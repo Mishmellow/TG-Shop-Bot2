@@ -137,7 +137,8 @@ def get_orders_by_user(username):
 
 def get_order_user_id(order_id):
     with get_db_connection() as conn:
-        result = conn.execute('''
-        'SELECT user_id FROM orders WHERE id = ?', (order_id,)
-      ''')
+        result = conn.execute(
+            'SELECT user_id FROM orders WHERE id = ?',
+            (order_id,)
+        )
         return result.fetchone()[0]
