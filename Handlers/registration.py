@@ -10,7 +10,7 @@ class Reg(StatesGroup):
     name = State()
     number = State()
 
-@router.message(Command('reg'))
+@router.message(Command('start'))
 async def start_reg(message: Message, state: FSMContext):
     await state.set_state(Reg.name)
     await message.answer('Введите ваше имя:')
@@ -36,4 +36,3 @@ async def reg_number(message: Message, state: FSMContext):
     )
 
     await state.clear()
-

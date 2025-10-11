@@ -7,7 +7,7 @@ main = InlineKeyboardMarkup(inline_keyboard=[
      InlineKeyboardButton(text='ℹ️ О нас', callback_data='about_us')]
 ])
 
-async def inline_categories():
+def inline_categories():
     keyboard = InlineKeyboardBuilder()
     categories = [
         '🍕 Еда',
@@ -20,7 +20,7 @@ async def inline_categories():
         keyboard.add(InlineKeyboardButton(text=category, callback_data=f'category_{callback_data}'))
     return keyboard.adjust(2).as_markup()
 
-async def inline_confirm_order():
+def inline_confirm_order():
     keyboard = InlineKeyboardBuilder()
     keyboard.add(
         InlineKeyboardButton(text='✅ Подтвердить заказ', callback_data='confirm_order'),

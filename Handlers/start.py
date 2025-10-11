@@ -7,6 +7,8 @@ from app.keyboards import main
 
 router = Router()
 
+print("🎯 start.py загружен!")
+
 @router.message(CommandStart())
 async def cmd_start(message: Message):
     args = message.text.split()
@@ -23,12 +25,6 @@ async def cmd_start(message: Message):
         first_name=message.from_user.first_name,
         referrer_id=referrer_id
     )
-
-    user_id = message.from_user.id
-    username = message.from_user.username
-    first_name = message.from_user.first_name
-
-    add_user(user_id, username, first_name)
 
     await message.reply(
         f'Добро пожаловать!.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:',
@@ -67,3 +63,12 @@ async def ref_user(message: Message):
         f"Приглашено друзей: {ref_count}\n"
         f"Твоя ссылка: {ref_link}"
     )
+
+@router.message(Command('admin'))
+async def admin_test(message: Message):
+    await message.answer("Админка из start.py работает!")
+
+
+@router.message(Command('test'))
+async def test_cmd(message: Message):
+    await message.answer("Test из start.py работает!")

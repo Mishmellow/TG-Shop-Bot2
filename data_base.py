@@ -40,8 +40,7 @@ def init_db():
                     product TEXT,
                     quantity INTEGER, 
                     address TEXT,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    referrer_id INTEGER DEFAULT NULL
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             ''')
         print("✅ Таблицы созданы успешно!")
@@ -51,6 +50,14 @@ def init_db():
 
 def add_order(user_id, product, quantity, address):
     print(f"[DB] Сохраняю заказ: {user_id}, {product}, {quantity}, {address}")
+
+    if not address:
+        raise ValueError("Адрес не может быть пустым")
+    if not product:
+        raise ValueError("Товар не может быть пустым")
+    if not quantity or quantity <= 0:
+        raise ValueError("Количество должно быть больше 0")
+
     with get_db_connection() as conn:
         conn.execute('''
             INSERT INTO orders (user_id, product, quantity, address)
@@ -82,3 +89,14 @@ def user_conn_ref(user_id: int) -> int:
                 SELECT COUNT(*) FROM users WHERE referrer_id = ?
             ''', (user_id,))
             return result.fetchone()[0]
+
+def get_all_orders():
+    with get_db_connection() as conn:
+        result = conn.execute('''
+        SELECT o.*, u.username, u.first_name 
+            FROM orders o 
+            LEFT JOIN users u ON o.user_id = u.user_id
+            ORDER BY o.created_at DESC
+            LIMIT 50
+        ''')
+        return result.fetchall()
