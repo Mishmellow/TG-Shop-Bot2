@@ -2,7 +2,7 @@ from aiogram.filters import Command
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from data_base import get_all_orders, get_users_count, update_order_status
-from app.keyboards import admin_order_action
+from app.keyboards import admin_order_actions
 
 router = Router()
 
@@ -40,7 +40,7 @@ async def show_all_orders(message: Message):
         return
 
     for order in orders:
-        keyboard = admin_order_action(order['id'])  # ← с 's'!
+        keyboard = admin_order_actions(order['id'])  # ← с 's'!
         await message.answer(
             f"📦 Заказ #{order['id']}\n"
             f"👤 {order['first_name']} (@{order['username']})\n"
@@ -53,7 +53,7 @@ async def show_all_orders(message: Message):
 
 @router.callback_query(F.data.startwith('admin_confirm'))
 async def admin_orders_callback(callback: CallbackQuery):
-    order_id = int(callback.data.replace('admin_confirm', ''))
+    order_id = int(callback.data.replace('admin_confirm_', ''))
     update_order_status(order_id, 'confirmed')
     await callback.message.answer(f'✅ Заказ {order_id} подтвержден!')
     await callback.message.edit_reply_markup(reply_markup=None)
@@ -62,19 +62,19 @@ async def admin_orders_callback(callback: CallbackQuery):
 async def admin_ship_callback(callback: CallbackQuery):
     order_id = int(callback.data.replace('admin_ship_', ''))
     update_order_status(order_id, 'shipping')
-    await callback.answear(f'🚚 Заказ {order_id} передан в доставку!')
+    await callback.answer(f'🚚 Заказ {order_id} передан в доставку!')
     await callback.message.edit_reply_markup(reply_markup=None)
 
 @router.callback_query(F.data.startwith('admin_complete'))
 async def admin_complete_callback(callback: CallbackQuery):
     order_id = int(callback.data.replace('admin_complete', ''))
-    update_order_status(order_id, 'complete')
+    update_order_status(order_id, 'completed')
     await callback.message.answer(f'🎉 Заказ {order_id} выполнен!')
     await callback.message.edit_reply_markup(reply_markup=None)
 
 @router.callback_query(F.data.startwith('admin_cancel'))
 async def admin_cancel_callback(callback: CallbackQuery):
-    order_id = int(callback.data.replace('admin_cancel', ''))
+    order_id = int(callback.data.replace('admin_cancelled', ''))
     update_order_status(order_id, 'cancel')
     await callback.message.answer(f'❌ Заказ {order_id} отменен!')
     await callback.message.edit_reply_markup(reply_markup=None)

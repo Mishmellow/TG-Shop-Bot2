@@ -28,7 +28,7 @@ def inline_confirm_order():
     )
     return keyboard.adjust(2).as_markup()
 
-def admin_order_action(order_id):
+def admin_order_actions(order_id):
     keyboard = InlineKeyboardBuilder()
     keyboard.add(
         InlineKeyboardButton(text='✅ Подтвердить', callback_data=f'confirm_{order_id}'),
