@@ -63,7 +63,3 @@ async def ref_user(message: Message):
         f"Приглашено друзей: {ref_count}\n"
         f"Твоя ссылка: {ref_link}"
     )
-
-@router.message(Command('admin'))
-async def admin_test(message: Message):
-    await message.answer("Админка из start.py работает!")
