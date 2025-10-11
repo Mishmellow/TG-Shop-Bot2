@@ -55,7 +55,6 @@ async def show_all_orders(message: Message):
 
 @router.callback_query(F.data.startswith('admin_confirm_'))
 async def admin_confirm_callback(callback: CallbackQuery, bot: Bot):
-    print(f"🎯 КНОПКА CONFIRM НАЖАТА! data: {callback.data}")
     order_id = int(callback.data.replace('admin_confirm_', ''))
     update_order_status(order_id, 'confirmed')
 
@@ -67,7 +66,6 @@ async def admin_confirm_callback(callback: CallbackQuery, bot: Bot):
 
 @router.callback_query(F.data.startswith('admin_ship_'))
 async def admin_ship_callback(callback: CallbackQuery, bot: Bot):
-    print(f"🎯 КНОПКА CONFIRM НАЖАТА! data: {callback.data}")
     order_id = int(callback.data.replace('admin_ship_', ''))
     update_order_status(order_id, 'shipped')
 
@@ -79,7 +77,6 @@ async def admin_ship_callback(callback: CallbackQuery, bot: Bot):
 
 @router.callback_query(F.data.startswith('admin_complete_'))
 async def admin_complete_callback(callback: CallbackQuery, bot: Bot):
-    print(f"🎯 КНОПКА CONFIRM НАЖАТА! data: {callback.data}")
     order_id = int(callback.data.replace('admin_complete_', ''))
     update_order_status(order_id, 'completed')
 
@@ -91,7 +88,6 @@ async def admin_complete_callback(callback: CallbackQuery, bot: Bot):
 
 @router.callback_query(F.data.startswith('admin_cancel_'))
 async def admin_cancel_callback(callback: CallbackQuery, bot: Bot):
-    print(f"🎯 КНОПКА CONFIRM НАЖАТА! data: {callback.data}")
     order_id = int(callback.data.replace('admin_cancel_', ''))
     update_order_status(order_id, 'cancelled')
 

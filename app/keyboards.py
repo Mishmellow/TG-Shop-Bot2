@@ -31,9 +31,9 @@ def inline_confirm_order():
 def admin_order_actions(order_id):
     keyboard = InlineKeyboardBuilder()
     keyboard.add(
-        InlineKeyboardButton(text='✅ Подтвердить', callback_data=f'confirm_{order_id}'),
-        InlineKeyboardButton(text='🚚 В доставку', callback_data=f'ship_{order_id}'),
-        InlineKeyboardButton(text='✅ Выполнено', callback_data=f'complete_{order_id}'),
-        InlineKeyboardButton(text='❌ Отменить', callback_data=f'cancel_{order_id}')
+        InlineKeyboardButton(text='✅ Подтвердить', callback_data=f'admin_confirm_{order_id}'),
+        InlineKeyboardButton(text='🚚 В доставку', callback_data=f'admin_ship_{order_id}'),
+        InlineKeyboardButton(text='✅ Выполнено', callback_data=f'admin_complete_{order_id}'),
+        InlineKeyboardButton(text='❌ Отменить', callback_data=f'admin_cancel_{order_id}')
     )
     return keyboard.adjust(2).as_markup()
