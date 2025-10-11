@@ -27,3 +27,13 @@ def inline_confirm_order():
         InlineKeyboardButton(text='❌ Отменить', callback_data='cancel_order')
     )
     return keyboard.adjust(2).as_markup()
+
+def admin_order_action(order_id):
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(
+        InlineKeyboardButton(text='✅ Подтвердить', callback_data=f'confirm_{order_id}'),
+        InlineKeyboardButton(text='🚚 В доставку', callback_data=f'ship_{order_id}'),
+        InlineKeyboardButton(text='✅ Выполнено', callback_data=f'complete_{order_id}'),
+        InlineKeyboardButton(text='❌ Отменить', callback_data=f'cancel_{order_id}')
+    )
+    return keyboard.adjust(2).as_markup()

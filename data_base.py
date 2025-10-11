@@ -40,9 +40,23 @@ def init_db():
                     product TEXT,
                     quantity INTEGER, 
                     address TEXT,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    status TEXT DEFAULT 'new'
                 )
             ''')
+
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS orders(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    product TEXT,
+                    quantity INTEGER, 
+                    address TEXT,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    status TEXT DEFAULT 'new'
+                )
+            ''')
+
         print("✅ Таблицы созданы успешно!")
     except Exception as e:
         print(f"❌ Ошибка при создании таблиц: {e}")
@@ -105,3 +119,18 @@ def get_users_count():
     with get_db_connection() as conn:
         result = conn.execute('SELECT COUNT(*) FROM users')
         return result.fetchone()[0]
+
+def update_order_status(order_id, status):
+    with get_db_connection() as conn:
+        conn.execute('UPDATE orders SET status = ? WHERE id = ?', (status, order_id))
+
+def get_orders_by_user(username):
+    with get_db_connection() as conn:
+        result = conn.execute('''
+            SELECT o.*, u.username, u.first_name 
+            FROM orders o 
+            LEFT JOIN users u ON o.user_id = u.user_id
+            WHERE u.username LIKE ? OR u.first_name LIKE ?
+            ORDER BY o.created_at DESC
+        ''', (f'%{username}%', f'%{username}%'))
+        return result.fetchall()

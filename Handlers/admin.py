@@ -1,7 +1,8 @@
 from aiogram.filters import Command
-from aiogram import Router
-from aiogram.types import Message
-from data_base import get_all_orders, get_users_count
+from aiogram import Router, F
+from aiogram.types import Message, CallbackQuery
+from data_base import get_all_orders, get_users_count, update_order_status
+from app.keyboards import admin_order_action
 
 router = Router()
 
@@ -38,16 +39,42 @@ async def show_all_orders(message: Message):
         await message.answer('📭 Заказов нет')
         return
 
-    text = "📦 **ВСЕ ЗАКАЗЫ:**\n\n"
     for order in orders:
-        text += f"👤 {order['first_name']} (@{order['username']})\n"
-        text += f"🛍 {order['product']} x{order['quantity']}\n"
-        text += f"📍 {order['address']}\n"
-        text += f"📅 {order['created_at'][:16]}\n"
-        text += "─" * 30 + "\n"
+        keyboard = admin_order_action(order['id'])  # ← с 's'!
+        await message.answer(
+            f"📦 Заказ #{order['id']}\n"
+            f"👤 {order['first_name']} (@{order['username']})\n"
+            f"🛍 {order['product']} x{order['quantity']}\n"
+            f"📍 {order['address']}\n"
+            f"📅 {order['created_at'][:16]}\n"
+            f"📊 Статус: {order['status']}",
+            reply_markup=keyboard
+        )
 
-    if len(text) > 4000:
-        for i in range(0, len(text), 4000):
-            await message.answer(text[i:i+4000])
-    else:
-        await message.answer(text)
+@router.callback_query(F.data.startwith('admin_confirm'))
+async def admin_orders_callback(callback: CallbackQuery):
+    order_id = int(callback.data.replace('admin_confirm', ''))
+    update_order_status(order_id, 'confirmed')
+    await callback.message.answer(f'✅ Заказ {order_id} подтвержден!')
+    await callback.message.edit_reply_markup(reply_markup=None)
+
+@router.callback_query(F.data.startwith('admin_ship_'))
+async def admin_ship_callback(callback: CallbackQuery):
+    order_id = int(callback.data.replace('admin_ship_', ''))
+    update_order_status(order_id, 'shipping')
+    await callback.answear(f'🚚 Заказ {order_id} передан в доставку!')
+    await callback.message.edit_reply_markup(reply_markup=None)
+
+@router.callback_query(F.data.startwith('admin_complete'))
+async def admin_complete_callback(callback: CallbackQuery):
+    order_id = int(callback.data.replace('admin_complete', ''))
+    update_order_status(order_id, 'complete')
+    await callback.message.answer(f'🎉 Заказ {order_id} выполнен!')
+    await callback.message.edit_reply_markup(reply_markup=None)
+
+@router.callback_query(F.data.startwith('admin_cancel'))
+async def admin_cancel_callback(callback: CallbackQuery):
+    order_id = int(callback.data.replace('admin_cancel', ''))
+    update_order_status(order_id, 'cancel')
+    await callback.message.answer(f'❌ Заказ {order_id} отменен!')
+    await callback.message.edit_reply_markup(reply_markup=None)
