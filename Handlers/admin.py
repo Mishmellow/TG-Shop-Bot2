@@ -51,30 +51,30 @@ async def show_all_orders(message: Message):
             reply_markup=keyboard
         )
 
-@router.callback_query(F.data.startwith('admin_confirm'))
+@router.callback_query(F.data.startswith('admin_confirm_'))
 async def admin_orders_callback(callback: CallbackQuery):
     order_id = int(callback.data.replace('admin_confirm_', ''))
     update_order_status(order_id, 'confirmed')
     await callback.message.answer(f'✅ Заказ {order_id} подтвержден!')
     await callback.message.edit_reply_markup(reply_markup=None)
 
-@router.callback_query(F.data.startwith('admin_ship_'))
+@router.callback_query(F.data.startswith('admin_ship_'))
 async def admin_ship_callback(callback: CallbackQuery):
     order_id = int(callback.data.replace('admin_ship_', ''))
     update_order_status(order_id, 'shipping')
     await callback.answer(f'🚚 Заказ {order_id} передан в доставку!')
     await callback.message.edit_reply_markup(reply_markup=None)
 
-@router.callback_query(F.data.startwith('admin_complete'))
+@router.callback_query(F.data.startswith('admin_complete_'))
 async def admin_complete_callback(callback: CallbackQuery):
-    order_id = int(callback.data.replace('admin_complete', ''))
+    order_id = int(callback.data.replace('admin_complete_', ''))
     update_order_status(order_id, 'completed')
     await callback.message.answer(f'🎉 Заказ {order_id} выполнен!')
     await callback.message.edit_reply_markup(reply_markup=None)
 
-@router.callback_query(F.data.startwith('admin_cancel'))
+@router.callback_query(F.data.startswith('admin_cancel_'))
 async def admin_cancel_callback(callback: CallbackQuery):
-    order_id = int(callback.data.replace('admin_cancelled', ''))
-    update_order_status(order_id, 'cancel')
+    order_id = int(callback.data.replace('admin_cancel_', ''))
+    update_order_status(order_id, 'cancelled')
     await callback.message.answer(f'❌ Заказ {order_id} отменен!')
     await callback.message.edit_reply_markup(reply_markup=None)
