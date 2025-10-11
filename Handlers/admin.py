@@ -100,5 +100,3 @@ async def admin_cancel_callback(callback: CallbackQuery, bot: Bot):
 
     await callback.answer(f'❌ Заказ {order_id} отменен!')
     await callback.message.edit_reply_markup(reply_markup=None)
-
-    print("✅ admin.py загружен и хендлеры зарегистрированы")
