@@ -16,15 +16,6 @@ dp = Dispatcher()
 
 async def main():
     init_db()
-
-    print("🎯 Подключаю роутеры...")
-    try:
-        from Handlers.admin import router as admin_router
-        dp.include_router(admin_router)
-        print("✅ admin_router подключен")
-    except Exception as e:
-        print(f"❌ Ошибка подключения admin_router: {e}")
-
     print("🎯 Подключаю роутеры...")
     dp.include_router(start_router)
     print("✅ start_router подключен")
