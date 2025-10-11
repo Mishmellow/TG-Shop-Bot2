@@ -95,16 +95,6 @@ async def cancel_order(callback: CallbackQuery, state: FSMContext):
         reply_markup=main
     )
 
-@router.message(Command('admin'))
-async def admin_test(message: Message):
-    print("🎯 АДМИНКА ВЫЗВАНА!")
-    await message.answer("Админка работает!")
-
-@router.message(Command('test'))
-async def test_cmd(message: Message):
-    print("🎯 TEST ВЫЗВАН!")
-    await message.answer("Test работает!")
-
 @router.message(Command('my_orders'))
 async def show_my_orders(message: Message):
     print('🎯 /my_orders ВЫЗВАН!')

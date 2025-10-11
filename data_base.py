@@ -100,3 +100,8 @@ def get_all_orders():
             LIMIT 50
         ''')
         return result.fetchall()
+
+def get_users_count():
+    with get_db_connection() as conn:
+        result = conn.execute('SELECT COUNT(*) FROM users')
+        return result.fetchone()[0]

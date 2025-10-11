@@ -67,8 +67,3 @@ async def ref_user(message: Message):
 @router.message(Command('admin'))
 async def admin_test(message: Message):
     await message.answer("Админка из start.py работает!")
-
-
-@router.message(Command('test'))
-async def test_cmd(message: Message):
-    await message.answer("Test из start.py работает!")

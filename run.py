@@ -8,6 +8,7 @@ from Handlers.registration import router as registration_router
 from Handlers.order import router as order_router
 from data_base import init_db
 from Handlers.profile import router as profile_router
+from Handlers.admin import router as admin_router
 
 
 bot = Bot(token=TOKEN)
@@ -24,6 +25,8 @@ async def main():
     print("✅ order_router подключен")
     dp.include_router(profile_router)
     print("✅ profile_router подключен")
+    dp.include_router(admin_router)
+    print("✅ admin_router подключен")
 
     print('Бот запущен...')
     await dp.start_polling(bot)
