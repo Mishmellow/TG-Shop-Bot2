@@ -3,7 +3,7 @@ from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
-from data_base import add_order
+from data_base import add_order, get_user_orders
 
 from app.keyboards import main, inline_categories, inline_confirm_order
 
@@ -104,3 +104,21 @@ async def admin_test(message: Message):
 async def test_cmd(message: Message):
     print("🎯 TEST ВЫЗВАН!")
     await message.answer("Test работает!")
+
+@router.message(Command('my_orders'))
+async def show_my_orders(message: Message):
+    print('🎯 /my_orders ВЫЗВАН!')
+
+    orders = get_user_orders(message.from_user.id)
+
+    if not orders:
+        await message.answer('📭 У вас ещё нет заказов')
+        return
+
+    text = '📦 Ваши заказы:\n\n'
+    for order in orders:
+        text += f"🛍 {order['product']} x{order['quantity']}\n"
+        text += f"📍 Адрес: {order['address']}\n"
+        text += f"📅 {order['created_at'][:16]}\n\n"
+
+    await message.answer(text)
