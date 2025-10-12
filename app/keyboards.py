@@ -4,7 +4,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 main = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')],
-    InlineKeyboardButton(text='🌐 WebApp магазин', web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/'))
+    InlineKeyboardButton(text='🌐 WebApp магазин', web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/')),
     [InlineKeyboardButton(text='📞 Контакты', callback_data='contacts'),
      InlineKeyboardButton(text='ℹ️ О нас', callback_data='about_us')]
 ])
