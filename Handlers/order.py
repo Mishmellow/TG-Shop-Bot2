@@ -5,7 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
 
-from app.keyboards import main, inline_categories, inline_confirm_order
+from app.keyboards import main_menu, inline_categories, inline_confirm_order
 
 router = Router()
 
@@ -82,7 +82,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Заказ подтвержден!', show_alert=True)
     await callback.message.edit_text(
         '✅ Ваш заказ принят в обработку! Ожидайте доставку.',
-        reply_markup=main
+        reply_markup=main_menu()
     )
     await state.clear()
 
@@ -92,7 +92,7 @@ async def cancel_order(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Заказ отменён')
     await callback.message.edit_text(
         '❌ Заказ отменён',
-        reply_markup=main
+        reply_markup=main_menu()
     )
 
 @router.message(Command('my_orders'))

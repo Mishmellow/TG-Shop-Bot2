@@ -3,7 +3,7 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 
 from data_base import add_user, user_conn_ref
-from app.keyboards import main
+from app.keyboards import main_menu
 
 router = Router()
 
@@ -28,7 +28,7 @@ async def cmd_start(message: Message):
 
     await message.reply(
         f'Добро пожаловать!.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:',
-        reply_markup=main
+        reply_markup=main_menu()
     )
 
 @router.message(Command('help'))
@@ -41,7 +41,7 @@ async def show_about(callback: CallbackQuery):
         "ℹ️ О нашем сервисе:\n"
         "Мы доставляем лучшие товары с 2025 года!\n"
         "Быстро, качественно, с гарантией.",
-        reply_markup=main
+        reply_markup=main_menu()
     )
 
 @router.callback_query(F.data == 'contacts')
@@ -51,7 +51,7 @@ async def contacts(callback: CallbackQuery):
         "📍 Адрес: Киев, ул. Примерная, 123\n"
         "📱 Телефон: +380 (99) 123-45-67\n"
         "⏰ График работы: Пн-Пт 9:00-18:00",
-        reply_markup=main
+        reply_markup=main_menu()
     )
 
 @router.message(Command('ref'))
