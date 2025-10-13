@@ -6,16 +6,48 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./script.js">
 
     <title>Web-APP for telegram</title>
+
+    <style>
+        * {
+        box-sizing: border-box;
+        }
+
+        body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 16px;
+        background-color: var(--tg-theme-bg-color, #ffffff);
+        color: var(--tg-theme-bg-color-text, #000000);
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 200;
+        text-align: center;
+        }
+
+
+
+    </style>
+
 </head>
 <body>
-<div>
+<div class="main">
     <h1>🛍️ Мой магазин</h1>>
     <p>Тестовая страница Web-App</p>
-    <button>Кнопка</button>
+    <button>Купить</button>
+
+    <div>
+        <h2>☕️ Кава| Латте</h2>
+        <p class="price">70 грн</p>
+        <button class="btn" id="buy-btn">Купити</button>
+    </div>
+
+
+
 </div>
 </body>
 </html>
