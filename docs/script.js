@@ -1,12 +1,13 @@
 console.log("🎯 JS загружен!");
 
-// ПРОВЕРЯЕМ существует ли Telegram WebApp
 const tg = window.Telegram?.WebApp;
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("✅ DOM готов!");
+    console.log("📱 Telegram WebApp:", tg);
     
     if (tg) {
+        console.log("🎯 Инициализируем Telegram WebApp...");
         tg.expand();
         tg.BackButton.show();
         
@@ -21,11 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const product = this.dataset.product;
             const price = this.dataset.price;
-            
             console.log("🛒 Нажата кнопка:", product, price);
-
-
+            console.log("📱 Telegram WebApp в обработчике:", tg);
+            
             if (tg) {
+                console.log("✅ Отправляем данные в Telegram...");
                 tg.sendData(JSON.stringify({
                     action: 'order_delivery',
                     product: product,
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }));
                 tg.close();
             } else {
+                console.log("❌ Telegram WebApp не найден!");
                 alert(`Заказ: ${product} за ${price}₴\n(В Telegram отправится автоматически)`);
             }
         });  
