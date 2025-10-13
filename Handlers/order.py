@@ -4,7 +4,6 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
-import json
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order
 
@@ -95,30 +94,6 @@ async def cancel_order(callback: CallbackQuery, state: FSMContext):
         '❌ Заказ отменён',
         reply_markup=main_menu()
     )
-
-@router.message()
-async def debug_all_messages(message: Message):
-    print(f"🔍 ВСЕ сообщения: {message.text} | WebApp data: {message.web_app_data}")
-
-    if message.web_app_data:
-        print(f"🎯 WebApp данные получены: {message.web_app_data.data}")
-        data = json.loads(message.web_app_data.data)
-        print(f"📦 Данные из WebApp: {data}")
-
-        # Твоя обработка заказа
-        product = data.get('product', 'Неизвестный товар')
-        price = data.get('price', 0)
-
-        add_order(
-            user_id=message.from_user.id,
-            product=product,
-            quantity=1,
-            address='Доставка из WebApp'
-        )
-
-        await message.answer(f"🎉 Заказ '{product}' принят!")
-        return
-
 
 @router.message(Command('my_orders'))
 async def show_my_orders(message: Message):

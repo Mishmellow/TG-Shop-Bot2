@@ -9,6 +9,7 @@ from Handlers.order import router as order_router
 from data_base import init_db
 from Handlers.profile import router as profile_router
 from Handlers.admin import router as admin_router
+from Handlers.order import router as webapp_router
 
 
 bot = Bot(token=TOKEN)
@@ -16,6 +17,8 @@ dp = Dispatcher()
 
 async def main():
     init_db()
+    dp.include_router(webapp_router)
+    print('✅ webapp_router подключен ПЕРВЫМ')
     print("🎯 Подключаю роутеры...")
     dp.include_router(start_router)
     print("✅ start_router подключен")
