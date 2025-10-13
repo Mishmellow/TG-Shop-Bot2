@@ -3,23 +3,26 @@ import logging
 from aiogram import Bot, Dispatcher
 from config import TOKEN
 
+from Handlers.web_app_hand import router as webapp_router
 from Handlers.start import router as start_router
 from Handlers.registration import router as registration_router
 from Handlers.order import router as order_router
-from data_base import init_db
 from Handlers.profile import router as profile_router
 from Handlers.admin import router as admin_router
-from Handlers.order import router as webapp_router
 
+from data_base import init_db
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
+
 async def main():
     init_db()
-    dp.include_router(webapp_router)
-    print('✅ webapp_router подключен ПЕРВЫМ')
     print("🎯 Подключаю роутеры...")
+
+    dp.include_router(webapp_router)
+    print("✅ webapp_router подключен")
+
     dp.include_router(start_router)
     print("✅ start_router подключен")
     dp.include_router(registration_router)
