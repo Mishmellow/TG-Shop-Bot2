@@ -2,61 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <title>Web-APP for telegram</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram WebApp Shop</title>
+    <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
     <style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 16px;
-    background-color: var(--tg-theme-bg-color, #ffffff);
-    color: var(--tg-theme-text-color, #000000);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    text-align: center;
-}
+        body {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+        .btn {
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
     </style>
-
 </head>
 <body>
-<div class="main">
-    <h1>🛍️ Мой магазин</h1>
-    <p>Тестовая страница Web-App</p>
-    <button>Купить</button>
+    <div class="main">
+        <h1>🛍️ Магазин в Telegram</h1>
+        <p>Выберите товар:</p>
 
-    <div class="product-card">
-        <h2>☕️ Кава| Латте</h2>
-        <p class="price">70 грн</p>
-        <button class="btn" data-product="cofee" data-price="70">Заказать доставку</button>
+        <div class="product-card">
+            <h2>☕️ Кофе Латте</h2>
+            <p class="price">70 грн</p>
+            <button class="btn" data-product="coffee" data-price="70">Заказать</button>
+        </div>
+
+        <div class="product-card">
+            <h2>🍕 Пицца "Маргарита"</h2>
+            <p class="price">209 грн</p>
+            <button class="btn" data-product="pizza_margarita" data-price="209">Заказать</button>
+        </div>
     </div>
 
-    <div class="product-card">
-        <h2>🍕 Пицца "Маргарита"</h2>
-        <p class="price">209 грн</p>
-        <button class="btn" data-product="pizza_margarita" data-price="209">Заказать доставку</button>
-    </div>
+    <script>
+        console.log("🚀 Script loaded");
 
-    <div class="product-card">
-        <h2>🍔 Бургер Комбо</h2>
-        <p class="price">189 грн</p>
-        <button class="btn" data-product="burger_combo" data-price="189">Заказать доставку</button>
-    </div>
+        const tg = window.Telegram.WebApp;
+        console.log("📱 Telegram WebApp:", tg);
 
-</div>
+        // Инициализация
+        tg.expand();
+        tg.ready();
 
+        console.log("✅ WebApp initialized");
+        console.log("📤 sendData available:", typeof tg.sendData === 'function');
+
+        // Обработчики кнопок
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const product = this.dataset.product;
+                const price = this.dataset.price;
+
+                console.log("🛒 Clicked:", product, price);
+
+                const orderData = {
+                    product: product,
+                    price: parseInt(price)
+                };
+
+                console.log("📦 Sending data:", orderData);
+
+                // Отправляем данные в бот
+                tg.sendData(JSON.stringify(orderData));
+                console.log("✅ Data sent!");
+
+                // Закрываем WebApp через секунду
+                setTimeout(() => {
+                    tg.close();
+                }, 1000);
+            });
+        });
+    </script>
 </body>
-
-<script src="https://telegram.org/js/telegram-web-app.js?59"></script>
-<script src="./script.js"></script>
-
 </html>

@@ -9,6 +9,7 @@ from Handlers.registration import router as registration_router
 from Handlers.order import router as order_router
 from Handlers.profile import router as profile_router
 from Handlers.admin import router as admin_router
+from Handlers.debug_handler import router as debug_router
 
 from data_base import init_db
 
@@ -25,6 +26,7 @@ async def main():
     dp.include_router(order_router)
     dp.include_router(profile_router)
     dp.include_router(admin_router)
+    dp.include_router(debug_router)
 
     print('🚀 Бот запускается...')
 
