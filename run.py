@@ -18,21 +18,20 @@ dp = Dispatcher()
 
 async def main():
     init_db()
+
     dp.include_router(webapp_router)
-    print("✅ webapp_router подключен")
-
     dp.include_router(start_router)
-    print("✅ start_router подключен")
     dp.include_router(registration_router)
-    print("✅ registration_router подключен")
     dp.include_router(order_router)
-    print("✅ order_router подключен")
     dp.include_router(profile_router)
-    print("✅ profile_router подключен")
     dp.include_router(admin_router)
-    print("✅ admin_router подключен")
 
-    print('Бот запущен...')
+    print('🚀 Бот запускается...')
+
+
+    await bot.delete_webhook(drop_pending_updates=True)
+    print('✅ Вебхуки очищены')
+
     await dp.start_polling(bot)
 
 

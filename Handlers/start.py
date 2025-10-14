@@ -63,3 +63,8 @@ async def ref_user(message: Message):
         f"Приглашено друзей: {ref_count}\n"
         f"Твоя ссылка: {ref_link}"
     )
+
+@router.message(Command("test"))
+async def test_command(message: Message):
+    print(f"✅ Тестовая команда получена от {message.from_user.id}")
+    await message.answer("✅ Бот работает! WebApp данные должны приходить сейчас.")
