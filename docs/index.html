@@ -48,32 +48,41 @@
         </div>
     </div>
 
-  <script>
-        // ВЕСЬ твой JavaScript код ЗДЕСЬ!
-        console.log("🎯 JS загружен!");
+<script>
+console.log("🎯 JS запущен!");
 
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+const tg = window.Telegram.WebApp;
+tg.expand();
+tg.ready();
 
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const product = this.dataset.product;
-                const price = this.dataset.price;
+// Ждем полной загрузки
+setTimeout(() => {
+    console.log("✅ WebApp готов!");
 
-                console.log("🛒 Нажата кнопка:", product, price);
+    // Вешаем обработчики на ВСЕ кнопки
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn')) {
+            console.log("🛒 Кнопка нажата!");
 
-                const data = {
+            const product = e.target.dataset.product;
+            const price = e.target.dataset.price;
+
+            console.log("📦 Данные:", {product, price});
+
+            // Пробуем отправить
+            try {
+                tg.sendData(JSON.stringify({
                     product: product,
-                    price: parseInt(price)
-                };
-
-                tg.sendData(JSON.stringify(data));
-                console.log("✅ Data sent!");
-
-                setTimeout(() => tg.close(), 1000);
-            });
-        });
-    </script>
+                    price: price
+                }));
+                console.log("✅ Данные отправлены!");
+            } catch (error) {
+                console.log("❌ Ошибка:", error);
+            }
+        }
+    });
+}, 1000);
+</script>
 
 </body>
 </html>
