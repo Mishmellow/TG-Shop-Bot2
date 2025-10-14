@@ -3,7 +3,7 @@ console.log("🎯 JS загружен!");
 document.addEventListener('DOMContentLoaded', function() {
     console.log("✅ DOM готов!");
     
-    const tg = window.Telegram?.WebApp;
+    const tg = window.Telegram.WebApp;
     console.log("📱 Telegram WebApp версия:", tg.version);
     console.log("📱 Telegram WebApp platform:", tg.platform);
     
