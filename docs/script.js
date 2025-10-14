@@ -4,15 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("✅ DOM готов!");
     
     const tg = window.Telegram?.WebApp;
-    console.log("📱 Telegram WebApp:", tg);
+    console.log("📱 Telegram WebApp версия:", tg.version);
+    console.log("📱 Telegram WebApp platform:", tg.platform);
     
     if (tg) {
         tg.expand();
         console.log("✅ WebApp инициализирован");
-
-        console.log("📋 Доступные методы:", Object.keys(tg).filter(key => typeof tg[key] === 'function'));
     }
-
 
     document.querySelectorAll('.btn').forEach(button => { 
         button.addEventListener('click', function() {
@@ -20,40 +18,34 @@ document.addEventListener('DOMContentLoaded', function() {
             const price = this.dataset.price;
             
             console.log("🛒 Нажата кнопка:", product, price);
-            console.log("📱 Telegram WebApp объект:", tg);
-
-            if (tg) {
-                console.log("✅ Пробуем отправить данные...");
+            
+            if (tg && tg.sendData) {
+                console.log("✅ sendData доступен!");
                 
                 const data = {
                     product: product,
                     price: parseInt(price)
                 };
                 
-                console.log("📦 Данные для отправки:", data);
+                console.log("📦 Отправляем данные:", data);
                 
+                try {
 
-                if (tg.sendData) {
-                    console.log("🚀 Используем sendData");
                     tg.sendData(JSON.stringify(data));
-                }
+                    console.log("✅ sendData вызван успешно!");
+                    
 
-                else if (tg.MainButton) {
-                    console.log("🚀 Используем MainButton");
-                    tg.MainButton.setText("Заказ отправлен!");
-                    tg.MainButton.show();
-                    setTimeout(() => tg.close(), 1000);
+                    setTimeout(() => {
+                        console.log("🔒 Закрываем WebApp...");
+                        tg.close();
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.log("❌ Ошибка при sendData:", error);
                 }
-
-                else {
-                    console.log("🚀 Закрываем WebApp");
-                    tg.close();
-                }
-                
-                console.log("✅ Действие выполнено!");
                 
             } else {
-                console.log("❌ WebApp не доступен");
+                console.log("❌ sendData не доступен");
                 alert(`Заказ: ${product} за ${price}₴`);
             }
         });  
