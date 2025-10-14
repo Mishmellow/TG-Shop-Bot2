@@ -16,17 +16,16 @@ from data_base import init_db
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-
 async def main():
     init_db()
 
     dp.include_router(webapp_router)
-    dp.include_router(start_router)
-    dp.include_router(registration_router)
-    dp.include_router(order_router)
-    dp.include_router(profile_router)
-    dp.include_router(admin_router)
-    dp.include_router(debug_router)
+    # dp.include_router(start_router)
+    # dp.include_router(registration_router)
+    # dp.include_router(order_router)
+    # dp.include_router(profile_router)
+    # dp.include_router(admin_router)
+    # dp.include_router(debug_router)
 
     print('🚀 Бот запускается...')
 
