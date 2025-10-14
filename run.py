@@ -18,8 +18,6 @@ dp = Dispatcher()
 
 async def main():
     init_db()
-    print("🎯 Подключаю роутеры...")
-
     dp.include_router(webapp_router)
     print("✅ webapp_router подключен")
 

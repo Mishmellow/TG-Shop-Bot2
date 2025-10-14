@@ -45,18 +45,6 @@ def init_db():
                 )
             ''')
 
-            conn.execute('''
-                CREATE TABLE IF NOT EXISTS orders(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER,
-                    product TEXT,
-                    quantity INTEGER, 
-                    address TEXT,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    status TEXT DEFAULT 'new'
-                )
-            ''')
-
         print("✅ Таблицы созданы успешно!")
     except Exception as e:
         print(f"❌ Ошибка при создании таблиц: {e}")
