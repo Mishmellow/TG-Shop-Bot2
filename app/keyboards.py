@@ -9,7 +9,7 @@ def main_menu():
     )
     keyboard.row(
         InlineKeyboardButton(text='🌐 WebApp магазин',
-                             web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/docs/index.html'),)
+                             web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/'),)
     )
     keyboard.row(
         InlineKeyboardButton(text='📞 Контакты', callback_data='contacts'),
