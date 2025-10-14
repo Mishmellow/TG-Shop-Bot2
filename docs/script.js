@@ -2,53 +2,60 @@ console.log("🎯 JS загружен!");
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("✅ DOM готов!");
-
+    
     const tg = window.Telegram?.WebApp;
     console.log("📱 Telegram WebApp:", tg);
-
+    
     if (tg) {
-        console.log("🎯 Инициализируем Telegram WebApp...");
         tg.expand();
-        tg.enableClosingConfirmation();
+        console.log("✅ WebApp инициализирован");
 
-        // Показываем кнопку "Назад"
-        if (tg.BackButton) {
-            tg.BackButton.show();
-            tg.BackButton.onClick(function(){
-                tg.close();
-            });
-        }
-    } else {
-        console.log("❌ Telegram WebApp не найден (запускай в Telegram)");
+        console.log("📋 Доступные методы:", Object.keys(tg).filter(key => typeof tg[key] === 'function'));
     }
 
 
-    document.querySelectorAll('.btn').forEach(button => {
+    document.querySelectorAll('.btn').forEach(button => { 
         button.addEventListener('click', function() {
             const product = this.dataset.product;
             const price = this.dataset.price;
-
+            
             console.log("🛒 Нажата кнопка:", product, price);
-            console.log("📱 Telegram WebApp:", tg);
+            console.log("📱 Telegram WebApp объект:", tg);
 
-            if (tg && tg.sendData) {
-                console.log("✅ Отправляем данные в Telegram...");
-
-
-                const orderData = {
+            if (tg) {
+                console.log("✅ Пробуем отправить данные...");
+                
+                const data = {
                     product: product,
                     price: parseInt(price)
                 };
+                
+                console.log("📦 Данные для отправки:", data);
+                
 
-                console.log("📦 Отправляемые данные:", orderData);
+                if (tg.sendData) {
+                    console.log("🚀 Используем sendData");
+                    tg.sendData(JSON.stringify(data));
+                }
 
-                tg.sendData(JSON.stringify(orderData));
-                console.log("📤 Данные отправлены!");
+                else if (tg.MainButton) {
+                    console.log("🚀 Используем MainButton");
+                    tg.MainButton.setText("Заказ отправлен!");
+                    tg.MainButton.show();
+                    setTimeout(() => tg.close(), 1000);
+                }
 
+                else {
+                    console.log("🚀 Закрываем WebApp");
+                    tg.close();
+                }
+                
+                console.log("✅ Действие выполнено!");
+                
             } else {
-                console.log("❌ Telegram WebApp не найден!");
-                alert(`Заказ: ${product} за ${price}₴\n(В Telegram отправится автоматически)`);
+                console.log("❌ WebApp не доступен");
+                alert(`Заказ: ${product} за ${price}₴`);
             }
-        });
-    });
+        });  
+    });  
 });
