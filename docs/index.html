@@ -48,44 +48,6 @@
         </div>
     </div>
 
-    <script>
-        console.log("🚀 Script loaded");
-
-        const tg = window.Telegram.WebApp;
-        console.log("📱 Telegram WebApp:", tg);
-
-        // Инициализация
-        tg.expand();
-        tg.ready();
-
-        console.log("✅ WebApp initialized");
-        console.log("📤 sendData available:", typeof tg.sendData === 'function');
-
-        // Обработчики кнопок
-        document.querySelectorAll('.btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const product = this.dataset.product;
-                const price = this.dataset.price;
-
-                console.log("🛒 Clicked:", product, price);
-
-                const orderData = {
-                    product: product,
-                    price: parseInt(price)
-                };
-
-                console.log("📦 Sending data:", orderData);
-
-                // Отправляем данные в бот
-                tg.sendData(JSON.stringify(orderData));
-                console.log("✅ Data sent!");
-
-                // Закрываем WebApp через секунду
-                setTimeout(() => {
-                    tg.close();
-                }, 1000);
-            });
-        });
-    </script>
+    <script src="./script.js"></script>
 </body>
 </html>
