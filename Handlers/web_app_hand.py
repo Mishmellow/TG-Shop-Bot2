@@ -1,31 +1,24 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 import json
-from data_base import add_order
 
 router = Router()
 
-@router.message(F.web_app_data)
-async def handle_webapp_data(message: Message):
-    print(f"🎯 WEBAPP TRIGGERED! User: {message.from_user.id}")
 
-    try:
+@router.message()
+async def catch_webapp_data(message: Message):
+    # Ловим ВСЁ что приходит
+    print(f"🔍 Получено сообщение: {message.text}")
+    print(f"🔍 WebApp data: {message.web_app_data}")
+    print(f"🔍 ВСЁ сообщение: {message}")
+    print("---")
+
+    # Если есть данные из веб-приложения
+    if message.web_app_data:
+        print("🎯🎯🎯 WEBAPP ДАННЫЕ НАКОНЕЦ-ТО!")
         data = json.loads(message.web_app_data.data)
-        print(f"📦 Data: {data}")
+        await message.answer(f"🎉 УРА! Получил: {data}")
+        return
 
-        product = data.get('product', 'Unknown')
-        price = data.get('price', 0)
 
-        add_order(
-            user_id=message.from_user.id,
-            product=product,
-            quantity=1,
-            address='WebApp Delivery'
-        )
-
-        await message.answer(f"✅ Заказ '{product}' за {price}₴ принят!")
-        print("✅ ORDER PROCESSED!")
-
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        await message.answer("❌ Ошибка")
+    return
