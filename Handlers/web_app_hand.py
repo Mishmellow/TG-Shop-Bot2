@@ -1,63 +1,31 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message
-from aiogram.filters import Command
 import json
+from data_base import add_order
 
 router = Router()
 
+@router.message(F.web_app_data)
+async def handle_webapp_data(message: Message):
+    print(f"🎯 WEBAPP TRIGGERED! User: {message.from_user.id}")
 
-@router.message(Command("shop"))
-async def cmd_shop(message: Message):
-    from aiogram.types import InlineKeyboardButton, WebAppInfo
-    from aiogram.utils.keyboard import InlineKeyboardBuilder
+    try:
+        data = json.loads(message.web_app_data.data)
+        print(f"📦 Data: {data}")
 
-    keyboard = InlineKeyboardBuilder()
-    keyboard.add(InlineKeyboardButton(
-        text="🛍️ Открыть магазин",
-        web_app=WebAppInfo(url="https://mishmellow.github.io/TG-Shop-Bot2/")
-    ))
+        product = data.get('product', 'Unknown')
+        price = data.get('price', 0)
 
-    await message.answer(
-        "Нажми кнопку чтобы открыть магазин:",
-        reply_markup=keyboard.as_markup()
-    )
+        add_order(
+            user_id=message.from_user.id,
+            product=product,
+            quantity=1,
+            address='WebApp Delivery'
+        )
 
+        await message.answer(f"✅ Заказ '{product}' за {price}₴ принят!")
+        print("✅ ORDER PROCESSED!")
 
-@router.message()
-async def handle_all_messages(message: Message):
-    print(f"🔍 Пришло сообщение, тип: {message.content_type}")
-
-    # Если есть веб-апп данные
-    if hasattr(message, 'web_app_data') and message.web_app_data:
-        print("🎯🎯🎯 ДАННЫЕ ИЗ WEBAPP ПРИШЛИ!")
-        print(f"📦 Raw данные: {message.web_app_data.data}")
-
-        try:
-            data = json.loads(message.web_app_data.data)
-            product = data.get('product', 'Неизвестно')
-            price = data.get('price', 0)
-
-            from data_base import add_order
-            add_order(
-                user_id=message.from_user.id,
-                product=product,
-                quantity=1,
-                address='WebApp Delivery'
-            )
-
-            await message.answer(
-                f"✅ Заказ принят!\n"
-                f"📦 Товар: {product}\n"
-                f"💵 Цена: {price}₴\n"
-                f"🚚 Доставка: WebApp"
-            )
-            print("✅ ЗАКАЗ СОХРАНЕН!")
-
-        except Exception as e:
-            print(f"❌ Ошибка: {e}")
-            await message.answer("❌ Ошибка при обработке заказа")
-
-        return
-
-
-    return
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        await message.answer("❌ Ошибка")
