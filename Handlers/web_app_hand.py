@@ -5,7 +5,6 @@ import json
 
 router = Router()
 
-
 @router.message(Command("shop"))
 async def cmd_shop(message: Message):
     from aiogram.types import InlineKeyboardButton, WebAppInfo
@@ -23,35 +22,40 @@ async def cmd_shop(message: Message):
     )
 
 
-@router.message(lambda message: message.web_app_data is not None)
-async def handle_webapp_data(message: Message):
-    print("🎯🎯🎯 ДАННЫЕ ИЗ WEBAPP ПРИШЛИ!")
+@router.message()
+async def handle_all_messages(message: Message):
+    print(f"🔍 Пришло сообщение, тип: {message.content_type}")
 
-    web_app_data = message.web_app_data
-    print(f"📦 Данные: {web_app_data.data}")
+    # Если есть веб-апп данные
+    if hasattr(message, 'web_app_data') and message.web_app_data:
+        print("🎯🎯🎯 ДАННЫЕ ИЗ WEBAPP ПРИШЛИ!")
+        print(f"📦 Raw данные: {message.web_app_data.data}")
 
-    try:
-        data = json.loads(web_app_data.data)
-        product = data.get('product', 'Неизвестно')
-        price = data.get('price', 0)
+        try:
+            data = json.loads(message.web_app_data.data)
+            product = data.get('product', 'Неизвестно')
+            price = data.get('price', 0)
 
-        # Сохраняем заказ
-        from data_base import add_order
-        add_order(
-            user_id=message.from_user.id,
-            product=product,
-            quantity=1,
-            address='WebApp Delivery'
-        )
 
-        await message.answer(
-            f"✅ Заказ принят!\n"
-            f"📦 Товар: {product}\n"
-            f"💵 Цена: {price}₴\n"
-            f"🚚 Доставка: WebApp"
-        )
-        print("✅ ЗАКАЗ СОХРАНЕН!")
+            from data_base import add_order
+            add_order(
+                user_id=message.from_user.id,
+                product=product,
+                quantity=1,
+                address='WebApp Delivery'
+            )
 
-    except Exception as e:
-        print(f"❌ Ошибка: {e}")
-        await message.answer("❌ Ошибка при обработке заказа")
+            await message.answer(
+                f"✅ Заказ принят!\n"
+                f"📦 Товар: {product}\n"
+                f"💵 Цена: {price}₴\n"
+                f"🚚 Доставка: WebApp"
+            )
+            print("✅ ЗАКАЗ СОХРАНЕН!")
+
+        except Exception as e:
+            print(f"❌ Ошибка: {e}")
+            await message.answer("❌ Ошибка при обработке заказа")
+
+    elif message.text and message.text.startswith('/'):
+        return
