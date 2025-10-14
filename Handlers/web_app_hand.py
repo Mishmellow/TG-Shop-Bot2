@@ -13,7 +13,7 @@ async def cmd_shop(message: Message):
     keyboard = InlineKeyboardBuilder()
     keyboard.add(InlineKeyboardButton(
         text="🛍️ Открыть магазин",
-        web_app=WebAppInfo(url="https://t.me/PractAPI_Bot/bot_market")
+        web_app=WebAppInfo(url="https://mishmellow.github.io/TG-Shop-Bot2/")
     ))
 
     await message.answer(
