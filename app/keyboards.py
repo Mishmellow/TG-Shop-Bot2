@@ -7,10 +7,10 @@ def main_menu():
     keyboard.row(
         InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')
     )
-    keyboard.row(
-        InlineKeyboardButton(text='🌐 WebApp магазин',
-                             web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/'),)
-    )
+    # keyboard.row(
+    #     InlineKeyboardButton(text='🌐 WebApp магазин',
+    #                          web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/'),)
+    # )
     keyboard.row(
         InlineKeyboardButton(text='📞 Контакты', callback_data='contacts'),
         InlineKeyboardButton(text='ℹ️ О нас', callback_data='about_us')
