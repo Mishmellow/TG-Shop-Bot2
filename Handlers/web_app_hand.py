@@ -5,6 +5,7 @@ import json
 
 router = Router()
 
+
 @router.message(Command("shop"))
 async def cmd_shop(message: Message):
     from aiogram.types import InlineKeyboardButton, WebAppInfo
@@ -36,7 +37,6 @@ async def handle_all_messages(message: Message):
             product = data.get('product', 'Неизвестно')
             price = data.get('price', 0)
 
-
             from data_base import add_order
             add_order(
                 user_id=message.from_user.id,
@@ -57,5 +57,7 @@ async def handle_all_messages(message: Message):
             print(f"❌ Ошибка: {e}")
             await message.answer("❌ Ошибка при обработке заказа")
 
-    elif message.text and message.text.startswith('/'):
         return
+
+
+    return
