@@ -3,7 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher
 from config import TOKEN
 
-from Handlers.web_app_hand import router as webapp_router
+# from Handlers.web_app_hand import router as webapp_router
 from Handlers.start import router as start_router
 from Handlers.registration import router as registration_router
 from Handlers.order import router as order_router
@@ -18,7 +18,7 @@ dp = Dispatcher()
 async def main():
     init_db()
 
-    dp.include_router(webapp_router)
+    # dp.include_router(webapp_router)
     dp.include_router(start_router)
     dp.include_router(registration_router)
     dp.include_router(order_router)
