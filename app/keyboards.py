@@ -8,9 +8,11 @@ def main_menu():
         InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')
     )
 
+    keyboard.row(
     InlineKeyboardButton(
         text='🛍️ Магазин',
         web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/')
+    )
     )
 
     keyboard.row(
