@@ -1,4 +1,5 @@
 import sqlite3
+import os
 import logging
 from contextlib import contextmanager
 
@@ -17,6 +18,7 @@ def get_db_connection():
         raise
     finally:
         conn.close()
+
 
 def init_db():
     print("🎯 init_db() ВЫЗВАНА!")
@@ -130,3 +132,26 @@ def get_order_user_id(order_id):
             (order_id,)
         )
         return result.fetchone()[0]
+
+
+def init_db():
+    db_path = os.path.abspath('shop_bot.db')
+    print(f"📁 Путь к БД: {db_path}")
+
+    conn = sqlite3.connect('shop_bot.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            product TEXT,
+            quantity INTEGER, 
+            address TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
+
+    conn.commit()
+    conn.close()
+    print("✅ Таблицы созданы успешно!")
