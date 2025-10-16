@@ -62,12 +62,10 @@ def add_order(user_id, product, quantity, address):
         raise ValueError("Количество должно быть больше 0")
 
     with get_db_connection() as conn:
-        conn.execute('''
+       cursor = conn.execute('''
             INSERT INTO orders (user_id, product, quantity, address)
             VALUES (?, ?, ?, ?)
         ''', (user_id, product, quantity, address))
-        print("✅ Заказ сохранён в БД!")
-
 
 def add_user(user_id: int, username: str, first_name: str, referrer_id: int = None):
     with get_db_connection() as conn:

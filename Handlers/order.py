@@ -87,6 +87,21 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
                  f"📍 Адрес: {data['address']}"
         )
 
+        order_info = (
+            "🛒 *НОВЫЙ ЗАКАЗ #{}*\n"
+            "👤 Пользователь: [{}](tg://user?id={})\n"
+            "📦 Товар: {}\n"
+            "🔢 Количество: {}\n"
+            "📍 Адрес: {}\n"
+            "⏰ Время: {}"
+        ).format(
+            callback.from_user.first_name,
+            callback.from_user.id,
+            data['product'],
+            data['quantity'],
+            data['address']
+        )
+
     except Exception as e:
         print(f"❌ Ошибка сохранения заказа: {e}")
         await callback.answer(f'Ошибка: {e}', show_alert=True)
@@ -125,3 +140,9 @@ async def show_my_orders(message: Message):
         text += f"📅 {order['created_at'][:16]}\n\n"
 
     await message.answer(text)
+
+@router.message(Command('cansel'))
+@router.message(F.text.casefold() == 'Отмена')
+async def cansel(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer('Заказ отменен!', reply_markup=main_menu())
