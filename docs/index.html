@@ -49,11 +49,11 @@
     </div>
 
 <script>
-console.log("🎯 JS запущен!");
-
 const tg = window.Telegram.WebApp;
+
 tg.expand();
 tg.ready();
+tg.MainButton.setText('Магазин').show();
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("✅ DOM готов!");
