@@ -6,7 +6,6 @@ from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order
-from run import bot
 
 router = Router()
 
@@ -74,6 +73,10 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             quantity=data['quantity'],
             address=data['address']
         )
+
+        from aiogram import Bot
+        from config import TOKEN
+        bot = Bot(token=TOKEN)
 
         await bot.send_message(
             chat_id=1499143658,
