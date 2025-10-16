@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order
+from run import bot
 
 router = Router()
 
@@ -72,6 +73,15 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             product=data['product'],
             quantity=data['quantity'],
             address=data['address']
+        )
+
+        await bot.send_message(
+            chat_id=1499143658,
+            text=f"🛒 НОВЫЙ ЗАКАЗ!\n"
+                 f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
+                 f"📦 Товар: {data['product']}\n"
+                 f"🔢 Количество: {data['quantity']}\n"
+                 f"📍 Адрес: {data['address']}"
         )
 
     except Exception as e:

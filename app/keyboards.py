@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardButton, WebAppInfo
+from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 def main_menu():
@@ -6,13 +6,6 @@ def main_menu():
 
     keyboard.row(
         InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')
-    )
-
-    keyboard.row(
-    InlineKeyboardButton(
-        text='🛍️ Магазин',
-        web_app=WebAppInfo(url='https://mishmellow.github.io/TG-Shop-Bot2/')
-    )
     )
 
     keyboard.row(
