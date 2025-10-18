@@ -6,6 +6,10 @@ from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order
+from aiogram import Bot
+from config import TOKEN
+
+bot = Bot(token=TOKEN)
 
 router = Router()
 
@@ -77,10 +81,6 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             address=data['address'],
             comment=data.get('comment', '')
         )
-
-        from aiogram import Bot
-        from config import TOKEN
-        bot = Bot(token=TOKEN)
 
         order_info = (
             "🛒 *НОВЫЙ ЗАКАЗ!*\n"
