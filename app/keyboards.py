@@ -15,6 +15,14 @@ def main_menu():
 
     return keyboard.as_markup()
 
+def inline_continue_order():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(
+        InlineKeyboardButton(text='✅ Добавить еще товар', callback_data='continue_order'),
+        InlineKeyboardButton(text='🚀 Завершить заказ', callback_data='finish_order')
+    )
+    return keyboard.adjust(1).as_markup()
+
 def inline_categories():
     keyboard = InlineKeyboardBuilder()
     categories = [

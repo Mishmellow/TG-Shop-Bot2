@@ -5,7 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
 
-from app.keyboards import main_menu, inline_categories, inline_confirm_order
+from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order
 
 router = Router()
 
@@ -15,6 +15,7 @@ class Order(StatesGroup):
     adding_comment = State()
     providing_address = State()
     confirm_order = State()
+    continue_order = State()
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):
@@ -96,6 +97,12 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             parse_mode='Markdown'
         )
 
+        await callback.message.edit_text(
+            '✅ Товар добавлен в заказ!\n'
+            'Хотите добавить еще товар или завершить заказ?',
+            reply_markup= inline_continue_order()
+        )
+
     except Exception as e:
         print(f"❌ Ошибка: {e}")
         await callback.answer(f'Ошибка: {e}', show_alert=True)
@@ -108,6 +115,25 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
     )
     await state.clear()
 
+@router.callback_query(F.data == 'continue_order')
+async def continue_order(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    await state.update_data(pruduct = None, quanity = None)
+
+    await callback.message.edit_text(
+        f'Выберите следующий товар:\n'
+        f'📝 Адрес доставки: {data["address"]}\n'
+        f'💬 Комментарий: {data.get("comment", "")}',
+        reply_markup= inline_categories()
+    )
+
+@router.callback_query(F.data == 'finish_order')
+async def finish_order(callback: CallbackQuery, state: FSMContext):
+    await state.clear()
+    await callback.message.edit_text(
+        '🎉 Ваш заказ завершен! Ожидайте доставку.',
+        reply_markup=main_menu()
+    )
 
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
