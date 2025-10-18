@@ -160,7 +160,7 @@ async def show_stats(message: Message):
 
     stats_text = (
         "📊 *Статистика бота*\n\n"
-        f"👥 Пользователей: {get_users_count}\n"
+        f"👥 Пользователей: {users_count}\n"
         f"📦 Всего заказов: {total_orders}\n"
     )
 
