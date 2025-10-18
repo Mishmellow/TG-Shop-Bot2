@@ -97,28 +97,25 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             parse_mode='Markdown'
         )
 
-        await callback.message.edit_text(
-            '✅ Товар добавлен в заказ!\n'
-            'Хотите добавить еще товар или завершить заказ?',
-            reply_markup= inline_continue_order()
-        )
-
     except Exception as e:
         print(f"❌ Ошибка: {e}")
         await callback.answer(f'Ошибка: {e}', show_alert=True)
         return
 
     await callback.answer('Заказ подтвержден!', show_alert=True)
+
     await callback.message.edit_text(
-        '✅ Ваш заказ принят в обработку! Ожидайте доставку.',
-        reply_markup=main_menu()
+        '✅ Товар добавлен в заказ!\n'
+        'Хотите добавить еще товар или завершить заказ?',
+        reply_markup=inline_continue_order()
     )
-    await state.clear()
 
 @router.callback_query(F.data == 'continue_order')
 async def continue_order(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     await state.update_data(pruduct = None, quanity = None)
+
+    await state.set_state(Order.choosing_product)
 
     await callback.message.edit_text(
         f'Выберите следующий товар:\n'
@@ -134,6 +131,7 @@ async def finish_order(callback: CallbackQuery, state: FSMContext):
         '🎉 Ваш заказ завершен! Ожидайте доставку.',
         reply_markup=main_menu()
     )
+    await state.clear()
 
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
@@ -144,17 +142,6 @@ async def process_comment(message: Message, state: FSMContext):
 
     await state.update_data(comment=comment)
     await state.set_state(Order.confirm_order)
-
-    data = await state.get_data()
-    confirm_text = (
-        f"Проверьте заказ:\n"
-        f"Товар: {data['product']}\n"
-        f"Количество: {data['quantity']}\n"
-        f"Адрес: {data['address']}\n"
-        f"Комментарий: {data['comment'] or 'нет комментария'}\n\n"
-        f"Все верно?"
-    )
-    await message.answer(confirm_text, reply_markup=inline_confirm_order())
 
 
 @router.callback_query(F.data == 'cancel_order')
