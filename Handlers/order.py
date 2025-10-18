@@ -23,6 +23,11 @@ class Order(StatesGroup):
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(
+        items= [],
+        address="",
+        comment=""
+    )
     await state.set_state(Order.choosing_product)
     await callback.message.edit_text(
         'Что хотите заказать?',
@@ -31,13 +36,38 @@ async def place_order(callback: CallbackQuery, state: FSMContext):
 
 @router.callback_query(F.data.startswith('category_'), Order.choosing_product)
 async def choose_product(callback: CallbackQuery, state: FSMContext):
-    print("🎯 1. Категория выбрана")
     product = callback.data.replace('category_', '')
-    await state.update_data(product=product)
+    await state.update_data(current_product=product)
     await state.set_state(Order.specifying_quantity)
     await callback.message.edit_text(
         f'Вы выбрали: {product}\nВведите количество'
     )
+
+@router.message(Order.specifying_quantity)
+async def specifying_quantity(message: Message, state: FSMContext):
+    if not message.text.isdigit():
+        await message.answer('Введите число')
+        return
+
+    data = await state.get_data()
+    product = data['current_product']
+    quantity = int(message.text)
+
+    items = data.get("items", [])
+    items.append({"product": product, "quantity": quantity})
+
+    await state.update_data(items=items)
+
+    if not data.get("address"):
+        await state.set_state(Order.providing_address)
+        await message.answer('Теперь введите адрес доставки')
+    else:
+        await state.set_state(Order.choosing_product)
+        await message.answer(
+            f'✅ Товар "{product}" x{quantity} добавлен в заказ!\n'
+            'Хотите добавить еще товар или завершить заказ?',
+            reply_markup=inline_continue_order()
+        )
 
 @router.message(Order.specifying_quantity)
 async def specifying_quantity(message: Message, state: FSMContext):
@@ -52,44 +82,37 @@ async def specifying_quantity(message: Message, state: FSMContext):
 
 @router.message(Order.providing_address)
 async def process_address(message: Message, state: FSMContext):
-    print("🎯 3. Адрес получен")
     await state.update_data(address=message.text)
     await state.set_state(Order.adding_comment)
-    await message.answer('💬 Хотите добавить комментарий к заказу? Если нет - напишите "нет"')
+    await message.answer('💬 Хотите добавить комментарий к заказу? Если нет - напишите нет')
 
-    data = await state.get_data()
-    await message.answer(
-        f"Проверьте заказ:\n"
-        f"Товар: {data['product']}\n"
-        f"Количество: {data['quantity']}\n"
-        f"Адрес: {data['address']}\n"
-        f"Все верно?",
-        reply_markup= inline_confirm_order()
-    )
 
 @router.callback_query(F.data == 'confirm_order')
 async def confirm_order(callback: CallbackQuery, state: FSMContext):
-    print("🎯 4. Подтверждение получено!")
     data = await state.get_data()
-    print("Данные для сохранения:", data)
 
     try:
-        add_order(
-            user_id=callback.from_user.id,
-            product=data['product'],
-            quantity=data['quantity'],
-            address=data['address'],
-            comment=data.get('comment', '')
-        )
+        for item in data['items']:
+            add_order(
+                user_id=callback.from_user.id,
+                product=item['product'],
+                quantity=item['quantity'],
+                address=data['address'],
+                comment=data.get('comment', '')
+            )
 
-        order_info = (
-            "🛒 *НОВЫЙ ЗАКАЗ!*\n"
-            f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
-            f"📦 Товар: {data['product']}\n"
-            f"🔢 Количество: {data['quantity']}\n"
-            f"📍 Адрес: {data['address']}\n"
-            f"💬 Комментарий: {data.get('comment', 'нет комментария')}"
-        )
+        order_info = "🛒 *НОВЫЙ ЗАКАЗ!*\n\n"
+        order_info += f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
+        order_info += f"📍 Адрес: {data['address']}\n"
+        order_info += f"💬 Комментарий: {data.get('comment', 'нет комментария')}\n\n"
+        order_info += "📦 Состав заказа:\n"
+
+        total_quantity = 0
+        for item in data['items']:
+            order_info += f"• {item['product']} x{item['quantity']}\n"
+            total_quantity += item['quantity']
+
+        order_info += f"\n📊 Итого: {len(data['items'])} позиций, {total_quantity} шт."
 
         await bot.send_message(
             chat_id=1499143658,
@@ -97,31 +120,33 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             parse_mode='Markdown'
         )
 
+        await callback.message.edit_text(
+            '✅ Ваш заказ принят в обработку! Ожидайте доставку.',
+            reply_markup=main_menu()
+        )
+        await state.clear()
+
     except Exception as e:
         print(f"❌ Ошибка: {e}")
         await callback.answer(f'Ошибка: {e}', show_alert=True)
-        return
 
-    await callback.answer('Заказ подтвержден!', show_alert=True)
-
-    await callback.message.edit_text(
-        '✅ Товар добавлен в заказ!\n'
-        'Хотите добавить еще товар или завершить заказ?',
-        reply_markup=inline_continue_order()
-    )
 
 @router.callback_query(F.data == 'continue_order')
 async def continue_order(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    await state.update_data(pruduct = None, quanity = None)
 
-    await state.set_state(Order.choosing_product)
+    current_order = '📦 Текущий заказ:\n'
+    for item in data['items']:
+        current_order += f"• {item['product']} x{item['quantity']}\n"
 
+    current_order += f"\n📍 Адрес: {data['address']}"
+    current_order += f"\n💬 Комментарий: {data.get('comment', 'нет комментария')}"
+    current_order += f"\n\nВыберите следующий товар:"
+
+    await state.set_state(Order.continue_order)
     await callback.message.edit_text(
-        f'Выберите следующий товар:\n'
-        f'📝 Адрес доставки: {data["address"]}\n'
-        f'💬 Комментарий: {data.get("comment", "")}',
-        reply_markup= inline_categories()
+        current_order,
+        reply_markup=inline_categories()
     )
 
 @router.callback_query(F.data == 'finish_order')
@@ -133,15 +158,28 @@ async def finish_order(callback: CallbackQuery, state: FSMContext):
     )
     await state.clear()
 
+
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
-    print("🎯 4. Комментарий получен")
-    comment = message.text
-    if comment.lower() in ['нет', 'no', 'без комментария']:
-        comment = ''
-
+    comment = message.text if message.text.lower() not in ['нет', 'no', 'без комментария'] else ''
     await state.update_data(comment=comment)
+
+    data = await state.get_data()
+
+    order_text = "📦 Ваш заказ:\n\n"
+    total_items = 0
+
+    for item in data['items']:
+        order_text += f"• {item['product']} x{item['quantity']}\n"
+        total_items += item['quantity']
+
+    order_text += f"\n📍 Адрес: {data['address']}"
+    order_text += f"\n💬 Комментарий: {comment or 'нет'}"
+    order_text += f"\n\nВсего товаров: {total_items} шт."
+    order_text += f"\n\nВсё верно?"
+
     await state.set_state(Order.confirm_order)
+    await message.answer(order_text, reply_markup=inline_confirm_order())
 
 
 @router.callback_query(F.data == 'cancel_order')
@@ -153,21 +191,29 @@ async def cancel_order(callback: CallbackQuery, state: FSMContext):
         reply_markup=main_menu()
     )
 
+
 @router.message(Command('my_orders'))
 async def show_my_orders(message: Message):
-    print('🎯 /my_orders ВЫЗВАН!')
-
     orders = get_user_orders(message.from_user.id)
 
     if not orders:
         await message.answer('📭 У вас ещё нет заказов')
         return
 
-    text = '📦 Ваши заказы:\n\n'
+    orders_by_group = {}
     for order in orders:
-        text += f"🛍 {order['product']} x{order['quantity']}\n"
-        text += f"📍 Адрес: {order['address']}\n"
-        text += f"📅 {order['created_at'][:16]}\n\n"
+        key = f"{order['address']}_{order['created_at'][:16]}"
+        if key not in orders_by_group:
+            orders_by_group[key] = []
+        orders_by_group[key].append(order)
+
+    text = '📦 Ваши заказы:\n\n'
+    for group_key, order_list in orders_by_group.items():
+        text += f"📍 Адрес: {order_list[0]['address']}\n"
+        text += f"📅 {order_list[0]['created_at'][:16]}\n"
+        for order in order_list:
+            text += f"   • {order['product']} x{order['quantity']}\n"
+        text += "\n"
 
     await message.answer(text)
 
