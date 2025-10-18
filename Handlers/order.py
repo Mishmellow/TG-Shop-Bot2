@@ -50,7 +50,7 @@ async def process_address(message: Message, state: FSMContext):
     print("🎯 3. Адрес получен")
     await state.update_data(address=message.text)
     await state.set_state(Order.adding_comment)
-    await message.answer('💬 Хотите добавить комментарий к заказу?')
+    await message.answer('💬 Хотите добавить комментарий к заказу? Если нет - напишите "нет"')
 
     data = await state.get_data()
     await message.answer(
@@ -62,7 +62,7 @@ async def process_address(message: Message, state: FSMContext):
         reply_markup= inline_confirm_order()
     )
 
-@router.callback_query(F.data == 'confirm_order', Order.confirm_order)
+@router.callback_query(F.data == 'confirm_order')
 async def confirm_order(callback: CallbackQuery, state: FSMContext):
     print("🎯 4. Подтверждение получено!")
     data = await state.get_data()
@@ -81,30 +81,13 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
         from config import TOKEN
         bot = Bot(token=TOKEN)
 
-        await bot.send_message(
-            chat_id=1499143658,
-            text=f"🛒 НОВЫЙ ЗАКАЗ!\n"
-                 f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
-                 f"📦 Товар: {data['product']}\n"
-                 f"🔢 Количество: {data['quantity']}\n"
-                 f"📍 Адрес: {data['address']}"
-        )
-
         order_info = (
-            "🛒 *НОВЫЙ ЗАКАЗ #{}*\n"
-            "👤 Пользователь: [{}](tg://user?id={})\n"
-            "📦 Товар: {}\n"
-            "🔢 Количество: {}\n"
-            "📍 Адрес: {}\n"
-            "⏰ Время: {}"
-            "💬 Комментарий: {}"
-        ).format(
-            callback.from_user.first_name,
-            callback.from_user.id,
-            data['product'],
-            data['quantity'],
-            data['address'],
-            data.get('comment', 'нет комментария')
+            "🛒 *НОВЫЙ ЗАКАЗ!*\n"
+            f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
+            f"📦 Товар: {data['product']}\n"
+            f"🔢 Количество: {data['quantity']}\n"
+            f"📍 Адрес: {data['address']}\n"
+            f"💬 Комментарий: {data.get('comment', 'нет комментария')}"
         )
 
         await bot.send_message(
@@ -125,10 +108,15 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
     )
     await state.clear()
 
+
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
     print("🎯 4. Комментарий получен")
-    await state.update_data(comment=message.text)
+    comment = message.text
+    if comment.lower() in ['нет', 'no', 'без комментария']:
+        comment = ''
+
+    await state.update_data(comment=comment)
     await state.set_state(Order.confirm_order)
 
     data = await state.get_data()
@@ -137,7 +125,7 @@ async def process_comment(message: Message, state: FSMContext):
         f"Товар: {data['product']}\n"
         f"Количество: {data['quantity']}\n"
         f"Адрес: {data['address']}\n"
-        f"Комментарий: {data['comment']}\n\n"
+        f"Комментарий: {data['comment'] or 'нет комментария'}\n\n"
         f"Все верно?"
     )
     await message.answer(confirm_text, reply_markup=inline_confirm_order())
@@ -170,7 +158,7 @@ async def show_my_orders(message: Message):
 
     await message.answer(text)
 
-@router.message(Command('cansel'))
+@router.message(Command('cancel'))
 @router.message(F.text.casefold() == 'Отмена')
 async def cansel(message: Message, state: FSMContext):
     await state.clear()

@@ -16,7 +16,6 @@ dp = Dispatcher()
 
 async def main():
     init_db()
-
     dp.include_router(start_router)
     dp.include_router(registration_router)
     dp.include_router(order_router)

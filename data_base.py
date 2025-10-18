@@ -67,19 +67,6 @@ def init_db():
                 VALUES (?, ?, ?)
             ''', (name, price, category))
 
-            conn.execute('''
-                CREATE TABLE IF NOT EXISTS orders(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER,
-                    product TEXT,
-                    quantity INTEGER, 
-                    address TEXT,
-                    comment TEXT DEFAULT '',
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    status TEXT DEFAULT 'new'
-                )
-            ''')
-
             try:
                 conn.execute('ALTER TABLE orders ADD COLUMN comment TEXT DEFAULT ""')
                 print('✅ Колонка comment добавлена в таблицу orders')
