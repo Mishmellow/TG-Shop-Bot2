@@ -154,7 +154,7 @@ async def show_stats(message: Message):
 
     from data_base import get_users_count, get_all_orders
 
-    get_users_count()
+    users_count = get_users_count()
     orders = get_all_orders()
     total_orders = len(orders)
 
