@@ -50,6 +50,7 @@ async def process_address(message: Message, state: FSMContext):
     print("🎯 3. Адрес получен")
     await state.update_data(address=message.text)
     await state.set_state(Order.adding_comment)
+    await message.answer('💬 Хотите добавить комментарий к заказу?')
 
     data = await state.get_data()
     await message.answer(
@@ -126,9 +127,9 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
 
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
-    print('Комментарий получен')
+    print("🎯 4. Комментарий получен")
     await state.update_data(comment=message.text)
-    await state.set_state(Order.adding_comment)
+    await state.set_state(Order.confirm_order)
 
     data = await state.get_data()
     confirm_text = (
