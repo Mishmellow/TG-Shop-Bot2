@@ -65,7 +65,7 @@ def init_db():
                 conn.execute('''
                 INSERT INTO products(name, price, category)
                 VALUES (?, ?, ?)
-            '''), (name, price, category)
+            ''', (name, price, category))
 
             conn.execute('''
                 CREATE TABLE IF NOT EXISTS orders(
@@ -79,6 +79,12 @@ def init_db():
                     status TEXT DEFAULT 'new'
                 )
             ''')
+
+            try:
+                conn.execute('ALTER TABLE orders ADD COLUMN comment TEXT DEFAULT ""')
+                print('✅ Колонка comment добавлена в таблицу orders')
+            except Exception:
+                print('ℹ️ Колонка comment уже существует')
 
         print("✅ Таблицы созданы успешно!")
     except Exception as e:
