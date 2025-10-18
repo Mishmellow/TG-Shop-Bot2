@@ -46,6 +46,27 @@ def init_db():
                 )
             ''')
 
+            conn.execute('''
+            CREATE TABLE IF NOT EXISTS products(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE,
+            price INTEGER,
+            category TEXT
+            )
+        ''')
+
+            products = [
+                ('Пицца Маргарита', 209, 'еда'),
+                ('Кофе Латте', 70, 'еда'),
+                ('Бургер Комбо', 189, 'еда')
+            ]
+
+            for name,price,category in products:
+                conn.execute('''
+                INSERT INTO products(name, price, category)
+                VALUES (?, ?, ?)
+            '''), (name, price, category)
+
         print("✅ Таблицы созданы успешно!")
     except Exception as e:
         print(f"❌ Ошибка при создании таблиц: {e}")

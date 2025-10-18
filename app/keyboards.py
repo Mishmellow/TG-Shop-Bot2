@@ -18,10 +18,10 @@ def main_menu():
 def inline_categories():
     keyboard = InlineKeyboardBuilder()
     categories = [
-        '🍕 Еда',
-        '🎁 Товары',
-        '🔧 Услуги',
-        '📦 Доставка'
+        '🍕 Еда (от 70грн)',
+        '🎁 Товары (от 100грн)',
+        '🔧 Услуги (от 50грн)',
+        '📦 Доставка (40грн)'
     ]
     for category in categories:
         callback_data = category.split(' ')[1].lower()

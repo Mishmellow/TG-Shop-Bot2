@@ -146,3 +146,22 @@ async def show_my_orders(message: Message):
 async def cansel(message: Message, state: FSMContext):
     await state.clear()
     await message.answer('Заказ отменен!', reply_markup=main_menu())
+
+@router.message(Command('stats'))
+async def show_stats(message: Message):
+    if message.from_user.id != 1499143658:
+        return
+
+    from data_base import get_users_count, get_all_orders
+
+    get_users_count()
+    orders = get_all_orders()
+    total_orders = len(orders)
+
+    stats_text = (
+        "📊 *Статистика бота*\n\n"
+        f"👥 Пользователей: {get_users_count}\n"
+        f"📦 Всего заказов: {total_orders}\n"
+    )
+
+    await message.answer(stats_text, parse_mode='Markdown')
