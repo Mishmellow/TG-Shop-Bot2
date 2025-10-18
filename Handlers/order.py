@@ -12,6 +12,7 @@ router = Router()
 class Order(StatesGroup):
     choosing_product = State()
     specifying_quantity = State()
+    adding_comment = State()
     providing_address = State()
     confirm_order = State()
 
@@ -48,7 +49,7 @@ async def specifying_quantity(message: Message, state: FSMContext):
 async def process_address(message: Message, state: FSMContext):
     print("🎯 3. Адрес получен")
     await state.update_data(address=message.text)
-    await state.set_state(Order.confirm_order)
+    await state.set_state(Order.adding_comment)
 
     data = await state.get_data()
     await message.answer(
@@ -59,6 +60,24 @@ async def process_address(message: Message, state: FSMContext):
         f"Все верно?",
         reply_markup= inline_confirm_order()
     )
+
+@router.message(Order.adding_comment)
+async def process_comment(message: Message, state: FSMContext):
+    print('Комментарий получен')
+    await state.update_data(comment=message.text)
+    await state.set_state(Order.adding_comment)
+
+    data = await state.get_data()
+    confirm_text = (
+        f"Проверьте заказ:\n"
+        f"Товар: {data['product']}\n"
+        f"Количество: {data['quantity']}\n"
+        f"Адрес: {data['address']}\n"
+        f"Комментарий: {data['comment']}\n\n"
+        f"Все верно?"
+    )
+    await message.answer(confirm_text, reply_markup=inline_confirm_order())
+
 
 @router.callback_query(F.data == 'confirm_order', Order.confirm_order)
 async def confirm_order(callback: CallbackQuery, state: FSMContext):
@@ -71,7 +90,8 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             user_id=callback.from_user.id,
             product=data['product'],
             quantity=data['quantity'],
-            address=data['address']
+            address=data['address'],
+            comment=data.get('comment', '')
         )
 
         from aiogram import Bot
@@ -94,16 +114,24 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             "🔢 Количество: {}\n"
             "📍 Адрес: {}\n"
             "⏰ Время: {}"
+            "💬 Комментарий: {}"
         ).format(
             callback.from_user.first_name,
             callback.from_user.id,
             data['product'],
             data['quantity'],
-            data['address']
+            data['address'],
+        data.get('comment', 'нет комментария')
+        )
+
+        await bot.send_message(
+            chat_id=1499143658,
+            text=order_info,
+            parse_mode='Markdown'
         )
 
     except Exception as e:
-        print(f"❌ Ошибка сохранения заказа: {e}")
+        print(f"❌ Ошибка: {e}")
         await callback.answer(f'Ошибка: {e}', show_alert=True)
         return
 

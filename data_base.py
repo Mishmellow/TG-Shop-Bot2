@@ -67,12 +67,25 @@ def init_db():
                 VALUES (?, ?, ?)
             '''), (name, price, category)
 
+            conn.execute('''
+                CREATE TABLE IF NOT EXISTS orders(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    product TEXT,
+                    quantity INTEGER, 
+                    address TEXT,
+                    comment TEXT DEFAULT '',  # ⬅️ ДОБАВИЛИ ПОЛЕ ДЛЯ КОММЕНТАРИЕВ
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    status TEXT DEFAULT 'new'
+                )
+            ''')
+
         print("✅ Таблицы созданы успешно!")
     except Exception as e:
         print(f"❌ Ошибка при создании таблиц: {e}")
 
 
-def add_order(user_id, product, quantity, address):
+def add_order(user_id, product, quantity, address, comment):
     print(f"[DB] Сохраняю заказ: {user_id}, {product}, {quantity}, {address}")
 
     if not address:
@@ -86,7 +99,7 @@ def add_order(user_id, product, quantity, address):
        cursor = conn.execute('''
             INSERT INTO orders (user_id, product, quantity, address)
             VALUES (?, ?, ?, ?)
-        ''', (user_id, product, quantity, address))
+        ''', (user_id, product, quantity, address, comment))
 
 def add_user(user_id: int, username: str, first_name: str, referrer_id: int = None):
     with get_db_connection() as conn:
