@@ -61,24 +61,6 @@ async def process_address(message: Message, state: FSMContext):
         reply_markup= inline_confirm_order()
     )
 
-@router.message(Order.adding_comment)
-async def process_comment(message: Message, state: FSMContext):
-    print('Комментарий получен')
-    await state.update_data(comment=message.text)
-    await state.set_state(Order.adding_comment)
-
-    data = await state.get_data()
-    confirm_text = (
-        f"Проверьте заказ:\n"
-        f"Товар: {data['product']}\n"
-        f"Количество: {data['quantity']}\n"
-        f"Адрес: {data['address']}\n"
-        f"Комментарий: {data['comment']}\n\n"
-        f"Все верно?"
-    )
-    await message.answer(confirm_text, reply_markup=inline_confirm_order())
-
-
 @router.callback_query(F.data == 'confirm_order', Order.confirm_order)
 async def confirm_order(callback: CallbackQuery, state: FSMContext):
     print("🎯 4. Подтверждение получено!")
@@ -121,7 +103,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             data['product'],
             data['quantity'],
             data['address'],
-        data.get('comment', 'нет комментария')
+            data.get('comment', 'нет комментария')
         )
 
         await bot.send_message(
@@ -141,6 +123,24 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
         reply_markup=main_menu()
     )
     await state.clear()
+
+@router.message(Order.adding_comment)
+async def process_comment(message: Message, state: FSMContext):
+    print('Комментарий получен')
+    await state.update_data(comment=message.text)
+    await state.set_state(Order.adding_comment)
+
+    data = await state.get_data()
+    confirm_text = (
+        f"Проверьте заказ:\n"
+        f"Товар: {data['product']}\n"
+        f"Количество: {data['quantity']}\n"
+        f"Адрес: {data['address']}\n"
+        f"Комментарий: {data['comment']}\n\n"
+        f"Все верно?"
+    )
+    await message.answer(confirm_text, reply_markup=inline_confirm_order())
+
 
 @router.callback_query(F.data == 'cancel_order')
 async def cancel_order(callback: CallbackQuery, state: FSMContext):
