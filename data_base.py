@@ -74,7 +74,7 @@ def init_db():
                     product TEXT,
                     quantity INTEGER, 
                     address TEXT,
-                    comment TEXT DEFAULT '',  # ⬅️ ДОБАВИЛИ ПОЛЕ ДЛЯ КОММЕНТАРИЕВ
+                    comment TEXT DEFAULT '',
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     status TEXT DEFAULT 'new'
                 )
@@ -97,8 +97,8 @@ def add_order(user_id, product, quantity, address, comment):
 
     with get_db_connection() as conn:
        cursor = conn.execute('''
-            INSERT INTO orders (user_id, product, quantity, address)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO orders (user_id, product, quantity, address, comment)
+            VALUES (?, ?, ?, ?, ?)
         ''', (user_id, product, quantity, address, comment))
 
 def add_user(user_id: int, username: str, first_name: str, referrer_id: int = None):
