@@ -31,10 +31,10 @@ async def place_order(callback: CallbackQuery, state: FSMContext):
      )
 
 @router.callback_query(F.data.startswith('category_'))
-async def choose_product(callback: CallbackQuery, state: FSMContext):
+async def handle_category_click(callback: CallbackQuery, state: FSMContext):
     category = callback.data.replace('category_', '')
     await callback.message.edit_text(
-        f'Выберите товар из категории',
+        f'Выберите товар из категории {category}:',
         reply_markup=inline_products(category)
     )
 
