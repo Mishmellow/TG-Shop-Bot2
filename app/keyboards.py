@@ -38,18 +38,36 @@ def inline_categories():
             callback_data=f'category_{category}'
         ))
 
-        return keyboard.adjust(2).as_markup()
+    return keyboard.adjust(2).as_markup()
+
 
 def inline_products(category):
     keyboard = InlineKeyboardBuilder()
 
-    from data_base import get_products_by_category
-    products = get_products_by_category(category)
+    products_data = {
+        'еда': [
+            '🍕 Пицца Маргарита - 209₴',
+            '☕ Кофе Латте - 70₴',
+            '🍔 Бургер Комбо - 189₴',
+            '🥗 Салат Цезарь - 120₴'
+        ],
+        'товары': [
+            '👕 Футболка - 150₴',
+            '☕ Кружка - 100₴',
+            '📱 Чехол для телефона - 200₴'
+        ],
+        'услуги': [
+            '🚚 Доставка - 40₴',
+            '🎁 Упаковка подарка - 50₴',
+            '💬 Консультация - 100₴'
+        ]
+    }
 
-    for product in products:
+    for product_text in products_data.get(category, []):
+        product_name = product_text.split(' - ')[0].strip()
         keyboard.add(InlineKeyboardButton(
-            text=f"{product['name']} - {product['price']}₴",
-            callback_data=f"product_{product['name']}"
+            text=product_text,
+            callback_data=f"product_{product_name}"
         ))
 
     keyboard.add(InlineKeyboardButton(
