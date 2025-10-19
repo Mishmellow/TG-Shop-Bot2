@@ -5,7 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
 
-from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order
+from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order, inline_products
 from aiogram import Bot
 from config import TOKEN
 
@@ -23,24 +23,35 @@ class Order(StatesGroup):
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):
-    await state.update_data(
-        items= [],
-        address="",
-        comment=""
-    )
-    await state.set_state(Order.choosing_product)
-    await callback.message.edit_text(
-        'Что хотите заказать?',
-        reply_markup= inline_categories()
-    )
+     await state.update_data(items=[], address="", comment="")
+     await state.set_state(Order.choosing_product)
+     await callback.message.edit_text(
+         'Выберите категорию:',
+         reply_markup=inline_categories()
+     )
 
 @router.callback_query(F.data.startswith('category_'), Order.choosing_product)
 async def choose_product(callback: CallbackQuery, state: FSMContext):
-    product = callback.data.replace('category_', '')
-    await state.update_data(current_product=product)
-    await state.set_state(Order.specifying_quantity)
+    category = callback.data.replace('category_', '')
     await callback.message.edit_text(
-        f'Вы выбрали: {product}\nВведите количество'
+        f'Выберите товар из категории',
+        reply_markup=inline_products(category)
+    )
+
+@router.callback_query(F.data.startswith('product_'))
+async def choose_product(callback: CallbackQuery, state: FSMContext):
+    product_name = callback.data.replace('product_', '')
+    await state.update_data(current_product=product_name)
+    await state.set_state(Order.choosing_product)
+    await callback.message.edit_text(
+        f'Вы выбрали: {product_name}\nВведите количество:'
+    )
+
+@router.callback_query(F.data.startswith('back_to_categories'))
+async def back_to_categories(callback: CallbackQuery, state: FSMContext):
+    await callback.message.edit_text(
+        'Выберите категорию:',
+        reply_markup=inline_categories()
     )
 
 @router.message(Order.specifying_quantity)

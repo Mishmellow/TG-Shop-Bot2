@@ -25,16 +25,39 @@ def inline_continue_order():
 
 def inline_categories():
     keyboard = InlineKeyboardBuilder()
-    categories = [
-        '🍕 Еда (от 70грн)',
-        '🎁 Товары (от 100грн)',
-        '🔧 Услуги (от 50грн)',
-        '📦 Доставка (40грн)'
-    ]
-    for category in categories:
-        callback_data = category.split(' ')[1].lower()
-        keyboard.add(InlineKeyboardButton(text=category, callback_data=f'category_{callback_data}'))
-    return keyboard.adjust(2).as_markup()
+
+    categories = {
+        '🍕 Еда': 'еда',
+        '🎁 Товары': 'товары',
+        '🔧 Услуги': 'услуги'
+    }
+
+    for display_name, category in categories.items():
+        keyboard.add(InlineKeyboardButton(
+            text=display_name,
+            callback_data=f'categories_{category}'
+        ))
+
+        return
+
+def inline_products(category):
+    keyboard = InlineKeyboardBuilder()
+
+    from data_base import get_products_by_category
+    products = get_products_by_category(category)
+
+    for product in products:
+        keyboard.add(InlineKeyboardButton(
+            text=f"{product['name']} - {product['price']}₴",
+            callback_data=f"product_{product['name']}"
+        ))
+
+    keyboard.add(InlineKeyboardButton(
+        text="⬅️ Назад",
+        callback_data="back_to_categories"
+    ))
+
+    return keyboard.adjust(1).as_markup()
 
 def inline_confirm_order():
     keyboard = InlineKeyboardBuilder()

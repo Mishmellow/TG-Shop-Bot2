@@ -58,7 +58,10 @@ def init_db():
             products = [
                 ('Пицца Маргарита', 209, 'еда'),
                 ('Кофе Латте', 70, 'еда'),
-                ('Бургер Комбо', 189, 'еда')
+                ('Бургер Комбо', 189, 'еда'),
+                ('Футболка', 150, 'товары'),
+                ('Кружка', 100, 'товары'),
+                ('Доставка', 40, 'услуги')
             ]
 
             for name,price,category in products:
@@ -77,6 +80,18 @@ def init_db():
     except Exception as e:
         print(f"❌ Ошибка при создании таблиц: {e}")
 
+def get_all_products():
+    with get_db_connection() as conn:
+        result = conn.execute('SELECT name, price FROM products')
+        return [dict(row) for row in result.fetchall()]
+
+def get_products_by_category(category):
+    with get_db_connection() as conn:
+        result = conn.execute(
+            'SELECT name, price FROM products WHERE category = ?',
+            (category,)
+        )
+        return [dict(row) for row in result.fetchall()]
 
 def add_order(user_id, product, quantity, address, comment):
     print(f"[DB] Сохраняю заказ: {user_id}, {product}, {quantity}, {address}")
