@@ -35,10 +35,10 @@ def inline_categories():
     for display_name, category in categories.items():
         keyboard.add(InlineKeyboardButton(
             text=display_name,
-            callback_data=f'categories_{category}'
+            callback_data=f'category_{category}'
         ))
 
-        return
+        return keyboard.adjust(2).as_markup()
 
 def inline_products(category):
     keyboard = InlineKeyboardBuilder()
