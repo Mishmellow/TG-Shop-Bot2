@@ -71,17 +71,6 @@ async def specifying_quantity(message: Message, state: FSMContext):
             reply_markup=inline_continue_order()
         )
 
-@router.message(Order.specifying_quantity)
-async def specifying_quantity(message: Message, state: FSMContext):
-    print("🎯 2. Количество получено")
-    if not message.text.isdigit():
-        await message.answer('Введите число!')
-        return
-
-    await state.update_data(quantity=int(message.text))
-    await state.set_state(Order.providing_address)
-    await message.answer('Теперь введите адрес доставки')
-
 @router.message(Order.providing_address)
 async def process_address(message: Message, state: FSMContext):
     await state.update_data(address=message.text)
@@ -160,6 +149,14 @@ async def finish_order(callback: CallbackQuery, state: FSMContext):
     )
     await state.clear()
 
+@router.callback_query(F.data.startswith('product_'))
+async def choose_product(callback: CallbackQuery, state: FSMContext):
+    product_name = callback.data.replace('product_', '')
+    await state.update_data(current_product=product_name)
+    await state.set_state(Order.specifying_quantity)
+    await callback.message.edit_text(
+        f'Вы выбрали: {product_name}\nВведите количество:'
+    )
 
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
@@ -192,7 +189,6 @@ async def cancel_order(callback: CallbackQuery, state: FSMContext):
         '❌ Заказ отменён',
         reply_markup=main_menu()
     )
-
 
 @router.message(Command('my_orders'))
 async def show_my_orders(message: Message):
