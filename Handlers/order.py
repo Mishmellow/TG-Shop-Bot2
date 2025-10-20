@@ -111,7 +111,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
             total_quantity += item['quantity']
 
         order_info += f'\n💰 Общая сумма: {total_amount}₴'
-        order_info += f'\n📊 Итого: {len(data['items'])} позиций, {total_quantity} шт.'
+        order_info += f'\n📊 Итого: {len(data["items"])} позиций, {total_quantity} шт.'
 
         await bot.send_message(
             chat_id=1499143658,
@@ -120,7 +120,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
         )
 
         await callback.message.edit_text(
-            '✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
+            f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
             reply_markup=main_menu()
         )
         await state.clear()
