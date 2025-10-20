@@ -4,6 +4,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from data_base import add_order, get_user_orders
+from data_base import get_product_price
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order, inline_products
 from aiogram import Bot
@@ -82,8 +83,6 @@ async def process_address(message: Message, state: FSMContext):
 async def confirm_order(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     total_amount = 0
-
-    from data_base import get_product_price
 
     try:
         for item in data['items']:
@@ -173,7 +172,6 @@ async def process_comment(message: Message, state: FSMContext):
     await state.update_data(comment=comment)
 
     data = await state.get_data()
-    from data_base import get_product_price
 
     order_text = "📦 Ваш заказ:\n\n"
     total_items = 0
