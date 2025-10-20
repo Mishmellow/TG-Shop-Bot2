@@ -184,7 +184,7 @@ def get_order_user_id(order_id):
 def get_product_price(product_name):
     with get_db_connection() as conn:
         result = conn.execute(
-            'SELECT price, user_id FROM products WHERE name = ?',
+            'SELECT price FROM products WHERE name = ?',
             (product_name,)
         )
         row = result.fetchone()
