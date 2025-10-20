@@ -102,7 +102,7 @@ def get_products_by_category(category):
         )
         return [dict(row) for row in result.fetchall()]
 
-def add_order(user_id, product, quantity, address, comment):
+def add_order(user_id, product, quantity, address, comment, price=0):
     print(f"[DB] Сохраняю заказ: {user_id}, {product}, {quantity}, {address}")
 
     if not address:
@@ -114,9 +114,9 @@ def add_order(user_id, product, quantity, address, comment):
 
     with get_db_connection() as conn:
        cursor = conn.execute('''
-            INSERT INTO orders (user_id, product, quantity, address, comment)
+            INSERT INTO orders (user_id, product, quantity, address, comment, price)
             VALUES (?, ?, ?, ?, ?)
-        ''', (user_id, product, quantity, address, comment))
+        ''', (user_id, product, quantity, address, comment, price))
 
 def add_user(user_id: int, username: str, first_name: str, referrer_id: int = None):
     with get_db_connection() as conn:
@@ -180,3 +180,12 @@ def get_order_user_id(order_id):
             (order_id,)
         )
         return result.fetchone()[0]
+
+def get_product_price(product_name):
+    with get_db_connection() as conn:
+        result = conn.execute(
+            'SELECT price, user_id FROM products WHERE name = ?',
+            (product_name,)
+        )
+        row = result.fetchone()
+        return row['price'] if row else 0

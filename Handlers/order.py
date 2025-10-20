@@ -81,15 +81,23 @@ async def process_address(message: Message, state: FSMContext):
 @router.callback_query(F.data == 'confirm_order')
 async def confirm_order(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
+    total_amount = 0
+
+    from data_base import get_product_price
 
     try:
         for item in data['items']:
+            product_price = get_product_price(item['product'])
+            item['price'] = product_price
+            total_amount += product_price * item['quantity']
+
             add_order(
                 user_id=callback.from_user.id,
                 product=item['product'],
                 quantity=item['quantity'],
                 address=data['address'],
-                comment=data.get('comment', '')
+                comment=data.get('comment', ''),
+                price = product_price
             )
 
         order_info = "🛒 *НОВЫЙ ЗАКАЗ!*\n\n"
@@ -100,10 +108,11 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
 
         total_quantity = 0
         for item in data['items']:
-            order_info += f"• {item['product']} x{item['quantity']}\n"
+            order_info += f"• {item['product']} x{item['quantity']} - {item['price']}₴\n"
             total_quantity += item['quantity']
 
-        order_info += f"\n📊 Итого: {len(data['items'])} позиций, {total_quantity} шт."
+        order_info += f'\n💰 Общая сумма: {total_amount}₴'
+        order_info += f'\n📊 Итого: {len(data['items'])} позиций, {total_quantity} шт.'
 
         await bot.send_message(
             chat_id=1499143658,
@@ -112,7 +121,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
         )
 
         await callback.message.edit_text(
-            '✅ Ваш заказ принят в обработку! Ожидайте доставку.',
+            '✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
             reply_markup=main_menu()
         )
         await state.clear()
@@ -164,16 +173,22 @@ async def process_comment(message: Message, state: FSMContext):
     await state.update_data(comment=comment)
 
     data = await state.get_data()
+    from data_base import get_product_price
 
     order_text = "📦 Ваш заказ:\n\n"
     total_items = 0
+    total_amount = 0
 
     for item in data['items']:
-        order_text += f"• {item['product']} x{item['quantity']}\n"
+        price = get_product_price(item['product'])
+        item_total = price * item['quantity']
+        order_text += f"• {item['product']} x{item['quantity']} - {item_total}₴\n"
         total_items += item['quantity']
+        total_amount += item_total
 
     order_text += f"\n📍 Адрес: {data['address']}"
     order_text += f"\n💬 Комментарий: {comment or 'нет'}"
+    order_text += f"\n💰 Общая сумма: {total_amount}₴"
     order_text += f"\n\nВсего товаров: {total_items} шт."
     order_text += f"\n\nВсё верно?"
 
