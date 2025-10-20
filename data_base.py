@@ -29,6 +29,7 @@ def init_db():
                     user_id INTEGER UNIQUE,
                     username TEXT,
                     first_name TEXT,
+                    price INTEGER DEFAULT 0,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     referrer_id INTEGER DEFAULT NULL
                 )
@@ -73,6 +74,12 @@ def init_db():
                 INSERT INTO products(name, price, category)
                 VALUES (?, ?, ?)
             ''', (name, price, category))
+
+            try:
+                conn.execute('ALTER TABLE orders ADD COLUMN price INTEGER DEFAULT 0')
+                print('✅ Колонка price добавлена в таблицу orders')
+            except Exception:
+                print('ℹ️ Колонка price уже существует')
 
             try:
                 conn.execute('ALTER TABLE orders ADD COLUMN comment TEXT DEFAULT ""')
