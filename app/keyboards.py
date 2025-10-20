@@ -76,6 +76,32 @@ def inline_products(category):
 
     return keyboard.adjust(1).as_markup()
 
+def inline_cart_keyboard():
+    keyboard = InlineKeyboardBuilder()
+
+    keyboard.add(InlineKeyboardButton(
+        text = '🛒 Продолжить покупки',
+        callback_data='back_to_categories'
+    ))
+    keyboard.add(InlineKeyboardButton(
+        text = '✅ Оформить зака',
+        callback_data='finish_order'
+    ))
+    keyboard.add(InlineKeyboardButton(
+        text = '🗑️ Очистить корзину',
+        callback_data='clear_cart'
+    ))
+
+    return keyboard.adjust(1).as_markup()
+
+def inline_continue_shopping():
+    keyboard = InlineKeyboardBuilder()
+    keyboard.add(InlineKeyboardButton(
+        text = '🛒 Начать покупки',
+        callback_data='place_order'
+    ))
+    return keyboard.as_markup()
+
 def inline_confirm_order():
     keyboard = InlineKeyboardBuilder()
     keyboard.add(

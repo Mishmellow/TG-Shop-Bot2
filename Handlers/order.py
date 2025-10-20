@@ -3,6 +3,8 @@ from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
+from app.keyboards import inline_cart_keyboard, inline_continue_shopping
+
 from data_base import add_order, get_user_orders
 from data_base import get_product_price
 
@@ -252,3 +254,43 @@ async def show_stats(message: Message):
     )
 
     await message.answer(stats_text, parse_mode='Markdown')
+
+@router.callback_query(F.data == 'cleat_cart')
+async def cleat_cart(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(items=[])
+    await callback.answer('🗑️ Корзина очищена!')
+    await callback.message.edit.text(
+        '🛒 Ваша корзина пуста',
+        reply_markup=inline_confirm_order()
+    )
+
+@router.message(Command('cart'))
+@router.callback_query(F.data == 'view_cart')
+async def view_cart(update: Message, state: FSMContext):
+    data = await state.get_data()
+    items = data.get('items', [])
+
+    if not items:
+        text = '🛒 Ваша корзина пуста'
+        keyboard = inline_continue_shopping()
+    else:
+        text = '📦 Ваша корзина:\n\n'
+        total_amount = 0
+        total_quantity = 0
+
+        for item in items:
+            price = get_product_price(item['product'])
+            item_total = price * item['quantity']
+            text += f'• {item['product']} x{item['quantity']} - {item_total}₴\n'
+            total_amount += item_total
+            total_quantity += item['quantity']
+
+        text += f'\n💰 Общая сумма: {total_amount}₴'
+        text += f'\n📊 Товаров: {total_quantity} шт.'
+
+        keyboard = inline_cart_keyboard()
+
+    if isinstance(update, Message):
+        await update.answer(text, reply_markup=keyboard)
+    else:
+        await update.messsage.edit_text(text, reply_markup=keyboard)
