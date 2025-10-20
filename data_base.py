@@ -115,7 +115,7 @@ def add_order(user_id, product, quantity, address, comment, price=0):
     with get_db_connection() as conn:
        cursor = conn.execute('''
             INSERT INTO orders (user_id, product, quantity, address, comment, price)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
         ''', (user_id, product, quantity, address, comment, price))
 
 def add_user(user_id: int, username: str, first_name: str, referrer_id: int = None):
