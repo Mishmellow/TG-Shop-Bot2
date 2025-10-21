@@ -46,6 +46,17 @@ def init_db():
                     status TEXT DEFAULT 'new'
                 )
             ''')
+            conn.execute('''
+                    CREATE TABLE IF NOT EXISTS cart_items(
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_id INTEGER,
+                        product TEXT,
+                        quantity INTEGER,
+                        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (user_id) REFERENCES users (user_id)
+                    )
+                ''')
+            print('✅ Таблица cart_items создана')
 
             conn.execute('''
             CREATE TABLE IF NOT EXISTS products(
@@ -90,18 +101,6 @@ def init_db():
         print("✅ Таблицы созданы успешно!")
     except Exception as e:
         print(f"❌ Ошибка при создании таблиц: {e}")
-
-        conn.execute('''
-                CREATE TABLE IF NOT EXISTS cart_items(
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER,
-                    product TEXT,
-                    quantity INTEGER,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (user_id) REFERENCES users (user_id)
-                )
-            ''')
-        print('✅ Таблица cart_items создана')
 
 
 def get_all_products():
