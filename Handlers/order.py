@@ -289,11 +289,25 @@ async def cleat_cart(callback: CallbackQuery, state: FSMContext):
         reply_markup=inline_confirm_order()
     )
 
+
 @router.message(Command('cart'))
 @router.callback_query(F.data == 'view_cart')
-async def view_cart(update: Message, state: FSMContext):
+async def view_cart(update: Message | CallbackQuery, state: FSMContext):
+    user_id = update.from_user.id if isinstance(update, CallbackQuery) else update.from_user.id
+
     data = await state.get_data()
-    items = data.get('items', [])
+    items_from_state = data.get('items', [])
+
+
+    if not items_from_state:
+        items_from_db = load_cart_from_db(user_id)
+        if items_from_db:
+            await state.update_data(items=items_from_db)
+            items = items_from_db
+        else:
+            items = []
+    else:
+        items = items_from_state
 
     if not items:
         text = '🛒 Ваша корзина пуста'
@@ -306,7 +320,7 @@ async def view_cart(update: Message, state: FSMContext):
         for item in items:
             price = get_product_price(item['product'])
             item_total = price * item['quantity']
-            text += f'• {item['product']} x{item['quantity']} - {item_total}₴\n'
+            text += f'• {item["product"]} x{item["quantity"]} - {item_total}₴\n'
             total_amount += item_total
             total_quantity += item['quantity']
 
@@ -318,4 +332,4 @@ async def view_cart(update: Message, state: FSMContext):
     if isinstance(update, Message):
         await update.answer(text, reply_markup=keyboard)
     else:
-        await update.messsage.edit_text(text, reply_markup=keyboard)
+        await update.message.edit_text(text, reply_markup=keyboard)
