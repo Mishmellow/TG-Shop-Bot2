@@ -1,6 +1,7 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
+from data_base import load_cart_from_db
 
 from data_base import add_user, user_conn_ref
 from app.keyboards import main_menu
@@ -26,8 +27,15 @@ async def cmd_start(message: Message):
         referrer_id=referrer_id
     )
 
+    cart_items = load_cart_from_db(message.from_user.id)
+
+    if cart_items:
+        welcome_text = f'🛒 Добро пожаловать! В вашей корзине {len(cart_items)} товаров.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
+    else:
+        welcome_text = f'Добро пожаловать!\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
+
     await message.reply(
-        f'Добро пожаловать!.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:',
+        welcome_text,
         reply_markup=main_menu()
     )
 
