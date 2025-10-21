@@ -91,6 +91,19 @@ def init_db():
     except Exception as e:
         print(f"❌ Ошибка при создании таблиц: {e}")
 
+        conn.execute('''
+                CREATE TABLE IF NOT EXISTS cart_items(
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    product TEXT,
+                    quantity INTEGER,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (user_id) REFERENCES users (user_id)
+                )
+            ''')
+        print('✅ Таблица cart_items создана')
+
+
 def get_all_products():
     with get_db_connection() as conn:
         result = conn.execute('SELECT name, price FROM products')
@@ -191,3 +204,26 @@ def get_product_price(product_name):
         )
         row = result.fetchone()
         return row['price'] if row else 100
+
+
+def save_cart_to_db(user_id, items):
+    clear_cart_from_db(user_id)
+
+    with get_db_connection() as conn:
+        for item in items:
+            conn.execute('''
+                INSERT INTO cart_items (user_id, product, quantity)
+                VALUES (?, ?, ?)
+            ''', (user_id, item['product'], item['quantity']))
+
+def load_cart_from_db(user_id):
+    with get_db_connection() as conn:
+        result = conn.execute('''
+            SELECT product, quantity FROM cart_items 
+            WHERE user_id = ?
+        ''', (user_id,))
+        return [dict(row) for row in result.fetchall()]
+
+def clear_cart_from_db(user_id):
+    with get_db_connection() as conn:
+        conn.execute('DELETE FROM cart_items WHERE user_id = ?', (user_id,))

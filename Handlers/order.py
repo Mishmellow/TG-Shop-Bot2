@@ -4,8 +4,9 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from app.keyboards import inline_cart_keyboard, inline_continue_shopping
+from data_base import save_cart_to_db, clear_cart_from_db
 
-from data_base import add_order, get_user_orders
+from data_base import add_order, get_user_orders, load_cart_from_db
 from data_base import get_product_price
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order, inline_products
@@ -26,12 +27,30 @@ class Order(StatesGroup):
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):
-     await state.update_data(items=[], address="", comment="")
-     await state.set_state(Order.choosing_product)
-     await callback.message.edit_text(
-         'Выберите категорию:',
-         reply_markup=inline_categories()
-     )
+    user_id = callback.message.from_user.id
+
+    cart_items = load_cart_from_db(user_id)
+
+    if cart_items:
+        await state.update_data(
+            items=cart_items,
+            address="",
+            comment="",
+        )
+        text = '🛒 Восстановлена ваша корзина!'
+    else:
+        await state.update_data(
+            items=[],
+            address="",
+            comment=""
+        )
+        text = 'Выберите категорию:'
+
+    await state.set_state(Order.choosing_product)
+    await callback.message.edit_text(
+        text,
+        reply_markup=inline_categories()
+    )
 
 @router.callback_query(F.data.startswith('category_'))
 async def handle_category_click(callback: CallbackQuery, state: FSMContext):
@@ -62,6 +81,8 @@ async def specifying_quantity(message: Message, state: FSMContext):
     items.append({"product": product, "quantity": quantity})
 
     await state.update_data(items=items)
+
+    save_cart_to_db(message.from_user.id, items)
 
     if not data.get("address"):
         await state.set_state(Order.providing_address)
@@ -255,9 +276,13 @@ async def show_stats(message: Message):
 
     await message.answer(stats_text, parse_mode='Markdown')
 
-@router.callback_query(F.data == 'cleat_cart')
+@router.callback_query(F.data == 'clear_cart')
 async def cleat_cart(callback: CallbackQuery, state: FSMContext):
+    user_id = callback.from_user.id
+
     await state.update_data(items=[])
+    clear_cart_from_db(user_id)
+
     await callback.answer('🗑️ Корзина очищена!')
     await callback.message.edit.text(
         '🛒 Ваша корзина пуста',
