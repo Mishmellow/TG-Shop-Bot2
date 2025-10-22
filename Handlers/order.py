@@ -148,6 +148,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
 
         total_quantity = 0
         for item in data['items']:
+            item_total = item['price'] * item['quantity']
             order_info += f"• {item['product']} x{item['quantity']} - {item['price']}₴\n"
             total_quantity += item['quantity']
 
