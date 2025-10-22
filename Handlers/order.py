@@ -5,9 +5,11 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from app.keyboards import inline_cart_keyboard, inline_continue_shopping
 from data_base import save_cart_to_db, clear_cart_from_db
+import logging
 
 from data_base import add_order, get_user_orders, load_cart_from_db
 from data_base import get_product_price
+from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order, inline_products
 from aiogram import Bot
@@ -107,20 +109,36 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     total_amount = 0
 
+    if 'items' not in data:
+        await callback.answer("❌ Корзина пуста. Пожалуйста, соберите заказ заново.", show_alert=True)
+        await state.clear()
+        return
+
     try:
         for item in data['items']:
-            product_price = get_product_price(item['product'])
+            try:
+                product_price = get_product_price(item['product'])
+            except KeyError:
+                logging.error(f"❌ Ошибка: Товар '{item['product']}' не найден.", exc_info=True)
+                await callback.answer("⚠️ Некоторые товары не найдены. Попробуйте обновить корзину.", show_alert=True)
+                return
+
             item['price'] = product_price
             total_amount += product_price * item['quantity']
 
-            add_order(
-                user_id=callback.from_user.id,
-                product=item['product'],
-                quantity=item['quantity'],
-                address=data['address'],
-                comment=data.get('comment', ''),
-                price = product_price
-            )
+            try:
+                add_order(
+                    user_id=callback.from_user.id,
+                    product=item['product'],
+                    quantity=item['quantity'],
+                    address=data['address'],
+                    comment=data.get('comment', ''),
+                    price=product_price
+                )
+            except Exception as db_error:
+                logging.error(f"❌ Ошибка при добавлении заказа в БД: {db_error}", exc_info=True)
+                await callback.answer("⚠️ Ошибка базы данных. Попробуйте оформить заказ снова.", show_alert=True)
+                return
 
         order_info = "🛒 *НОВЫЙ ЗАКАЗ!*\n\n"
         order_info += f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
@@ -136,21 +154,29 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
         order_info += f'\n💰 Общая сумма: {total_amount}₴'
         order_info += f'\n📊 Итого: {len(data["items"])} позиций, {total_quantity} шт.'
 
-        await bot.send_message(
-            chat_id=1499143658,
-            text=order_info,
-            parse_mode='Markdown'
-        )
+        try:
+            await bot.send_message(
+                chat_id=1499143658,
+                text=order_info,
+                parse_mode='Markdown'
+            )
 
-        await callback.message.edit_text(
-            f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
-            reply_markup=main_menu()
-        )
-        await state.clear()
+            await callback.message.edit_text(
+                f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
+                reply_markup=main_menu()
+            )
+            await state.clear()
+
+        except (TelegramBadRequest, TelegramForbiddenError) as api_error:
+            logging.error(f"❌ Ошибка Telegram API: {api_error}", exc_info=True)
+            await callback.answer("⚠️ Не удалось отправить сообщение. Обратитесь к администратору.", show_alert=True)
 
     except Exception as e:
-        print(f"❌ Ошибка: {e}")
-        await callback.answer(f'Ошибка: {e}', show_alert=True)
+        logging.error(f"❌ Непредвиденная ошибка в confirm_order: {e}", exc_info=True)
+        await callback.answer("⚠️ Произошла ошибка. Пожалуйста, попробуйте позже.", show_alert=True)
+
+    finally:
+        await callback.answer()
 
 
 @router.callback_query(F.data == 'continue_order')
