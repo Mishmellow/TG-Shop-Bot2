@@ -56,7 +56,7 @@ async def show_all_orders(message: Message):
 @router.callback_query(F.data.startswith('admin_confirm_'))
 async def admin_confirm_callback(callback: CallbackQuery, bot: Bot):
     order_id = int(callback.data.replace('admin_confirm_', ''))
-    update_order_status(order_id, 'confirmed')
+    update_order_status(order_id, 'preparing')
 
     user_id = get_order_user_id(order_id)
     await bot.send_message(user_id, f'✅ Ваш заказ #{order_id} подтвержден администратором!')
@@ -67,7 +67,7 @@ async def admin_confirm_callback(callback: CallbackQuery, bot: Bot):
 @router.callback_query(F.data.startswith('admin_ship_'))
 async def admin_ship_callback(callback: CallbackQuery, bot: Bot):
     order_id = int(callback.data.replace('admin_ship_', ''))
-    update_order_status(order_id, 'shipped')
+    update_order_status(order_id, 'delivering')
 
     user_id = get_order_user_id(order_id)
     await bot.send_message(user_id, f'🚚 Ваш заказ #{order_id} передан в доставку!')
@@ -78,7 +78,7 @@ async def admin_ship_callback(callback: CallbackQuery, bot: Bot):
 @router.callback_query(F.data.startswith('admin_complete_'))
 async def admin_complete_callback(callback: CallbackQuery, bot: Bot):
     order_id = int(callback.data.replace('admin_complete_', ''))
-    update_order_status(order_id, 'completed')
+    update_order_status(order_id, 'delivered')
 
     user_id = get_order_user_id(order_id)
     await bot.send_message(user_id, f'🎉 Ваш заказ #{order_id} выполнен!')
