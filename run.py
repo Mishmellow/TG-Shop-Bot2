@@ -46,7 +46,7 @@ async def main():
     dp.include_router(profile_router)
     dp.include_router(admin_router)
 
-    use_webhook = await setup_webhook(bot, dp)
+    use_webhook = await setup_webhook(bot)
 
     if use_webhook:
         print('Бот запущен в режиме Webhook')
