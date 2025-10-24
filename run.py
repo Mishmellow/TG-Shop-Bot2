@@ -1,5 +1,6 @@
 import asyncio
 import logging
+
 from aiogram import Bot, Dispatcher
 from aiogram.types import ErrorEvent
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -12,6 +13,7 @@ from Handlers.profile import router as profile_router
 from Handlers.admin import router as admin_router
 
 from data_base import init_db
+from webhook import setup_webhook
 
 session = AiohttpSession(timeout=40)
 
@@ -43,6 +45,15 @@ async def main():
     dp.include_router(order_router)
     dp.include_router(profile_router)
     dp.include_router(admin_router)
+
+    use_webhook = await setup_webhook(bot, dp)
+
+    if use_webhook:
+        print('Бот запущен в режиме Webhook')
+        await asyncio.Future()
+    else:
+        print('Бот запущен в режиме Polling')
+        await dp.start_polling()
 
     logging.info('🚀 Бот запускается...')
 
