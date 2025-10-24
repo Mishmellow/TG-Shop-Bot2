@@ -53,7 +53,7 @@ async def main():
         await asyncio.Future()
     else:
         print('Бот запущен в режиме Polling')
-        await dp.start_polling()
+        await dp.start_polling(bot)
 
     logging.info('🚀 Бот запускается...')
 
