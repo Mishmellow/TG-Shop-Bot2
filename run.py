@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 
 from aiogram import Bot, Dispatcher
 from aiogram.types import ErrorEvent
@@ -50,12 +51,26 @@ async def main():
 
     if use_webhook:
         print('Бот запущен в режиме Webhook')
-        await asyncio.Future()
-    else:
-        print('Бот запущен в режиме Polling')
-        await dp.start_polling(bot)
 
-    logging.info('🚀 Бот запускается...')
+        from aiogram.webhook.aiohttp_server import SimpleRequestHandler
+        from aiohttp import web
+        import os
+        app = web.Application()
+
+        WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
+        webhook_path = f"/webhook/{WEBHOOK_SECRET}"
+
+        handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
+        handler.register(app, path=webhook_path)
+
+        runner = web.AppRunner(app)
+        await runner.setup()
+
+        site = web.TCPSite(runner, "0.0.0.0", 8020)
+        await site.start()
+
+        print(f"🌐 Веб-сервер запущен на порту 8020")
+        await asyncio.Future()
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
