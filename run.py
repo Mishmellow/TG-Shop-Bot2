@@ -57,10 +57,6 @@ async def main():
 
     logging.info('🚀 Бот запускается...')
 
-
-    await bot.delete_webhook(drop_pending_updates=True)
-    logging.info('✅ Вебхуки очищены')
-
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     asyncio.run(main())
