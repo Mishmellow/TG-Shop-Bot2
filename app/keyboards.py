@@ -5,6 +5,10 @@ def main_menu():
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(
+        InlineKeyboardButton(text='🌐 WebApp магазин', url='https://mishmellow.github.io/TG-Shop-Bot2/'),
+    )
+
+    keyboard.row(
         InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')
     )
 
