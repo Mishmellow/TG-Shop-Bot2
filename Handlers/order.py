@@ -17,7 +17,7 @@ from aiogram import Bot
 from config import TOKEN
 
 bot = Bot(token=TOKEN)
-ADMIN_ID = '1499143658'
+ADMIN_ID = 1499143658
 
 router = Router()
 
@@ -28,6 +28,65 @@ class Order(StatesGroup):
     providing_address = State()
     confirm_order = State()
     continue_order = State()
+
+
+
+@router.message(F.web_app_data)
+async def handle_web_app_order(message: Message, state: FSMContext, bot: Bot):
+    data_string = message.web_app_data.data
+    user = message.from_user
+
+    try:
+        order_data = json.loads(data_string)
+
+        product_name = order_data.get('name', 'Неизвестный товар')
+        price = order_data.get('price', 0)
+
+        web_app_item = {
+            "product": product_name,
+            "quantity": 1,
+            "price": price
+        }
+        items = [web_app_item]
+        save_cart_to_db(user.id, items)
+
+        await state.set_state(Order.providing_address)
+        await state.update_data(
+            items=items,
+            address="",
+            comment="",
+            total_amount=price
+        )
+
+        await message.answer(
+            f'🛒 Вы выбрали: **{product_name}** ({price}₴).\n'
+            'Нам нужен **адрес доставки**.'
+            '\n\nВведите его сейчас:',
+            parse_mode='Markdown'
+        )
+
+        admin_message = (
+            f"🔔 **НОВЫЙ ЗАКАЗ ИЗ WEB APP**\n\n"
+            f"👤 Клиент: <a href='tg://user?id={user.id}'>{user.full_name}</a> (@{user.username or 'нет username'}) \n"
+            f"📦 Товар: **{product_name}**\n"
+            f"💰 Сумма: **{price} грн**\n"
+            f"Статус: Ожидает адрес."
+        )
+
+        await bot.send_message(
+            chat_id=ADMIN_ID,
+            text=admin_message,
+            parse_mode="HTML"
+        )
+
+    except json.JSONDecodeError:
+        logging.error(f"Ошибка JSON: {data_string}", exc_info=True)
+        await message.answer("⚠️ Ошибка: Не удалось расшифровать данные заказа. Попробуйте снова.")
+
+    except Exception as e:
+        logging.error(f"Общая ошибка WebApp: {e}", exc_info=True)
+        await message.answer("⚠️ Произошла внутренняя ошибка. Пожалуйста, попробуйте позже.")
+
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):
@@ -118,22 +177,27 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
 
     try:
         for item in data['items']:
+            product_price = item.get('price')
+            if not product_price:
+                try:
+                    product_price = get_product_price(item['product'])
+                except KeyError:
+                    return
+
+            item['price'] = product_price
+
+            total_amount += product_price * item['quantity']
+
             try:
-                    product_price = item.get('price')
-                    if not product_price:
-                        try:
-                            product_price = get_product_price(item['product'])
-                        except KeyError:
-                            logging.error(f"❌ Ошибка: Товар '{item['product']}' не найден.", exc_info=True)
-                            await callback.answer("⚠️ Некоторые товары не найдены. Попробуйте обновить корзину.", show_alert=True)
-                            return
-
-                    item['price'] = product_price,
-                    total_amount = total_amount * item['quantity']
-
-            except KeyError:
-                logging.error(f"❌ Ошибка: Товар '{item['product']}' не найден.", exc_info=True)
-                await callback.answer("⚠️ Некоторые товары не найдены. Попробуйте обновить корзину.", show_alert=True)
+                add_order(
+                    user_id=callback.from_user.id,
+                    product=item['product'],
+                    quantity=item['quantity'],
+                    address=data['address'],
+                    comment=data.get('comment', ''),
+                    price=product_price
+                )
+            except Exception as db_error:
                 return
 
             item['price'] = product_price
@@ -191,62 +255,6 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext):
 
     finally:
         await callback.answer()
-
-@router.message(F.web_app_data)
-async def handle_web_app_order(message: Message, state: FSMContext, bot: Bot):
-    data_string = message.web_app_data.data
-    user = message.from_user
-
-    try:
-        order_data = json.loads(data_string)
-
-        product_name = order_data.get('name', 'Неизвестный товар')
-        price = order_data.get('price', 0)
-
-        web_app_item = {
-            "product": product_name,
-            "quantity": 1,
-            "price": price
-        }
-        items = [web_app_item]
-        save_cart_to_db(user.id, items)
-
-        await state.set_state(Order.providing_address)
-        await state.update_data(
-            items=items,
-            address="",
-            comment="",
-            total_amount=price
-        )
-
-        await message.answer(
-            f'🛒 Вы выбрали: **{product_name}** ({price}₴).\n'
-            'Нам нужен **адрес доставки**.'
-            '\n\nВведите его сейчас:',
-            parse_mode='Markdown'
-        )
-
-        admin_message = (
-            f"🔔 **НОВЫЙ ЗАКАЗ ИЗ WEB APP**\n\n"
-            f"👤 Клиент: <a href='tg://user?id={user.id}'>{user.full_name}</a> (@{user.username or 'нет username'}) \n"
-            f"📦 Товар: **{product_name}**\n"
-            f"💰 Сумма: **{price} грн**\n"
-            f"Статус: Ожидает адрес."
-        )
-
-        await bot.send_message(
-            chat_id=ADMIN_ID,
-            text=admin_message,
-            parse_mode="HTML"
-        )
-
-    except json.JSONDecodeError:
-        logging.error(f"Ошибка JSON: {data_string}", exc_info=True)
-        await message.answer("⚠️ Ошибка: Не удалось расшифровать данные заказа. Попробуйте снова.")
-
-    except Exception as e:
-        logging.error(f"Общая ошибка WebApp: {e}", exc_info=True)
-        await message.answer("⚠️ Произошла внутренняя ошибка. Пожалуйста, попробуйте позже.")
 
 @router.callback_query(F.data == 'continue_order')
 async def continue_order(callback: CallbackQuery, state: FSMContext):
