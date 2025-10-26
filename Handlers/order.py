@@ -6,7 +6,6 @@ from aiogram.fsm.context import FSMContext
 from app.keyboards import inline_cart_keyboard, inline_continue_shopping
 from data_base import save_cart_to_db, clear_cart_from_db
 import logging
-import json
 
 from data_base import add_order, get_user_orders, load_cart_from_db
 from data_base import get_product_price
@@ -28,62 +27,6 @@ class Order(StatesGroup):
     providing_address = State()
     confirm_order = State()
     continue_order = State()
-
-
-@router.message(F.web_app_data)
-async def handle_web_app_order(message: Message, state: FSMContext, bot: Bot):
-    data_string = message.web_app_data.data
-    user = message.from_user
-
-    try:
-        order_data = json.loads(data_string)
-        items = order_data.get('items', [])
-        total_price = sum(item.get('price', 0) * item.get('quantity', 1) for item in items)
-
-        if not items:
-            await message.answer("⚠️ Ошибка: Данные о товарах не получены.")
-            return
-
-        save_cart_to_db(user.id, items)
-
-        await state.set_state(Order.providing_address)
-        await state.update_data(
-            items=items,
-            address="",
-            comment="",
-            total_amount=total_price
-        )
-
-        item_list = "\n".join([f"• {item['product']} x{item['quantity']} - {item['price']}₴" for item in items])
-
-        await message.answer(
-            f'🛒 Вы выбрали:\n{item_list}\n\n'
-            f'Нам нужен **адрес доставки**.\n\nВведите его сейчас:',
-            parse_mode='Markdown'
-        )
-
-        admin_message = (
-            f"🔔 **НОВЫЙ ЗАКАЗ ИЗ WEB APP**\n\n"
-            f"👤 Клиент: <a href='tg://user?id={user.id}'>{user.full_name}</a> (@{user.username or 'нет username'}) \n"
-            f"📦 Товары:\n{item_list}\n"
-            f"💰 Сумма: **{total_price} грн**\n"
-            f"Статус: Ожидает адрес."
-        )
-
-        await bot.send_message(
-            chat_id=ADMIN_ID,
-            text=admin_message,
-            parse_mode="HTML"
-        )
-
-    except json.JSONDecodeError:
-        logging.error(f"Ошибка JSON: {data_string}", exc_info=True)
-        await message.answer("⚠️ Ошибка: Не удалось расшифровать данные заказа. Попробуйте снова.")
-
-    except Exception as e:
-        logging.error(f"Общая ошибка WebApp: {e}", exc_info=True)
-        await message.answer("⚠️ Произошла внутренняя ошибка. Пожалуйста, попробуйте позже.")
-
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):

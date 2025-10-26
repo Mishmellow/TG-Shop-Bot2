@@ -1,15 +1,8 @@
 from aiogram.types import InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder, WebAppInfo
-
-WEB_APP_URL = 'https://mishmellow.github.io/TG-Shop-Bot2/'
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 def main_menu():
     keyboard = InlineKeyboardBuilder()
-    web_app_info = WebAppInfo(url=WEB_APP_URL)
-
-    keyboard.row(
-        InlineKeyboardButton(text='🌐 WebApp магазин', web_app=web_app_info)
-    )
 
     keyboard.row(
         InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')
