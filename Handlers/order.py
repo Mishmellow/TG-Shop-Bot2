@@ -29,31 +29,62 @@ class Order(StatesGroup):
     confirm_order = State()
     continue_order = State()
 
-
 @router.message(F.web_app_data)
 async def handle_web_app_order(message: Message, state: FSMContext, bot: Bot):
     data_string = message.web_app_data.data
     user = message.from_user
 
-    logging.critical("=====================================================")
-    logging.critical(f"✅ WEBAPP ВХОД. От пользователя: {user.id} (@{user.username})")
-    logging.critical(f"✅ WEBAPP ВХОД. Сырая строка: {data_string}")
-
     try:
         order_data = json.loads(data_string)
-        logging.critical(f"✅ WEBAPP DEBUG: РАСШИФРОВАНО в объект: {order_data}")
 
-        await message.answer(f"✅ DEBUG: Данные WebApp приняты! Товар: {order_data.get('name')}")
+        product_name = order_data.get('name', 'Неизвестный товар')
+        price = order_data.get('price', 0)
+
+        web_app_item = {
+            "product": product_name,
+            "quantity": 1,
+            "price": price
+        }
+        items = [web_app_item]
+        save_cart_to_db(user.id, items)
+
+        await state.set_state(Order.providing_address)
+        await state.update_data(
+            items=items,
+            address="",
+            comment="",
+            total_amount=price
+        )
+
+        await message.answer(
+            f'🛒 Вы выбрали: **{product_name}** ({price}₴).\n'
+            'Нам нужен **адрес доставки**.'
+            '\n\nВведите его сейчас:',
+            parse_mode='Markdown'
+        )
+
+        admin_message = (
+            f"🔔 **НОВЫЙ ЗАКАЗ ИЗ WEB APP**\n\n"
+            f"👤 Клиент: <a href='tg://user?id={user.id}'>{user.full_name}</a> (@{user.username or 'нет username'}) \n"
+            f"📦 Товар: **{product_name}**\n"
+            f"💰 Сумма: **{price} грн**\n"
+            f"Статус: Ожидает адрес."
+        )
+
+        await bot.send_message(
+            chat_id=ADMIN_ID,
+            text=admin_message,
+            parse_mode="HTML"
+        )
 
     except json.JSONDecodeError:
-        logging.error(f"❌ ОШИБКА JSON: Строка: {data_string}", exc_info=True)
-        await message.answer("❌ DEBUG: Ошибка расшифровки JSON. Проверьте WebApp-код.")
+        logging.error(f"Ошибка JSON: {data_string}", exc_info=True)
+        await message.answer("⚠️ Ошибка: Не удалось расшифровать данные заказа. Попробуйте снова.")
 
     except Exception as e:
-        logging.error(f"❌ ОШИБКА ОБРАБОТКИ: {e}", exc_info=True)
-        await message.answer("❌ DEBUG: Произошла внутренняя ошибка в хендлере.")
+        logging.error(f"Общая ошибка WebApp: {e}", exc_info=True)
+        await message.answer("⚠️ Произошла внутренняя ошибка. Пожалуйста, попробуйте позже.")
 
-    logging.critical("=====================================================")
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):

@@ -69,50 +69,40 @@
     </div>
 
 <script>
-    // 1. Получаем объект WebApp
     const tg = window.Telegram.WebApp;
 
-    // Гарантируем, что WebApp полностью инициализирован
     tg.ready();
     tg.expand();
 
-    // 2. Тестовые данные (замените на ваши реальные данные)
-    const testData = {
-        name: "Тестовый товар WebApp",
-        price: 99,
-        source: "WebApp_Test"
+    const cart = {
+        product: "TEST_PRODUCT_CLEAN_SCRIPT",
+        price: 500,
+        name: "ГАРАНТИРОВАННЫЙ ТЕСТ"
     };
 
-    // 3. Настраиваем Главную Кнопку и делаем ее видимой
-    tg.MainButton.setText(`Купить за ${testData.price} грн`);
+    tg.MainButton.setText(`ОТПРАВИТЬ ТЕСТ ${cart.price} грн`);
     tg.MainButton.show();
     tg.MainButton.enable();
 
-    // 4. КРИТИЧЕСКИЙ ОБРАБОТЧИК: Убедитесь, что он вызывается
-    tg.onEvent('mainButtonClicked', function() {
-
-        console.log("💥 mainButtonClicked СРАБОТАЛ! Попытка отправки.");
+    Telegram.WebApp.onEvent('mainButtonClicked', function() {
+        
+        console.log("💥💥 mainButtonClicked СРАБОТАЛ! Попытка отправки чистых данных."); 
 
         try {
-            const dataToSend = JSON.stringify(testData);
-            console.log("-> Отправка сырых данных:", dataToSend);
-
-            // ОТПРАВКА ДАННЫХ В БОТ
+            const dataToSend = JSON.stringify(cart);
+            
             tg.sendData(dataToSend);
-
+            
             tg.MainButton.setText('✅ Отправлено!').disable();
-
-            // Если данные отправлены, закрываем окно
             tg.close();
 
         } catch (error) {
-            console.error("❌ Ошибка отправки:", error);
-            tg.showAlert('Ошибка отправки данных.');
+            console.error("❌ Ошибка при отправке tg.sendData:", error);
+            tg.showAlert('Ошибка отправки тестовых данных.');
         }
     });
-
-    // Логирование для подтверждения, что JS-код запущен
-    console.log("✅ WebApp скрипт инициализирован.");
+    
+    console.log("✅ WebApp CLEAN SCRIPT ИНИЦИАЛИЗИРОВАН.");
 
 </script>
 
