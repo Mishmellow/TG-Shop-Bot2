@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram WebApp Shop</title>
-    
-    <meta name="theme-color" content="var(--tg-theme-bg-color, #ffffff)"> 
-    
+
+    <meta name="theme-color" content="var(--tg-theme-bg-color, #ffffff)">
+
     <style>
         body {
             background-color: var(--tg-theme-bg-color, #ffffff);
@@ -14,19 +14,19 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 20px;
             text-align: center;
-            -webkit-font-smoothing: antialiased; 
-            -moz-osx-font-smoothing: grayscale; 
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         .main {
-            max-width: 600px; 
-            margin: 0 auto; 
+            max-width: 600px;
+            margin: 0 auto;
         }
         .product-card {
             border: 1px solid var(--tg-theme-separator-color, #e0e0e0);
             padding: 15px;
-            margin: 10px 0; 
-            border-radius: 8px; 
-            text-align: left; 
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: left;
         }
         .btn {
             background-color: var(--tg-theme-button-color, #2481cc);
@@ -36,7 +36,7 @@
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
-            display: block; 
+            display: block;
             width: 100%;
         }
         h2 {
@@ -68,40 +68,56 @@
     </div>
 
 <script>
+    // Получаем экземпляр WebApp
     const tg = window.Telegram.WebApp;
 
+    // Инициализируем WebApp
     tg.ready();
     tg.expand();
 
-    const cart = {
-        product: "TEST_PRODUCT_CLEAN_SCRIPT",
-        price: 500,
-        name: "ГАРАНТИРОВАННЫЙ ТЕСТ"
-    };
+    // Переменная для хранения состояния корзины
+    let cart = {};
 
-    tg.MainButton.setText(`ОТПРАВИТЬ ТЕСТ ${cart.price} грн`);
-    tg.MainButton.show();
-    tg.MainButton.enable();
+    // Обработчик для кнопок "Заказать"
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', () => {
+            cart = {
+                product: button.getAttribute('data-product'),
+                price: parseFloat(button.getAttribute('data-price')),
+                name: button.getAttribute('data-name')
+            };
 
-    Telegram.WebApp.onEvent('mainButtonClicked', function() {
-        
-        console.log("💥💥 mainButtonClicked СРАБОТАЛ! Попытка отправки чистых данных."); 
+            tg.MainButton.setText(`ОТПРАВИТЬ ${cart.price} грн`);
+            tg.MainButton.show();
+            tg.MainButton.enable();
+            tg.HapticFeedback.notificationOccurred('success');
+        });
+    });
+
+    // Обработчик для Главной Кнопки
+    tg.onEvent('mainButtonClicked', function() {
+        if (Object.keys(cart).length === 0) {
+             tg.showAlert('Корзина пуста. Выберите товар.');
+             return;
+        }
+
+        console.log("💥💥 mainButtonClicked СРАБОТАЛ! Попытка отправки данных.");
 
         try {
             const dataToSend = JSON.stringify(cart);
-            
             tg.sendData(dataToSend);
-            
+
             tg.MainButton.setText('✅ Отправлено!').disable();
+            tg.HapticFeedback.notificationOccurred('success');
             tg.close();
 
         } catch (error) {
             console.error("❌ Ошибка при отправке tg.sendData:", error);
-            tg.showAlert('Ошибка отправки тестовых данных.');
+            tg.showAlert('Ошибка отправки данных. Попробуйте снова.');
         }
     });
-    
-    console.log("✅ WebApp CLEAN SCRIPT ИНИЦИАЛИЗИРОВАН.");
+
+    console.log("✅ WebApp ИНИЦИАЛИЗИРОВАН.");
 
 </script>
 

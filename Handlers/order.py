@@ -29,6 +29,7 @@ class Order(StatesGroup):
     confirm_order = State()
     continue_order = State()
 
+
 @router.message(F.web_app_data)
 async def handle_web_app_order(message: Message, state: FSMContext, bot: Bot):
     data_string = message.web_app_data.data
@@ -36,16 +37,13 @@ async def handle_web_app_order(message: Message, state: FSMContext, bot: Bot):
 
     try:
         order_data = json.loads(data_string)
+        items = order_data.get('items', [])
+        total_price = sum(item.get('price', 0) * item.get('quantity', 1) for item in items)
 
-        product_name = order_data.get('name', 'Неизвестный товар')
-        price = order_data.get('price', 0)
+        if not items:
+            await message.answer("⚠️ Ошибка: Данные о товарах не получены.")
+            return
 
-        web_app_item = {
-            "product": product_name,
-            "quantity": 1,
-            "price": price
-        }
-        items = [web_app_item]
         save_cart_to_db(user.id, items)
 
         await state.set_state(Order.providing_address)
@@ -53,21 +51,22 @@ async def handle_web_app_order(message: Message, state: FSMContext, bot: Bot):
             items=items,
             address="",
             comment="",
-            total_amount=price
+            total_amount=total_price
         )
 
+        item_list = "\n".join([f"• {item['product']} x{item['quantity']} - {item['price']}₴" for item in items])
+
         await message.answer(
-            f'🛒 Вы выбрали: **{product_name}** ({price}₴).\n'
-            'Нам нужен **адрес доставки**.'
-            '\n\nВведите его сейчас:',
+            f'🛒 Вы выбрали:\n{item_list}\n\n'
+            f'Нам нужен **адрес доставки**.\n\nВведите его сейчас:',
             parse_mode='Markdown'
         )
 
         admin_message = (
             f"🔔 **НОВЫЙ ЗАКАЗ ИЗ WEB APP**\n\n"
             f"👤 Клиент: <a href='tg://user?id={user.id}'>{user.full_name}</a> (@{user.username or 'нет username'}) \n"
-            f"📦 Товар: **{product_name}**\n"
-            f"💰 Сумма: **{price} грн**\n"
+            f"📦 Товары:\n{item_list}\n"
+            f"💰 Сумма: **{total_price} грн**\n"
             f"Статус: Ожидает адрес."
         )
 
