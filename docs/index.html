@@ -112,22 +112,24 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 tg.onEvent('mainButtonClicked', function() {
+
+    console.log("💥 mainButtonClicked СРАБОТАЛ! Попытка отправки.");
+
     if (!cart) {
         tg.showAlert('Пожалуйста, выберите товар!');
         return;
     }
 
     try {
-        tg.sendData(JSON.stringify(cart));
-        
-        tg.MainButton.setText('✅ Отправлено!').disable();
-        
-        tg.close(); 
+        const dataToSend = JSON.stringify(cart);
+        console.log("-> Отправка данных:", dataToSend); 
+
+        tg.sendData(dataToSend); 
+
+        // ...
 
     } catch (error) {
-        tg.showAlert('Ошибка отправки данных. Попробуйте обновить.');
-        console.error("❌ Ошибка отправки:", error);
-        tg.MainButton.hide();
+        // ...
     }
 });
 </script>
