@@ -69,69 +69,51 @@
     </div>
 
 <script>
-const tg = window.Telegram.WebApp;
-let cart = null;
-let total_price = 0;
+    // 1. Получаем объект WebApp
+    const tg = window.Telegram.WebApp;
 
-tg.expand();
-tg.ready();
-tg.MainButton.hide(); 
+    // Гарантируем, что WebApp полностью инициализирован
+    tg.ready();
+    tg.expand();
 
-function updateMainButton() {
-    if (total_price > 0) {
-        tg.MainButton.setText(`Оплатить ${total_price} грн`).show();
-        tg.MainButton.enable();
-    } else {
-        tg.MainButton.hide();
-    }
-}
+    // 2. Тестовые данные (замените на ваши реальные данные)
+    const testData = {
+        name: "Тестовый товар WebApp",
+        price: 99,
+        source: "WebApp_Test"
+    };
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("✅ DOM готов!");
+    // 3. Настраиваем Главную Кнопку и делаем ее видимой
+    tg.MainButton.setText(`Купить за ${testData.price} грн`);
+    tg.MainButton.show();
+    tg.MainButton.enable();
 
-    document.querySelectorAll('.btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const product = this.dataset.product;
-            const price = parseInt(this.dataset.price);
-            const name = this.dataset.name;
+    // 4. КРИТИЧЕСКИЙ ОБРАБОТЧИК: Убедитесь, что он вызывается
+    tg.onEvent('mainButtonClicked', function() {
 
-            cart = {
-                product: product,
-                price: price,
-                name: name
-            };
-            total_price = price;
+        console.log("💥 mainButtonClicked СРАБОТАЛ! Попытка отправки.");
 
-            console.log("🛒 Товар выбран:", cart);
-            
-            updateMainButton();
-            
-            tg.HapticFeedback.notificationOccurred('success'); 
-        });
+        try {
+            const dataToSend = JSON.stringify(testData);
+            console.log("-> Отправка сырых данных:", dataToSend);
+
+            // ОТПРАВКА ДАННЫХ В БОТ
+            tg.sendData(dataToSend);
+
+            tg.MainButton.setText('✅ Отправлено!').disable();
+
+            // Если данные отправлены, закрываем окно
+            tg.close();
+
+        } catch (error) {
+            console.error("❌ Ошибка отправки:", error);
+            tg.showAlert('Ошибка отправки данных.');
+        }
     });
-});
 
-tg.onEvent('mainButtonClicked', function() {
+    // Логирование для подтверждения, что JS-код запущен
+    console.log("✅ WebApp скрипт инициализирован.");
 
-    console.log("💥 mainButtonClicked СРАБОТАЛ! Попытка отправки.");
-
-    if (!cart) {
-        tg.showAlert('Пожалуйста, выберите товар!');
-        return;
-    }
-
-    try {
-        const dataToSend = JSON.stringify(cart);
-        console.log("-> Отправка данных:", dataToSend); 
-
-        tg.sendData(dataToSend); 
-
-        // ...
-
-    } catch (error) {
-        // ...
-    }
-});
 </script>
 
 </body>
