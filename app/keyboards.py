@@ -1,28 +1,26 @@
-from aiogram.types import InlineKeyboardButton, KeyboardButton, ReplyKeyboardMarkup, WebAppInfo
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder, WebAppInfo
 
 WEB_APP_URL = 'https://mishmellow.github.io/TG-Shop-Bot2/'
 
 def main_menu():
-    keyboard = ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text='🌐 WebApp магазин', web_app=WebAppInfo(url=WEB_APP_URL))],
-            [KeyboardButton(text='🛍️ Сделать заказ'), KeyboardButton(text='📞 Контакты')],
-            [KeyboardButton(text='ℹ️ О нас')]
-        ],
-        resize_keyboard=True,
-        input_field_placeholder="Выберите действие..."
-    )
-    return keyboard
+    keyboard = InlineKeyboardBuilder()
+    web_app_info = WebAppInfo(url=WEB_APP_URL)
 
-def web_app_only_keyboard():
-    keyboard = ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text='🌐 Открыть магазин', web_app=WebAppInfo(url=WEB_APP_URL))]
-        ],
-        resize_keyboard=True
+    keyboard.row(
+        InlineKeyboardButton(text='🌐 WebApp магазин', web_app=web_app_info)
     )
-    return keyboard
+
+    keyboard.row(
+        InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')
+    )
+
+    keyboard.row(
+        InlineKeyboardButton(text='📞 Контакты', callback_data='contacts'),
+        InlineKeyboardButton(text='ℹ️ О нас', callback_data='about_us')
+    )
+
+    return keyboard.as_markup()
 
 def inline_continue_order():
     keyboard = InlineKeyboardBuilder()
@@ -48,6 +46,7 @@ def inline_categories():
         ))
 
     return keyboard.adjust(2).as_markup()
+
 
 def inline_products(category):
     keyboard = InlineKeyboardBuilder()
@@ -88,15 +87,15 @@ def inline_cart_keyboard():
     keyboard = InlineKeyboardBuilder()
 
     keyboard.add(InlineKeyboardButton(
-        text='🛒 Продолжить покупки',
+        text = '🛒 Продолжить покупки',
         callback_data='back_to_categories'
     ))
     keyboard.add(InlineKeyboardButton(
-        text='✅ Оформить заказ',
+        text = '✅ Оформить зака',
         callback_data='finish_order'
     ))
     keyboard.add(InlineKeyboardButton(
-        text='🗑️ Очистить корзину',
+        text = '🗑️ Очистить корзину',
         callback_data='clear_cart'
     ))
 
@@ -105,7 +104,7 @@ def inline_cart_keyboard():
 def inline_continue_shopping():
     keyboard = InlineKeyboardBuilder()
     keyboard.add(InlineKeyboardButton(
-        text='🛒 Начать покупки',
+        text = '🛒 Начать покупки',
         callback_data='place_order'
     ))
     return keyboard.as_markup()

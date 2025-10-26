@@ -68,17 +68,12 @@
     </div>
 
 <script>
-    // Получаем экземпляр WebApp
     const tg = window.Telegram.WebApp;
 
-    // Инициализируем WebApp
     tg.ready();
     tg.expand();
-
-    // Переменная для хранения состояния корзины
     let cart = {};
 
-    // Обработчик для кнопок "Заказать"
     document.querySelectorAll('.btn').forEach(button => {
         button.addEventListener('click', () => {
             cart = {
@@ -94,7 +89,6 @@
         });
     });
 
-    // Обработчик для Главной Кнопки
     tg.onEvent('mainButtonClicked', function() {
         if (Object.keys(cart).length === 0) {
              tg.showAlert('Корзина пуста. Выберите товар.');
