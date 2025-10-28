@@ -8,7 +8,7 @@ web_app_info = WebAppInfo(url=WebA_APP_URL)
 def get_web_app_keyboard():
     webapp_info = WebAppInfo(url=WebA_APP_URL)
 
-    web_app_button = KeyboardButton(text='🛍️ Сделать Заказ', web_app=webapp_info),
+    web_app_button = KeyboardButton(text='🛍️ Сделать Заказ', web_app=webapp_info)
     contacts_button = KeyboardButton(text='📞 Контакты')
     about_button = KeyboardButton(text='ℹ️ О нас')
 
