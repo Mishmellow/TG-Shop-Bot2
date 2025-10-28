@@ -12,7 +12,7 @@ from data_base import add_order, get_user_orders, load_cart_from_db
 from data_base import get_product_price
 from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
-from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order, inline_products
+from app.keyboards import get_web_app_keyboard, inline_categories, inline_confirm_order, inline_continue_order, inline_products
 
 ADMIN_ID = 1499143658
 
@@ -129,53 +129,37 @@ async def process_address(message: Message, state: FSMContext):
 async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
     data = await state.get_data()
     total_amount = 0
+    total_quantity = 0
 
-    if 'items' not in data:
+    if 'items' not in data or not data['items']:
         await callback.answer("❌ Корзина пуста. Пожалуйста, соберите заказ заново.", show_alert=True)
         await state.clear()
         return
 
     try:
+        items_for_display = []
+
         for item in data['items']:
-            product_price = item.get('price')
-            if not product_price:
-                try:
-                    product_price = get_product_price(item['product'])
-                except KeyError:
-                    return
+            product_price = get_product_price(item['product'])
 
-            item['price'] = product_price
+            item_total = product_price * item['quantity']
+            total_amount += item_total
+            total_quantity += item['quantity']
 
-            total_amount += product_price * item['quantity']
+            add_order(
+                user_id=callback.from_user.id,
+                product=item['product'],
+                quantity=item['quantity'],
+                address=data['address'],
+                comment=data.get('comment', ''),
+                price=product_price
+            )
 
-            try:
-                add_order(
-                    user_id=callback.from_user.id,
-                    product=item['product'],
-                    quantity=item['quantity'],
-                    address=data['address'],
-                    comment=data.get('comment', ''),
-                    price=product_price
-                )
-            except Exception as db_error:
-                return
-
-            item['price'] = product_price
-            total_amount += product_price * item['quantity']
-
-            try:
-                add_order(
-                    user_id=callback.from_user.id,
-                    product=item['product'],
-                    quantity=item['quantity'],
-                    address=data['address'],
-                    comment=data.get('comment', ''),
-                    price=product_price
-                )
-            except Exception as db_error:
-                logging.error(f"❌ Ошибка при добавлении заказа в БД: {db_error}", exc_info=True)
-                await callback.answer("⚠️ Ошибка базы данных. Попробуйте оформить заказ снова.", show_alert=True)
-                return
+            items_for_display.append({
+                'product': item['product'],
+                'quantity': item['quantity'],
+                'price': product_price
+            })
 
         order_info = "🛒 *НОВЫЙ ЗАКАЗ!*\n\n"
         order_info += f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
@@ -183,32 +167,30 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
         order_info += f"💬 Комментарий: {data.get('comment', 'нет комментария')}\n\n"
         order_info += "📦 Состав заказа:\n"
 
-        total_quantity = 0
-        for item in data['items']:
+        for item in items_for_display:
             item_total = item['price'] * item['quantity']
-            order_info += f"• {item['product']} x{item['quantity']} - {item['price']}₴\n"
-            total_quantity += item['quantity']
+            order_info += f"• {item['product']} x{item['quantity']} - {item_total}₴\n"
 
         order_info += f'\n💰 Общая сумма: {total_amount}₴'
-        order_info += f'\n📊 Итого: {len(data["items"])} позиций, {total_quantity} шт.'
+        order_info += f'\n📊 Итого: {len(items_for_display)} позиций, {total_quantity} шт.'
 
-        try:
-            await bot.send_message(
-                chat_id=1499143658,
-                text=order_info,
-                parse_mode='Markdown'
-            )
+        await bot.send_message(
+            chat_id=1499143658,
+            text=order_info,
+            parse_mode='Markdown'
+        )
 
-            await callback.message.edit_text(
-                f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
-                reply_markup=main_menu()
-            )
-            await state.clear()
+        await callback.message.edit_text(
+            f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
+            reply_markup=get_web_app_keyboard()
+        )
 
-        except (TelegramBadRequest, TelegramForbiddenError) as api_error:
-            logging.error(f"❌ Ошибка Telegram API: {api_error}", exc_info=True)
-            await callback.answer("⚠️ Не удалось отправить сообщение. Обратитесь к администратору.", show_alert=True)
+        clear_cart_from_db(callback.from_user.id)
+        await state.clear()
 
+    except (TelegramBadRequest, TelegramForbiddenError) as api_error:
+        logging.error(f"❌ Ошибка Telegram API: {api_error}", exc_info=True)
+        await callback.answer("⚠️ Не удалось отправить сообщение. Обратитесь к администратору.", show_alert=True)
     except Exception as e:
         logging.error(f"❌ Непредвиденная ошибка в confirm_order: {e}", exc_info=True)
         await callback.answer("⚠️ Произошла ошибка. Пожалуйста, попробуйте позже.", show_alert=True)
@@ -239,7 +221,7 @@ async def finish_order(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.edit_text(
         '🎉 Ваш заказ завершен! Ожидайте доставку.',
-        reply_markup=main_menu()
+        reply_markup=get_web_app_keyboard()
     )
     await state.clear()
 
@@ -286,7 +268,7 @@ async def cancel_order(callback: CallbackQuery, state: FSMContext):
     await callback.answer('Заказ отменён')
     await callback.message.edit_text(
         '❌ Заказ отменён',
-        reply_markup=main_menu()
+        reply_markup=get_web_app_keyboard()
     )
 
 @router.message(Command('my_orders'))
@@ -318,7 +300,7 @@ async def show_my_orders(message: Message):
 @router.message(F.text.casefold() == 'Отмена')
 async def cansel(message: Message, state: FSMContext):
     await state.clear()
-    await message.answer('Заказ отменен!', reply_markup=main_menu())
+    await message.answer('Заказ отменен!', reply_markup=get_web_app_keyboard())
 
 @router.message(Command('stats'))
 async def show_stats(message: Message):
@@ -396,3 +378,29 @@ async def view_cart(update: Message | CallbackQuery, state: FSMContext):
         await update.answer(text, reply_markup=keyboard)
     else:
         await update.message.edit_text(text, reply_markup=keyboard)
+
+@router.message(F.text == '📞 Контакты')
+async def handler_contact(message: Message):
+    contact_text = (
+        "📞 **Наши Контакты**\n"
+        "Оператор: +380 50 123 4567\n"
+        "Email: support@tgshop.com\n"
+        "Мы работаем с 9:00 до 21:00 ежедневно."
+    )
+    await message.answer(
+        contact_text,
+        parse_mode='Markdown'
+    )
+
+@router.message(F.text == 'ℹ️ О нас')
+async def handler_about(message: Message):
+    about_text = (
+        "ℹ️ **О Нашем Магазине**\n"
+        "Мы — лучший магазин свежего кофе и пиццы в вашем городе! "
+        "Мы используем только высококачественные ингредиенты и готовим с любовью.\n"
+        "Начните заказ, нажав на кнопку '🛍️ Сделать Заказ' ниже."
+    )
+    await message.answer(
+        about_text,
+        parse_mode='Markdown'
+    )

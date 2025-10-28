@@ -1,5 +1,5 @@
 from aiogram.types import InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder,WebAppInfo
+from aiogram.utils.keyboard import InlineKeyboardBuilder, WebAppInfo
 
 WebA_APP_URL = 'https://mishmellow.github.io/TG-Shop-Bot2/'
 
@@ -8,29 +8,19 @@ web_app_info = WebAppInfo(url=WebA_APP_URL)
 def get_web_app_keyboard():
     webapp_info = WebAppInfo(url=WebA_APP_URL)
 
+    web_app_button = KeyboardButton(text='🛍️ Сделать Заказ', web_app=webapp_info),
+    contacts_button = KeyboardButton(text='📞 Контакты'),
+    about_button = KeyboardButton(text='ℹ️ О нас')
+
     keyboard = ReplyKeyboardMarkup(
         keyboard=[
-            [
-                KeyboardButton(text='🛍️ Сделать Заказ', web_app = webapp_info)
-            ]
+            [web_app_button],
+            [contacts_button, about_button]
         ],
         resize_keyboard=True,
         is_persistent=True
     )
     return keyboard
-
-def main_menu():
-    keyboard = InlineKeyboardBuilder()
-    # keyboard.row(
-    #     InlineKeyboardButton(text='🛍️ Сделать заказ', callback_data='place_order')
-    # )
-
-    keyboard.row(
-        InlineKeyboardButton(text='📞 Контакты', callback_data='contacts'),
-        InlineKeyboardButton(text='ℹ️ О нас', callback_data='about_us')
-    )
-
-    return keyboard.as_markup()
 
 def inline_continue_order():
     keyboard = InlineKeyboardBuilder()
