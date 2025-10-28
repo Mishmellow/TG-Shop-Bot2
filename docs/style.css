@@ -1,4 +1,4 @@
-body {
+/* body {
     background-color: var(--tg-theme-bg-color, #ffffff);
     color: var(--tg-theme-text-color, #000000);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -36,4 +36,4 @@ h2 {
 .price {
     margin: 0 0 10px 0;
     color: var(--tg-theme-hint-color, #999999);
-}
+} */
