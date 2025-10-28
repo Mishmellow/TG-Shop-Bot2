@@ -1,6 +1,6 @@
 from aiogram.filters import Command
 from aiogram import F, Router, Bot
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from app.keyboards import inline_cart_keyboard, inline_continue_shopping
@@ -26,54 +26,38 @@ class Order(StatesGroup):
     confirm_order = State()
     continue_order = State()
 
+
 @router.message(F.web_app_data)
-async def handle_web_app_order(message: Message, bot: Bot):
-    chat_id = message.chat.id
+async def handle_web_app_order(message: Message, state: FSMContext):
     raw_data = message.web_app_data.data
+    chat_id = message.chat.id
 
     try:
-        order_data = json.loads(raw_data)
+        data_from_webapp = json.loads(raw_data)
+
+        if 'items' not in data_from_webapp or not data_from_webapp['items']:
+            await message.answer("❌ Корзина пуста. Добавьте товары в WebApp.")
+            return
+
+        await state.update_data(
+            items=data_from_webapp['items'],
+            address=None,
+            comment=None
+        )
+
+        await state.set_state(Order.providing_address)
+
+        await message.answer(
+            "📍 **Отлично!** Мы получили ваш заказ из WebApp. "
+            "Теперь, пожалуйста, введите **адрес** доставки:",
+            reply_markup=ReplyKeyboardRemove()
+        )
+
     except json.JSONDecodeError:
-        await message.answer("❌ Ошибка обработки данных заказа. Попробуйте снова.")
-        return
-
-    product_name = order_data.get('name', 'Неизвестный товар')
-    price = order_data.get('price', 0)
-
-    await message.answer(
-        f"✅ Ваш заказ принят!\n"
-        f"Товар: **{product_name}**\n"
-        f"Сумма: **{price} грн**",
-        parse_mode='Markdown'
-    )
-    await bot.send_message(ADMIN_ID, "НОВЫЙ ЗАКАЗ!!!...")
-
-@router.callback_query(F.data == 'place_order')
-async def place_order(callback: CallbackQuery, state: FSMContext):
-    user_id = callback.message.from_user.id
-
-    cart_items = load_cart_from_db(user_id)
-
-    if cart_items:
-        await state.update_data(
-            items=cart_items,
-            address="",
-            comment="",
-        )
-        text = '🛒 Восстановлена ваша корзина!'
-    else:
-        await state.update_data(
-            items=[],
-            address="",
-            comment=""
-        )
-        text = 'Выберите категорию:'
-
-    await state.set_state(Order.choosing_product)
-    await callback.message.edit_text(
-        text,
-        reply_markup=inline_categories()
-    )
+        await message.answer("⚠️ Ошибка в формате данных WebApp. Попробуйте снова.")
+    except Exception as e:
+        logging.error(f"❌ Критическая ошибка при получении данных WebApp: {e}", exc_info=True)
+        await message.answer("❌ Произошла непредвиденная ошибка при получении данных.")
 
 @router.callback_query(F.data.startswith('category_'))
 async def handle_category_click(callback: CallbackQuery, state: FSMContext):
@@ -118,12 +102,18 @@ async def specifying_quantity(message: Message, state: FSMContext):
             reply_markup=inline_continue_order()
         )
 
-@router.message(Order.providing_address)
-async def process_address(message: Message, state: FSMContext):
-    await state.update_data(address=message.text)
-    await state.set_state(Order.adding_comment)
-    await message.answer('💬 Хотите добавить комментарий к заказу? Если нет - напишите нет')
 
+@router.message(Order.providing_address)
+async def process_address_webapp(message: Message, state: FSMContext):
+    await state.update_data(address=message.text)
+
+    await state.set_state(Order.adding_comment)
+    await message.answer(
+        '📝 Хотите добавить **комментарий** к заказу?',
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="➡️ Пропустить", callback_data="skip_comment")]
+        ])
+    )
 
 @router.callback_query(F.data == 'confirm_order')
 async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
@@ -404,3 +394,40 @@ async def handler_about(message: Message):
         about_text,
         parse_mode='Markdown'
     )
+
+async def show_order_summary(message: Message, state: FSMContext):
+    data = await state.get_data()
+
+    if 'items' not in data or not data['items']:
+        await message.answer("❌ Корзина пуста. Пожалуйста, начните сначала.")
+        await state.clear()
+        return
+
+    total_amount = 0
+    summary_text = "👀 **Проверьте ваш заказ:**\n"
+
+    for item in data['items']:
+        price = item.get('price', 0)
+        quantity = item.get('quantity', 1)
+        item_total = price * quantity
+        total_amount += item_total
+
+        summary_text += f"- {item['name']} x{quantity} ({price} грн)\n"
+
+    summary_text += f"\n📍 Адрес: {data.get('address', 'Не указан')}\n"
+    summary_text += f"💬 Комментарий: {data.get('comment', 'Нет')}\n"
+    summary_text += f"\n💰 **Общая сумма:** {total_amount} грн."
+
+    await message.answer(
+        summary_text,
+        reply_markup=inline_confirm_order(),
+        parse_mode='Markdown'
+    )
+
+@router.callback_query(F.data == 'skip_comment', Order.adding_comment)
+async def skip_comment(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(comment="Нет комментария")
+
+    await callback.message.delete()
+    await show_order_summary(callback.message, state)
+    await callback.answer()

@@ -5,94 +5,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram WebApp Shop</title>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    
-    <link rel="stylesheet" href="./css/style.css"> 
-    
+
+    <link rel="stylesheet" href="./css/style.css">
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <meta name="theme-color" content="var(--tg-theme-bg-color, #ffffff)">
 </head>
 
 <body>
-    <div class="container text-center my-4"> <h1 class="text-center mb-4">🛍️ Меню</h1>
-        
-        <div class="row row-cols-1 row-cols-md-3 g-3"> 
-            
+    <div class="container text-center my-4">
+        <h1 class="text-center mb-4">🛍️ Меню1</h1>
+
+        <div class="row row-cols-1 row-cols-md-3 g-3">
+
             <div class="col">
-                <div class="card h-100"> <img src="https://via.placeholder.com/286x180" class="card-img-top" alt="Placeholder Image">
+                <div class="card h-100"> <img src="https://via.placeholder.com/286x180" class="card-img-top"
+                        alt="Placeholder Image">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Товар 1</h5>
-                        <p class="card-text">Краткое описание товара.</p>
-                        <button class="btn btn-primary mt-auto" data-product="p1" data-price="100" data-name="Товар 1">Заказать</button>
+                        <h5 class="card-title">Латте</h5>
+                        <p class="card-text">Lorem ipsum dolor sit amet.</p>
+                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="latte" data-price="70"
+                            data-name="Товар 1">70грн</button>
                     </div>
                 </div>
             </div>
-            
+
+        </div>
+    </div>
+    <div class="container text-center my-4">
+        <h1 class="text-center mb-4">🛍️ Меню2</h1>
+
+        <div class="row row-cols-1 row-cols-md-3 g-3">
+
+            <div class="col">
+                <div class="card h-100"> <img src="https://via.placeholder.com/286x180" class="card-img-top"
+                        alt="Placeholder Image">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Пицца</h5>
+                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="pizza" data-price="120"
+                            data-name="Товар 1">120грн</button>
+                    </div>
+                </div>
             </div>
+
+        </div>
+    </div>
+    <div class="container text-center my-4">
+        <h1 class="text-center mb-4">🛍️ Меню3</h1>
+
+        <div class="row row-cols-1 row-cols-md-3 g-3">
+
+            <div class="col">
+                <div class="card h-100"> <img src="https://via.placeholder.com/286x180" class="card-img-top"
+                        alt="Placeholder Image">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Бургер</h5>
+                        <p class="card-text">Lorem ipsum dolor sit.</p>
+                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="burgers" data-price="250"
+                            data-name="Товар 1">250грн</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-let cart = []; 
-
-function updateMainButton() {
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    if (totalItems > 0) {
-        tg.MainButton.setText(`Оформить Заказ (${totalPrice} грн)`);
-        tg.MainButton.show();
-    } else {
-        tg.MainButton.hide();
-    }
-}
-
-function addToCart(productData) {
-    const existingItem = cart.find(item => item.product === productData.product);
-
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({
-            product: productData.product,
-            name: productData.name,
-            price: productData.price,
-            quantity: 1
-        });
-    }
-    
-    updateMainButton();
-    tg.HapticFeedback.notificationOccurred('success'); 
-}
-
-tg.ready();
-tg.expand();
-updateMainButton();
-
-document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const product = button.getAttribute('data-product');
-        const price = parseInt(button.getAttribute('data-price'));
-        const name = button.getAttribute('data-name');
-        
-        addToCart({ product, price, name });
-    });
-});
-
-tg.MainButton.onClick(() => {
-    const dataToSend = JSON.stringify({ items: cart }); 
-    tg.sendData(dataToSend);
-});
-    </script>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
 
-    <!-- <script src="./js/script.js"></script>  -->
+    <script src="./js/script.js"></script>
 
 </body>
 
