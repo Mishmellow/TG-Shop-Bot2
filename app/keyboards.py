@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder,WebAppInfo
 
-WebA_APP_URL = 'https://mishmellow.github.io/TG-Shop-Bot2/docs/index.html'
+WebA_APP_URL = 'https://mishmellow.github.io/TG-Shop-Bot2/'
 
 web_app_info = WebAppInfo(url=WebA_APP_URL)
 
