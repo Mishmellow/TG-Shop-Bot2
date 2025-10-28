@@ -1,5 +1,5 @@
 from aiogram.filters import Command
-from aiogram import F, Router
+from aiogram import F, Router, Bot
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
@@ -13,10 +13,7 @@ from data_base import get_product_price
 from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
 from app.keyboards import main_menu, inline_categories, inline_confirm_order, inline_continue_order, inline_products
-from aiogram import Bot
-from config import TOKEN
 
-bot = Bot(token=TOKEN)
 ADMIN_ID = 1499143658
 
 router = Router()
@@ -28,7 +25,6 @@ class Order(StatesGroup):
     providing_address = State()
     confirm_order = State()
     continue_order = State()
-
 
 @router.message(F.web_app_data)
 async def handle_web_app_order(message: Message, bot: Bot):
@@ -51,8 +47,6 @@ async def handle_web_app_order(message: Message, bot: Bot):
         parse_mode='Markdown'
     )
     await bot.send_message(ADMIN_ID, "НОВЫЙ ЗАКАЗ!!!...")
-
-    # console.log("✅ Python-хендлер сработал!")
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):
@@ -132,7 +126,7 @@ async def process_address(message: Message, state: FSMContext):
 
 
 @router.callback_query(F.data == 'confirm_order')
-async def confirm_order(callback: CallbackQuery, state: FSMContext):
+async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
     data = await state.get_data()
     total_amount = 0
 
