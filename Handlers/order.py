@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from app.keyboards import inline_cart_keyboard, inline_continue_shopping
 from data_base import save_cart_to_db, clear_cart_from_db
 import logging
+import json
 
 from data_base import add_order, get_user_orders, load_cart_from_db
 from data_base import get_product_price
@@ -27,6 +28,31 @@ class Order(StatesGroup):
     providing_address = State()
     confirm_order = State()
     continue_order = State()
+
+
+@router.message(F.web_app_data)
+async def handle_web_app_order(message: Message, bot: Bot):
+    chat_id = message.chat.id
+    raw_data = message.web_app_data.data
+
+    try:
+        order_data = json.loads(raw_data)
+    except json.JSONDecodeError:
+        await message.answer("❌ Ошибка обработки данных заказа. Попробуйте снова.")
+        return
+
+    product_name = order_data.get('name', 'Неизвестный товар')
+    price = order_data.get('price', 0)
+
+    await message.answer(
+        f"✅ Ваш заказ принят!\n"
+        f"Товар: **{product_name}**\n"
+        f"Сумма: **{price} грн**",
+        parse_mode='Markdown'
+    )
+    await bot.send_message(ADMIN_ID, "НОВЫЙ ЗАКАЗ!!!...")
+
+    # console.log("✅ Python-хендлер сработал!")
 
 @router.callback_query(F.data == 'place_order')
 async def place_order(callback: CallbackQuery, state: FSMContext):

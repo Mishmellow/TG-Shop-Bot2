@@ -5,6 +5,7 @@ from data_base import load_cart_from_db
 
 from data_base import add_user, user_conn_ref
 from app.keyboards import main_menu
+from app.keyboards import get_web_app_keyboard
 
 router = Router()
 
@@ -33,6 +34,11 @@ async def cmd_start(message: Message):
         welcome_text = f'🛒 Добро пожаловать! В вашей корзине {len(cart_items)} товаров.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
     else:
         welcome_text = f'Добро пожаловать!\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
+
+    await message.reply(
+        welcome_text,
+        reply_markup=get_web_app_keyboard()
+    )
 
     await message.reply(
         welcome_text,

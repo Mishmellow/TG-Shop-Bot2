@@ -1,119 +1,126 @@
-<!--<!doctype html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Telegram WebApp Shop</title>-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram WebApp Shop</title>
 
-<!--    <meta name="theme-color" content="var(&#45;&#45;tg-theme-bg-color, #ffffff)">-->
+    <meta name="theme-color" content="var(--tg-theme-bg-color, #ffffff)">
 
-<!--    <style>-->
-<!--        body {-->
-<!--            background-color: var(&#45;&#45;tg-theme-bg-color, #ffffff);-->
-<!--            color: var(&#45;&#45;tg-theme-text-color, #000000);-->
-<!--            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;-->
-<!--            padding: 20px;-->
-<!--            text-align: center;-->
-<!--            -webkit-font-smoothing: antialiased;-->
-<!--            -moz-osx-font-smoothing: grayscale;-->
-<!--        }-->
-<!--        .main {-->
-<!--            max-width: 600px;-->
-<!--            margin: 0 auto;-->
-<!--        }-->
-<!--        .product-card {-->
-<!--            border: 1px solid var(&#45;&#45;tg-theme-separator-color, #e0e0e0);-->
-<!--            padding: 15px;-->
-<!--            margin: 10px 0;-->
-<!--            border-radius: 8px;-->
-<!--            text-align: left;-->
-<!--        }-->
-<!--        .btn {-->
-<!--            background-color: var(&#45;&#45;tg-theme-button-color, #2481cc);-->
-<!--            color: var(&#45;&#45;tg-theme-button-text-color, #ffffff);-->
-<!--            border: none;-->
-<!--            padding: 10px 20px;-->
-<!--            border-radius: 5px;-->
-<!--            cursor: pointer;-->
-<!--            margin-top: 10px;-->
-<!--            display: block;-->
-<!--            width: 100%;-->
-<!--        }-->
-<!--        h2 {-->
-<!--            margin-top: 0;-->
-<!--            margin-bottom: 5px;-->
-<!--        }-->
-<!--        .price {-->
-<!--            margin: 0 0 10px 0;-->
-<!--            color: var(&#45;&#45;tg-theme-hint-color, #999999);-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <div class="main">-->
-<!--        <h1>🛍️ Магазин в Telegram</h1>-->
-<!--        <p>Нажмите "Заказать", затем используйте Главную Кнопку.</p>-->
+    <style>
+        body {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            text-align: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .main {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .product-card {
+            border: 1px solid var(--tg-theme-separator-color, #e0e0e0);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+        .btn {
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .price {
+            margin: 0 0 10px 0;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>🛍️ Магазин в Telegram</h1>
+        <p>Нажмите "Заказать", затем используйте Главную Кнопку.</p>
 
-<!--        <div class="product-card">-->
-<!--            <h2>☕️ Кофе Латте</h2>-->
-<!--            <p class="price">70 грн</p>-->
-<!--            <button class="btn" data-product="coffee" data-price="70" data-name="Кофе Латте">Заказать</button>-->
-<!--        </div>-->
+        <div class="product-card">
+            <h2>☕️ Кофе Латте</h2>
+            <p class="price">70 грн</p>
+            <button class="btn" data-product="coffee" data-price="70" data-name="Кофе Латте">Заказать</button>
+        </div>
 
-<!--        <div class="product-card">-->
-<!--            <h2>🍕 Пицца "Маргарита"</h2>-->
-<!--            <p class="price">209 грн</p>-->
-<!--            <button class="btn" data-product="pizza_margarita" data-price="209" data-name="Пицца Маргарита">Заказать</button>-->
-<!--        </div>-->
-<!--    </div>-->
+        <div class="product-card">
+            <h2>🍕 Пицца "Маргарита"</h2>
+            <p class="price">209 грн</p>
+            <button class="btn" data-product="pizza_margarita" data-price="209" data-name="Пицца Маргарита">Заказать</button>
+        </div>
+    </div>
 
-<!--<script>-->
-<!--    const tg = window.Telegram.WebApp;-->
+<script>
+    const tg = window.Telegram.WebApp;
 
-<!--    tg.ready();-->
-<!--    tg.expand();-->
-<!--    let cart = {};-->
+    tg.ready();
+    tg.expand();
 
-<!--    document.querySelectorAll('.btn').forEach(button => {-->
-<!--        button.addEventListener('click', () => {-->
-<!--            cart = {-->
-<!--                product: button.getAttribute('data-product'),-->
-<!--                price: parseFloat(button.getAttribute('data-price')),-->
-<!--                name: button.getAttribute('data-name')-->
-<!--            };-->
+    let cart = {};
 
-<!--            tg.MainButton.setText(`ОТПРАВИТЬ ${cart.price} грн`);-->
-<!--            tg.MainButton.show();-->
-<!--            tg.MainButton.enable();-->
-<!--            tg.HapticFeedback.notificationOccurred('success');-->
-<!--        });-->
-<!--    });-->
+    tg.MainButton.hide();
 
-<!--    tg.onEvent('mainButtonClicked', function() {-->
-<!--        if (Object.keys(cart).length === 0) {-->
-<!--             tg.showAlert('Корзина пуста. Выберите товар.');-->
-<!--             return;-->
-<!--        }-->
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', () => {
+            cart = {
+                product: button.getAttribute('data-product'),
+                price: parseFloat(button.getAttribute('data-price')),
+                name: button.getAttribute('data-name')
+            };
 
-<!--        console.log("💥💥 mainButtonClicked СРАБОТАЛ! Попытка отправки данных.");-->
+            tg.MainButton.setText(`ОТПРАВИТЬ ${cart.price} грн`);
+            tg.MainButton.show();
+            tg.MainButton.enable();
+            tg.HapticFeedback.notificationOccurred('success');
+        });
+    });
 
-<!--        try {-->
-<!--            const dataToSend = JSON.stringify(cart);-->
-<!--            tg.sendData(dataToSend);-->
+    setTimeout(function() {
 
-<!--            tg.MainButton.setText('✅ Отправлено!').disable();-->
-<!--            tg.HapticFeedback.notificationOccurred('success');-->
-<!--            tg.close();-->
+        Telegram.WebApp.onEvent('mainButtonClicked', function() {
+            if (Object.keys(cart).length === 0) {
+                 tg.showAlert('Корзина пуста. Выберите товар.');
+                 return;
+            }
 
-<!--        } catch (error) {-->
-<!--            console.error("❌ Ошибка при отправке tg.sendData:", error);-->
-<!--            tg.showAlert('Ошибка отправки данных. Попробуйте снова.');-->
-<!--        }-->
-<!--    });-->
+            console.log("💥💥 mainButtonClicked СРАБОТАЛ! Попытка отправки данных.");
 
-<!--    console.log("✅ WebApp ИНИЦИАЛИЗИРОВАН.");-->
+            try {
+                const dataToSend = JSON.stringify(cart);
 
-<!--</script>-->
+                tg.sendData(dataToSend);
 
-<!--</body>-->
-<!--</html>-->
+                tg.MainButton.setText('✅ Отправлено!').disable();
+                tg.HapticFeedback.notificationOccurred('success');
+                tg.close();
+
+            } catch (error) {
+                console.error("❌ Ошибка при отправке tg.sendData:", error);
+                tg.showAlert('Ошибка отправки данных. Попробуйте снова.');
+            }
+        });
+        console.log("✅ Обработчик кнопки ЗАРЕГИСТРИРОВАН.");
+    }, 100);
+
+    console.log("✅ WebApp ИНИЦИАЛИЗИРОВАН.");
+</script>
+
+</body>
+</html>
