@@ -109,7 +109,8 @@ async def process_address_webapp(message: Message, state: FSMContext):
 
     await state.set_state(Order.adding_comment)
     await message.answer(
-        "📝 **Почти готово! Введите, пожалуйста, любой комментарий к заказу (например, "
+        "📝 **Почти готово!"
+        "Введите, пожалуйста, любой комментарий к заказу (например, "
         "домофон, код подъезда, этаж) или нажмите Пропустить.",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text='➡️ Пропустить', callback_data='skip_comment')],
@@ -123,7 +124,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
     total_quantity = 0
 
     if 'items' not in data or not data['items']:
-        await callback.answer("❌ Корзина пуста. Пожалуйста, соберите заказ заново.", show_alert=True)
+        await callback.answer("❌ Корзина пуста. Пожалуйста, соберите заказ заново", show_alert=True)
         await state.clear()
         return
 
