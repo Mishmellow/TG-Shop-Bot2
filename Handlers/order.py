@@ -174,7 +174,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
         await callback.message.edit_text(
             f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
-            reply_markup=get_web_app_keyboard()
+            # reply_markup=get_web_app_keyboard()
         )
         await state.clear()
 
