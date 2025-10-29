@@ -161,7 +161,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
         for item in items_for_display:
             item_total = item['price'] * item['quantity']
-            order_info += f"• {item['name']} x{item['quantity']} - {item_total}₴\n"
+            order_info += f"• {item['product']} x{item['quantity']} - {item_total}₴\n"
 
         order_info += f'\n💰 Общая сумма: {total_amount}₴'
         order_info += f'\n📊 Итого: {len(items_for_display)} позиций, {total_quantity} шт.'
