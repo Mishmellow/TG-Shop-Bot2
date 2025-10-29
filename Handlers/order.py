@@ -149,7 +149,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
-    comment = message.text if message.tex.lower() not in ['Нет', 'not', 'без коментария', 'нет', 'не'] else ""
+    comment = message.text if message.tex.lower() not in ['Нет', 'not', 'без коментария'] else ''
     await state.update_data(comment=comment)
     await state.set_state(Order.confirm_order)
     await show_order_summary(message, state)
