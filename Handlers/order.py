@@ -4,7 +4,7 @@ from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove, InlineKey
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
 from app.keyboards import inline_cart_keyboard, inline_continue_shopping
-from data_base import save_cart_to_db, clear_cart_from_db
+from data_base import clear_cart_from_db
 import logging
 import json
 
@@ -12,7 +12,7 @@ from data_base import add_order, get_user_orders, load_cart_from_db
 from data_base import get_product_price
 from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
-from app.keyboards import get_web_app_keyboard, inline_categories, inline_confirm_order, inline_continue_order, inline_products
+from app.keyboards import get_web_app_keyboard,  inline_confirm_order
 
 ADMIN_ID = 1499143658
 
@@ -60,52 +60,9 @@ async def handle_web_app_order(message: Message, state: FSMContext):
         logging.error(f"❌ Критическая ошибка при получении данных WebApp: {e}", exc_info=True)
         await message.answer("❌ Произошла непредвиденная ошибка при получении данных.")
 
-@router.callback_query(F.data.startswith('category_'))
-async def handle_category_click(callback: CallbackQuery, state: FSMContext):
-    category = callback.data.replace('category_', '')
-    await callback.message.edit_text(
-        f'Выберите товар из категории {category}:',
-        reply_markup=inline_products(category)
-    )
-
-@router.callback_query(F.data.startswith('back_to_categories'))
-async def back_to_categories(callback: CallbackQuery, state: FSMContext):
-    await callback.message.edit_text(
-        'Выберите категорию:',
-        reply_markup=inline_categories()
-    )
-
-@router.message(Order.specifying_quantity)
-async def specifying_quantity(message: Message, state: FSMContext):
-    if not message.text.isdigit():
-        await message.answer('Введите число')
-        return
-
-    data = await state.get_data()
-    product = data['current_product']
-    quantity = int(message.text)
-
-    items = data.get("items", [])
-    items.append({"product": product, "quantity": quantity})
-
-    await state.update_data(items=items)
-
-    save_cart_to_db(message.from_user.id, items)
-
-    if not data.get("address"):
-        await state.set_state(Order.providing_address)
-        await message.answer('Теперь введите адрес доставки')
-    else:
-        await state.set_state(Order.choosing_product)
-        await message.answer(
-            f'✅ Товар "{product}" x{quantity} добавлен в заказ!\n'
-            'Хотите добавить еще товар или завершить заказ?',
-            reply_markup=inline_continue_order()
-        )
-
 
 @router.message(Order.providing_address)
-async def process_address_webapp(message: Message, state: FSMContext):
+async def process_address(message: Message, state: FSMContext):
     await state.update_data(address=message.text)
 
     await state.set_state(Order.adding_comment)
@@ -190,68 +147,12 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
     finally:
         await callback.answer()
 
-@router.callback_query(F.data == 'continue_order')
-async def continue_order(callback: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-
-    current_order = '📦 Текущий заказ:\n'
-    for item in data['items']:
-        current_order += f"• {item['product']} x{item['quantity']}\n"
-
-    current_order += f"\n📍 Адрес: {data['address']}"
-    current_order += f"\n💬 Комментарий: {data.get('comment', 'нет комментария')}"
-    current_order += f"\n\nВыберите следующий товар:"
-
-    await state.set_state(Order.continue_order)
-    await callback.message.edit_text(
-        current_order,
-        reply_markup=inline_categories()
-    )
-
-@router.callback_query(F.data == 'finish_order')
-async def finish_order(callback: CallbackQuery, state: FSMContext):
-    await state.clear()
-    await callback.message.edit_text(
-        '🎉 Ваш заказ завершен! Ожидайте доставку.',
-        reply_markup=get_web_app_keyboard()
-    )
-    await state.clear()
-
-@router.callback_query(F.data.startswith('product_'))
-async def choose_product(callback: CallbackQuery, state: FSMContext):
-    product_name = callback.data.replace('product_', '')
-    await state.update_data(current_product=product_name)
-    await state.set_state(Order.specifying_quantity)
-    await callback.message.edit_text(
-        f'Вы выбрали: {product_name}\nВведите количество:'
-    )
-
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
-    comment = message.text if message.text.lower() not in ['нет', 'no', 'без комментария'] else ''
+    comment = message.text if message.tex.lower() not in ['Нет', 'not', 'без коментария', 'нет', 'не'] else ""
     await state.update_data(comment=comment)
-
-    data = await state.get_data()
-
-    order_text = "📦 Ваш заказ:\n\n"
-    total_items = 0
-    total_amount = 0
-
-    for item in data['items']:
-        price = get_product_price(item['product'])
-        item_total = price * item['quantity']
-        order_text += f"• {item['product']} x{item['quantity']} - {item_total}₴\n"
-        total_items += item['quantity']
-        total_amount += item_total
-
-    order_text += f"\n📍 Адрес: {data['address']}"
-    order_text += f"\n💬 Комментарий: {comment or 'нет'}"
-    order_text += f"\n💰 Общая сумма: {total_amount}₴"
-    order_text += f"\n\nВсего товаров: {total_items} шт."
-    order_text += f"\n\nВсё верно?"
-
     await state.set_state(Order.confirm_order)
-    await message.answer(order_text, reply_markup=inline_confirm_order())
+    await show_order_summary(message, state)
 
 
 @router.callback_query(F.data == 'cancel_order')
