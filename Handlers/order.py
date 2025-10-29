@@ -48,8 +48,9 @@ async def handle_web_app_order(message: Message, state: FSMContext):
         await state.set_state(Order.providing_address)
 
         await message.answer(
-            "📍 **Отлично!** Мы получили ваш заказ из WebApp. "
-            "Теперь, пожалуйста, введите **адрес** доставки:",
+            "📍 Отлично!"
+            "Мы получили ваш заказ из WebApp. "
+            "Теперь, пожалуйста, введите адрес доставки:",
             reply_markup=ReplyKeyboardRemove()
         )
 
