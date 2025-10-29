@@ -134,7 +134,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
             product_price = item.get('price', 0)
             quantity = item.get('quantity', 1)
 
-            item_total = product_price * item['quantity']
+            item_total = product_price * quantity
             total_amount += item_total
             total_quantity += quantity
 
@@ -155,7 +155,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
         order_info = "🛒 *НОВЫЙ ЗАКАЗ!*\n\n"
         order_info += f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
-        order_info += f"📍 Адрес: {data['address']}\n"
+        order_info += f"📍 Адрес: {data.get('address', 'Не указан')}\n"
         order_info += f"💬 Комментарий: {data.get('comment', 'нет комментария')}\n\n"
         order_info += "📦 Состав заказа:\n"
 
