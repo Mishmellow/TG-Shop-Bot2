@@ -109,9 +109,10 @@ async def process_address_webapp(message: Message, state: FSMContext):
 
     await state.set_state(Order.adding_comment)
     await message.answer(
-        '📝 Хотите добавить **комментарий** к заказу?',
+        "📝 **Почти готово!** Введите, пожалуйста, любой **комментарий** к заказу (например, "
+        "домофон, код подъезда, этаж) или нажмите *Пропустить*.",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="➡️ Пропустить", callback_data="skip_comment")]
+            [InlineKeyboardButton(text='➡️ Пропустить', callback_data='skip_comment')],
         ])
     )
 
@@ -130,24 +131,25 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
         items_for_display = []
 
         for item in data['items']:
-            product_price = get_product_price(item['product'])
+            product_price = item.get('price', 0)
+            quantity = item.get('quantity', 1)
 
             item_total = product_price * item['quantity']
             total_amount += item_total
-            total_quantity += item['quantity']
+            total_quantity += quantity
 
             add_order(
                 user_id=callback.from_user.id,
                 product=item['product'],
-                quantity=item['quantity'],
-                address=data['address'],
+                quantity=quantity,
+                address=data.get('address', 'Не указан!'),
                 comment=data.get('comment', ''),
                 price=product_price
             )
 
             items_for_display.append({
-                'product': item['product'],
-                'quantity': item['quantity'],
+                'product': item.get('name', item['product']),
+                'quantity': quantity,
                 'price': product_price
             })
 
@@ -159,7 +161,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
         for item in items_for_display:
             item_total = item['price'] * item['quantity']
-            order_info += f"• {item['product']} x{item['quantity']} - {item_total}₴\n"
+            order_info += f"• {item['name']} x{item['quantity']} - {item_total}₴\n"
 
         order_info += f'\n💰 Общая сумма: {total_amount}₴'
         order_info += f'\n📊 Итого: {len(items_for_display)} позиций, {total_quantity} шт.'
@@ -174,8 +176,6 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
             f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
             reply_markup=get_web_app_keyboard()
         )
-
-        clear_cart_from_db(callback.from_user.id)
         await state.clear()
 
     except (TelegramBadRequest, TelegramForbiddenError) as api_error:
