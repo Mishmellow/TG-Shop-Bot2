@@ -13,47 +13,52 @@
 
     <meta name="theme-color" content="var(--tg-theme-bg-color, #ffffff)">
 
-<style>
-    body {
-    background-color: var(--tg-theme-bg-color, #ffffff);
-    color: var(--tg-theme-text-color, #000000);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    padding: 20px;
-    text-align: center;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-.main {
-    max-width: 600px;
-    margin: 0 auto;
-}
-.product-card {
-    border: 1px solid var(--tg-theme-separator-color, #e0e0e0);
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 8px;
-    text-align: left;
-}
-.btn {
-    background-color: var(--tg-theme-button-color, #2481cc);
-    color: var(--tg-theme-button-text-color, #ffffff);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    display: block;
-    width: 100%;
-}
-h2 {
-    margin-top: 0;
-    margin-bottom: 5px;
-}
-.price {
-    margin: 0 0 10px 0;
-    color: var(--tg-theme-hint-color, #999999);
-}
-</style>
+    <style>
+        body {
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #000000);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            text-align: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .main {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            border: 1px solid var(--tg-theme-separator-color, #e0e0e0);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .btn {
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .price {
+            margin: 0 0 10px 0;
+            color: var(--tg-theme-hint-color, #999999);
+        }
+    </style>
 
 </head>
 
@@ -63,15 +68,12 @@ h2 {
 
         <div class="row row-cols-1 row-cols-md-3 g-3">
             <div class="col">
-                <div class="card h-100"> 
-                    <img src="https://via.placeholder.com/286x180" class="card-img-top"
-                        alt="Placeholder Image">
+                <div class="card h-100 shadow-sm rounded-3">
+                    <img src="./photos/Cofee.webp" class="card-img-top" alt="Placeholder Image">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Латте</h5>
                         <p class="card-text">Свежесваренный кофе с молоком и пенкой.</p>
-                        <button class="btn btn-primary mt-auto add-to-cart-btn" 
-                            data-product="latte" 
-                            data-price="70" 
+                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="latte" data-price="70"
                             data-name="Латте">70 грн</button>
                     </div>
                 </div>
@@ -79,52 +81,54 @@ h2 {
 
         </div>
     </div>
-    
+
     <div class="container text-center my-4">
         <h1 class="text-center mb-4">🍕 Пицца</h1>
 
         <div class="row row-cols-1 row-cols-md-3 g-3">
 
             <div class="col">
-                <div class="card h-100"> 
-                    <img src="https://via.placeholder.com/286x180" class="card-img-top"
-                        alt="Placeholder Image">
+                <div class="card h-100 shadow-sm rounded-3">
+                    <img src="./photos/Pizza.webp" class="card-img-top" alt="Placeholder Image">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Пицца Пепперони</h5>
                         <p class="card-text">Острая пепперони с томатным соусом.</p>
-                        <button class="btn btn-primary mt-auto add-to-cart-btn" 
-                            data-product="pizza" 
-                            data-price="120"
-                            data-name="Пицца Пепперони">120 грн</button>
+                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="pizza" data-price="220"
+                            data-name="Пицца Пепперони">220 грн</button>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
-    
+
     <div class="container text-center my-4">
         <h1 class="text-center mb-4">🍔 Бургеры</h1>
 
         <div class="row row-cols-1 row-cols-md-3 g-3">
 
             <div class="col">
-                <div class="card h-100"> 
-                    <img src="https://via.placeholder.com/286x180" class="card-img-top"
-                        alt="Placeholder Image">
+                <div class="card h-100 shadow-sm rounded-3">
+                    <img src="./photos/Burger.webp" class="card-img-top" alt="Placeholder Image">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Большой Бургер</h5>
                         <p class="card-text">Мясной бургер с двойным сыром и беконом.</p>
-                        <button class="btn btn-primary mt-auto add-to-cart-btn" 
-                            data-product="burgers" 
-                            data-price="250"
-                            data-name="Большой Бургер">250 грн</button>
+                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="burgers" data-price="150"
+                            data-name="Большой Бургер">150 грн</button>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+
+    <div
+        style="position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; background-color: var(--tg-theme-bg-color); z-index: 1000;">
+        <button class="btn btn-success w-100" id="checkout-button">
+            Оформить заказ (0₴)
+        </button>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -137,9 +141,8 @@ h2 {
         function updateMainButton() {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
+
             if (totalItems > 0) {
-                // Обратите внимание: totalPrice передается как целое число в JS
                 tg.MainButton.setText(`Оформить Заказ (${totalPrice} грн)`);
                 tg.MainButton.show();
             } else {
@@ -148,9 +151,8 @@ h2 {
         }
 
         function addToCart(productData) {
-            // Убеждаемся, что price - число, хотя он приходит как строка из data-price
-            const price = parseInt(productData.price); 
-            
+            const price = parseInt(productData.price);
+
             const existingItem = cart.find(item => item.product === productData.product);
 
             if (existingItem) {
@@ -159,11 +161,11 @@ h2 {
                 cart.push({
                     product: productData.product,
                     name: productData.name,
-                    price: price, // Сохраняем цену как число
+                    price: price,
                     quantity: 1
                 });
             }
-            
+
             updateMainButton();
             tg.HapticFeedback.notificationOccurred('success');
         }
@@ -175,17 +177,14 @@ h2 {
         document.querySelectorAll('.add-to-cart-btn').forEach(button => {
             button.addEventListener('click', () => {
                 const product = button.getAttribute('data-product');
-                // Важно: парсим цену как целое число
-                const price = parseInt(button.getAttribute('data-price')); 
+                const price = parseInt(button.getAttribute('data-price'));
                 const name = button.getAttribute('data-name');
-                
-                // Передаем цену, имя и продукт
+
                 addToCart({ product, price, name });
             });
         });
 
         tg.MainButton.onClick(() => {
-            // Отправляем массив объектов корзины
             const dataToSend = JSON.stringify({ items: cart });
             tg.sendData(dataToSend);
         });
