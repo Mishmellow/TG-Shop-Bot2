@@ -58,7 +58,7 @@
             margin: 0 0 10px 0;
             color: var(--tg-theme-hint-color, #999999);
         }
-        
+
         .card-img-top {
             max-width: 80%;
             height: auto;
@@ -71,66 +71,104 @@
 </head>
 
 <body>
-    <div class="container text-center my-4">
-        <h1 class="text-center mb-4">🛍️ Кофе</h1>
 
-        <div class="row row-cols-2 row-cols-md-3 g-3">
-            <div class="col" style="width: 50%;">
-                <div class="card h-100 shadow-sm rounded-3">
-                    <img src="./photos/cofee.webp" class="card-img-top" alt="Placeholder Image">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Латте</h5>
-                        <p class="card-text">Свежесваренный кофе с молоком и пенкой.</p>
-                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="latte" data-price="70"
-                            data-name="Латте">70 грн</button>
+    <body>
+        <div class="container text-center my-4">
+            <h1 class="text-center mb-4">🛍️ Кофе</h1>
+
+            <div class="row row-cols-2 row-cols-md-3 g-3">
+
+                <div class="col" style="width: 50%;">
+                    <div class="card h-100 shadow-sm rounded-3">
+                        <img src="./photos/cofee.webp" class="card-img-top product-img" alt="Латте">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Латте</h5>
+                            <p class="card-text">Свежесваренный кофе с молоком и пенкой.</p>
+                            <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="latte" data-price="70"
+                                data-name="Латте">70 грн</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col" style="width: 50%;">
+                    <div class="card h-100 shadow-sm rounded-3">
+                        <img src="./photos/latte.webp" class="card-img-top product-img" alt="Двойной Латте">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Двойной Латте</h5>
+                            <p class="card-text">Крепкий двойной эспрессо.</p>
+                            <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="double_latte"
+                                data-price="95" data-name="Двойной Латте">95 грн</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
-    </div>
 
-    <div class="container text-center my-4">
-        <h1 class="text-center mb-4">🍕 Пицца</h1>
+        <div class="container text-center my-4">
+            <h1 class="text-center mb-4">🍕 Пицца</h1>
 
-        <div class="row row-cols-2 row-cols-md-3 g-3">
+            <div class="row row-cols-2 row-cols-md-3 g-3">
 
-            <div class="col" style="width: 50%;">
-                <div class="card h-100 shadow-sm rounded-3">
-                    <img src="./photos/pizza.webp" class="card-img-top" alt="Placeholder Image">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Пицца Пепперони</h5>
-                        <p class="card-text">Острая пепперони с томатным соусом.</p>
-                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="pizza" data-price="220"
-                            data-name="Пицца Пепперони">220 грн</button>
+                <div class="col" style="width: 50%;">
+                    <div class="card h-100 shadow-sm rounded-3">
+                        <img src="./photos/pizza.webp" class="card-img-top product-img" alt="Пицца Пепперони">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Пицца Пепперони</h5>
+                            <p class="card-text">Острая пепперони с томатным соусом.</p>
+                            <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="pizza"
+                                data-price="220" data-name="Пицца Пепперони">220 грн</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col" style="width: 50%;">
+                    <div class="card h-100 shadow-sm rounded-3">
+                        <img src="./photos/gavajska.webp" class="card-img-top product-img" alt="Пицца Гавайская">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Пицца Гавайская</h5>
+                            <p class="card-text">Сочная курица, ананасы, сыр.</p>
+                            <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="hawaiian_pizza"
+                                data-price="250" data-name="Пицца Гавайская">250 грн</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
-    </div>
 
-    <div class="container text-center my-4">
-        <h1 class="text-center mb-4">🍔 Бургеры</h1>
+        <div class="container text-center my-4">
+            <h1 class="text-center mb-4">🍔 Бургеры</h1>
 
-        <div class="row row-cols-2 row-cols-md-3 g-3">
+            <div class="row row-cols-2 row-cols-md-3 g-3">
 
-            <div class="col" style="width: 50%;">
-                <div class="card h-100 shadow-sm rounded-3">
-                    <img src="./photos/burger.webp" class="card-img-top" alt="Placeholder Image">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Большой Бургер</h5>
-                        <p class="card-text">Мясной бургер с двойным сыром и беконом.</p>
-                        <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="burgers" data-price="150"
-                            data-name="Большой Бургер">150 грн</button>
+                <div class="col" style="width: 50%;">
+                    <div class="card h-100 shadow-sm rounded-3">
+                        <img src="./photos/burger.webp" class="card-img-top product-img" alt="Большой Бургер">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Большой Бургер</h5>
+                            <p class="card-text">Мясной бургер с двойным сыром и беконом.</p>
+                            <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="burgers"
+                                data-price="150" data-name="Большой Бургер">150 грн</button>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col" style="width: 50%;">
+                    <div class="card h-100 shadow-sm rounded-3">
+                        <img src="./photos/chikenburger.webp" class="card-img-top product-img" alt="Чикен Бургер">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Чикен Бургер</h5>
+                            <p class="card-text">Куриное филе с соусом BBQ.</p>
+                            <button class="btn btn-primary mt-auto add-to-cart-btn" data-product="chicken_burger"
+                                data-price="120" data-name="Чикен Бургер">120 грн</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
         </div>
-    </div>
+    </body>
 
-    
+
     <script src="./js/bootstrap.bundle.min.js"></script>
 
     <script>
