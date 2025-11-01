@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Fix mainbutton">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="fix: scope issue resolving totalSum and orderText inside main button click">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/order.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00134" summary="Delete docs">
-      <option name="closed" value="true" />
-      <created>1761652300064</created>
-      <option name="number" value="00134" />
-      <option name="presentableId" value="LOCAL-00134" />
-      <option name="project" value="LOCAL" />
-      <updated>1761652300064</updated>
     </task>
     <task id="LOCAL-00135" summary="772">
       <option name="closed" value="true" />
@@ -480,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761996351470</updated>
     </task>
-    <option name="localTasksCounter" value="183" />
+    <task id="LOCAL-00183" summary="fix: scope issue resolving totalSum and orderText inside main button click">
+      <option name="closed" value="true" />
+      <created>1761996621375</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
+      <option name="project" value="LOCAL" />
+      <updated>1761996621375</updated>
+    </task>
+    <option name="localTasksCounter" value="184" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add new js and css files and do push" />
     <MESSAGE value="Add new photos" />
     <MESSAGE value="Upgrade photos" />
     <MESSAGE value="375" />
@@ -520,6 +519,7 @@
     <MESSAGE value="Update html and fix 404error" />
     <MESSAGE value="fix: Final fix, sending order data as JSON string" />
     <MESSAGE value="Fix mainbutton" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix mainbutton" />
+    <MESSAGE value="fix: scope issue resolving totalSum and orderText inside main button click" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: scope issue resolving totalSum and orderText inside main button click" />
   </component>
 </project>

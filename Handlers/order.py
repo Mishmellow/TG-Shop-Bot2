@@ -99,7 +99,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
             add_order(
                 user_id=callback.from_user.id,
-                product=item['product'],
+                product=item['name'],
                 quantity=quantity,
                 address=data.get('address', 'Не указан!'),
                 comment=data.get('comment', ''),
