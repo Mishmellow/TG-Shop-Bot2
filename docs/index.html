@@ -168,66 +168,110 @@
 
             </div>
         </div>
+
+        <div id="cart-fixed-btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: none;">
+            <button class="btn btn-primary btn-lg shadow-lg">
+                Корзина (<span id="cart-total-quantity">0</span>) - <span id="cart-total-sum">0</span> грн
+            </button>
+        </div>
     </body>
 
 
     <script src="./js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const tg = window.Telegram.WebApp;
+        
         let cart = [];
 
-        function updateMainButton() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const cartButtonContainer = document.getElementById('cart-fixed-btn');
+        const cartQuantitySpan = document.getElementById('cart-total-quantity');
+        const cartSumSpan = document.getElementById('cart-total-sum');
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
 
-            if (totalItems > 0) {
-                tg.MainButton.setText(`Оформить Заказ (${totalPrice} грн)`);
-                tg.MainButton.show();
+        function updateCartUI() {
+            let totalSum = 0;
+            let totalQuantity = 0;
+
+            cart.forEach(item => {
+                totalSum += item.price * item.quantity;
+                totalQuantity += item.quantity;
+            });
+
+            cartQuantitySpan.textContent = totalQuantity;
+            cartSumSpan.textContent = totalSum.toFixed(0);
+
+            if (totalQuantity > 0) {
+                cartButtonContainer.style.display = 'block';
+
+                if (window.Telegram) {
+                    window.Telegram.WebApp.MainButton.setText(`Оформить заказ (${totalSum.toFixed(0)} грн)`).show();
+                }
             } else {
-                tg.MainButton.hide();
+                cartButtonContainer.style.display = 'none'; 
+                if (window.Telegram) {
+                    window.Telegram.WebApp.MainButton.hide();
+                }
             }
+
+            console.log('--- КОРЗИНА ОБНОВЛЕНА ---');
+            console.log('Общая сумма заказа:', totalSum.toFixed(2), 'грн');
+            console.log('Текущие уникальные товары:', cart);
         }
 
-        function addToCart(productData) {
-            const price = parseInt(productData.price);
-
-            const existingItem = cart.find(item => item.product === productData.product);
+        function addToCart(productName, productPrice, productId) {
+            const price = parseFloat(productPrice);
+            const existingItem = cart.find(item => item.id === productId);
 
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
-                cart.push({
-                    product: productData.product,
-                    name: productData.name,
+                const newItem = {
+                    id: productId,
+                    name: productName,
                     price: price,
                     quantity: 1
-                });
+                };
+                cart.push(newItem);
             }
 
-            updateMainButton();
-            tg.HapticFeedback.notificationOccurred('success');
+            updateCartUI();
         }
 
-        tg.ready();
-        tg.expand();
-        updateMainButton();
-
-        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        addToCartButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const product = button.getAttribute('data-product');
-                const price = parseInt(button.getAttribute('data-price'));
-                const name = button.getAttribute('data-name');
+                const name = button.dataset.name;
+                const price = button.dataset.price;
+                const id = button.dataset.product;
 
-                addToCart({ product, price, name });
+                addToCart(name, price, id);
             });
         });
 
-        tg.MainButton.onClick(() => {
-            const dataToSend = JSON.stringify({ items: cart });
-            tg.sendData(dataToSend);
-        });
+        if (window.Telegram) {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
+
+            tg.MainButton.onClick(() => {
+                if (cart.length === 0) return;
+
+                let orderText = "🎉 НОВЫЙ ЗАКАЗ!\n\n";
+                let totalSum = 0;
+
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    orderText += `${item.name} x ${item.quantity} шт. = ${itemTotal.toFixed(0)} грн\n`;
+                    totalSum += itemTotal;
+                });
+
+                orderText += `\nИТОГО: ${totalSum.toFixed(0)} грн.`;
+                tg.sendData(orderText);
+            });
+        }
+
+        updateCartUI();
+
     </script>
+
 </body>
 
 </html>
