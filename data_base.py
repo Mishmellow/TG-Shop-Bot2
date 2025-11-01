@@ -44,7 +44,7 @@ def init_db():
                     address TEXT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     status TEXT DEFAULT 'new',
-                    price INTEGER DEFAULT 0,
+                    price INTEGER DEFAULT 0
                 )
             ''')
             conn.execute('''
