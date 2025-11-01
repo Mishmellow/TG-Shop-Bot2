@@ -77,9 +77,11 @@ async def process_address(message: Message, state: FSMContext):
 
 @router.callback_query(F.data == 'confirm_order')
 async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
+    user_id = callback.from_user.id
     data = await state.get_data()
     total_amount = 0
     total_quantity = 0
+    order_items_list = []
 
     if 'items' not in data or not data['items']:
         await callback.answer("❌ Корзина пуста. Пожалуйста, соберите заказ заново", show_alert=True)
@@ -87,8 +89,6 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
         return
 
     try:
-        items_for_display = []
-
         for item in data['items']:
             product_price = item.get('price', 0)
             quantity = item.get('quantity', 1)
@@ -97,33 +97,30 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
             total_amount += item_total
             total_quantity += quantity
 
-            add_order(
-                user_id=callback.from_user.id,
-                product=item['name'],
-                quantity=quantity,
-                address=data.get('address', 'Не указан!'),
-                comment=data.get('comment', ''),
-                price=product_price
-            )
+            order_items_list.append(f"{item['name']} x{quantity} - {item_total}₴")
 
-            items_for_display.append({
-                'product': item['name'],
-                'quantity': quantity,
-                'price': product_price
-            })
+        order_text_to_save = "\n".join(order_items_list)
+
+        add_order(
+            user_id=user_id,
+            product=order_text_to_save,
+            quantity=total_quantity,
+            address=data.get('address', 'Не указан!'),
+            comment=data.get('comment', 'нет комментария'),
+            price=total_amount
+        )
+
+        clear_cart_from_db(user_id)
+        await state.update_data(items=[])
 
         order_info = "🛒 *НОВЫЙ ЗАКАЗ!*\n\n"
         order_info += f"👤 Пользователь: @{callback.from_user.username or 'без username'}\n"
         order_info += f"📍 Адрес: {data.get('address', 'Не указан')}\n"
         order_info += f"💬 Комментарий: {data.get('comment', 'нет комментария')}\n\n"
         order_info += "📦 Состав заказа:\n"
-
-        for item in items_for_display:
-            item_total = item['price'] * item['quantity']
-            order_info += f"• {item['product']} x{item['quantity']} - {item_total}₴\n"
-
-        order_info += f'\n💰 Общая сумма: {total_amount}₴'
-        order_info += f'\n📊 Итого: {len(items_for_display)} позиций, {total_quantity} шт.'
+        order_info += "\n".join([f"• {line}" for line in order_items_list])
+        order_info += f'\n\n💰 Общая сумма: {total_amount}₴'
+        order_info += f'\n📊 Итого: {len(data["items"])} позиций, {total_quantity} шт.'
 
         await bot.send_message(
             chat_id=1499143658,
@@ -133,7 +130,6 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
         await callback.message.edit_text(
             f'✅ Ваш заказ принят в обработку!\n💰 Сумма заказа: {total_amount}₴\nОжидайте доставку! ',
-            # reply_markup=get_web_app_keyboard()
         )
         await state.clear()
 
