@@ -43,8 +43,8 @@ def init_db():
                     quantity INTEGER, 
                     address TEXT,
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    status TEXT DEFAULT 'new'
-                    price INTEGER DEFAULT 0
+                    status TEXT DEFAULT 'new',
+                    price INTEGER DEFAULT 0,
                 )
             ''')
             conn.execute('''
@@ -83,7 +83,7 @@ def init_db():
 
             for name,price,category in products:
                 conn.execute('''
-                INSERT INTO products(name, price, category)
+                INSERT OR IGNORE INTO products(name, price, category)
                 VALUES (?, ?, ?)
             ''', (name, price, category))
 
