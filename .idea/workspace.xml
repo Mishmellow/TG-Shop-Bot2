@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update our js code and btn">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/order.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/profile.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/registration.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/start.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/handlers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/keyboards.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/photos/burger.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/photos/cofee.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/photos/pizza.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/webhook.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Mishmellow&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Mishmellow/TG-Shop-Bot2.git&quot;,
+    &quot;accountId&quot;: &quot;f5838764-7e18-4a9b-a6a3-4b705450ac62&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="33sf0yijbiBmf6vmrCn3l5WJLwy" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.data_base.executor&quot;: &quot;Run&quot;,
+    &quot;Python.order.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/mishka/Documents/my_telegram_bot1/TG-Shop-Bot1/docs&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Handlers" />
+      <recent name="$PROJECT_DIR$/Web-APP" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/PythonProjectBotAiogram1" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-ce6832f46686-7b97d883f26b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.25557.178" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="" />
+      <created>1760110481360</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1760110481360</updated>
+    </task>
+    <task id="LOCAL-00131" summary="delete web app again">
+      <option name="closed" value="true" />
+      <created>1761509078434</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1761509078434</updated>
+    </task>
+    <task id="LOCAL-00132" summary="Add new btn 'profile'">
+      <option name="closed" value="true" />
+      <created>1761596431484</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1761596431484</updated>
+    </task>
+    <task id="LOCAL-00133" summary="Add new btn and adding new web-app info into a kbw">
+      <option name="closed" value="true" />
+      <created>1761652060004</created>
+      <option name="number" value="00133" />
+      <option name="presentableId" value="LOCAL-00133" />
+      <option name="project" value="LOCAL" />
+      <updated>1761652060004</updated>
+    </task>
+    <task id="LOCAL-00134" summary="Delete docs">
+      <option name="closed" value="true" />
+      <created>1761652300064</created>
+      <option name="number" value="00134" />
+      <option name="presentableId" value="LOCAL-00134" />
+      <option name="project" value="LOCAL" />
+      <updated>1761652300064</updated>
+    </task>
+    <task id="LOCAL-00135" summary="772">
+      <option name="closed" value="true" />
+      <created>1761653715937</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1761653715937</updated>
+    </task>
+    <task id="LOCAL-00136" summary="Add new src">
+      <option name="closed" value="true" />
+      <created>1761654572651</created>
+      <option name="number" value="00136" />
+      <option name="presentableId" value="LOCAL-00136" />
+      <option name="project" value="LOCAL" />
+      <updated>1761654572651</updated>
+    </task>
+    <task id="LOCAL-00137" summary="Big update of code">
+      <option name="closed" value="true" />
+      <created>1761683463946</created>
+      <option name="number" value="00137" />
+      <option name="presentableId" value="LOCAL-00137" />
+      <option name="project" value="LOCAL" />
+      <updated>1761683463946</updated>
+    </task>
+    <task id="LOCAL-00138" summary="Delete ,">
+      <option name="closed" value="true" />
+      <created>1761683771257</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1761683771257</updated>
+    </task>
+    <task id="LOCAL-00139" summary="Again delete ','">
+      <option name="closed" value="true" />
+      <created>1761684153803</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1761684153803</updated>
+    </task>
+    <task id="LOCAL-00140" summary="Add card and grid">
+      <option name="closed" value="true" />
+      <created>1761685469928</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1761685469928</updated>
+    </task>
+    <task id="LOCAL-00141" summary="Del script">
+      <option name="closed" value="true" />
+      <created>1761685738439</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1761685738439</updated>
+    </task>
+    <task id="LOCAL-00142" summary="Global adding new handlers and update HTML">
+      <option name="closed" value="true" />
+      <created>1761687711535</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1761687711535</updated>
+    </task>
+    <task id="LOCAL-00143" summary="3321">
+      <option name="closed" value="true" />
+      <created>1761688168845</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1761688168845</updated>
+    </task>
+    <task id="LOCAL-00144" summary="Global update code">
+      <option name="closed" value="true" />
+      <created>1761688781933</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1761688781933</updated>
+    </task>
+    <task id="LOCAL-00145" summary="Add process_address and new confirm order">
+      <option name="closed" value="true" />
+      <created>1761752985645</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1761752985645</updated>
+    </task>
+    <task id="LOCAL-00146" summary="Debugs data.get and quantity">
+      <option name="closed" value="true" />
+      <created>1761754035230</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1761754035230</updated>
+    </task>
+    <task id="LOCAL-00147" summary="Fix code errors">
+      <option name="closed" value="true" />
+      <created>1761755056037</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1761755056037</updated>
+    </task>
+    <task id="LOCAL-00148" summary="Delete reply_markup for verification">
+      <option name="closed" value="true" />
+      <created>1761756351906</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1761756351906</updated>
+    </task>
+    <task id="LOCAL-00149" summary="11021">
+      <option name="closed" value="true" />
+      <created>1761756401391</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1761756401391</updated>
+    </task>
+    <task id="LOCAL-00150" summary="828424">
+      <option name="closed" value="true" />
+      <created>1761756509260</created>
+      <option name="number" value="00150" />
+      <option name="presentableId" value="LOCAL-00150" />
+      <option name="project" value="LOCAL" />
+      <updated>1761756509260</updated>
+    </task>
+    <task id="LOCAL-00151" summary="5532">
+      <option name="closed" value="true" />
+      <created>1761756788211</created>
+      <option name="number" value="00151" />
+      <option name="presentableId" value="LOCAL-00151" />
+      <option name="project" value="LOCAL" />
+      <updated>1761756788211</updated>
+    </task>
+    <task id="LOCAL-00152" summary="Add new procces comment and delete old handlers">
+      <option name="closed" value="true" />
+      <created>1761772615661</created>
+      <option name="number" value="00152" />
+      <option name="presentableId" value="LOCAL-00152" />
+      <option name="project" value="LOCAL" />
+      <updated>1761772615661</updated>
+    </task>
+    <task id="LOCAL-00153" summary="3321">
+      <option name="closed" value="true" />
+      <created>1761772835500</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1761772835500</updated>
+    </task>
+    <task id="LOCAL-00154" summary="Debug text lower">
+      <option name="closed" value="true" />
+      <created>1761772868970</created>
+      <option name="number" value="00154" />
+      <option name="presentableId" value="LOCAL-00154" />
+      <option name="project" value="LOCAL" />
+      <updated>1761772868970</updated>
+    </task>
+    <task id="LOCAL-00155" summary="Upgrade our frontend part">
+      <option name="closed" value="true" />
+      <created>1761854251597</created>
+      <option name="number" value="00155" />
+      <option name="presentableId" value="LOCAL-00155" />
+      <option name="project" value="LOCAL" />
+      <updated>1761854251597</updated>
+    </task>
+    <task id="LOCAL-00156" summary="Del btn and add new padding">
+      <option name="closed" value="true" />
+      <created>1761854658261</created>
+      <option name="number" value="00156" />
+      <option name="presentableId" value="LOCAL-00156" />
+      <option name="project" value="LOCAL" />
+      <updated>1761854658261</updated>
+    </task>
+    <task id="LOCAL-00157" summary="Add new js and css files and do push">
+      <option name="closed" value="true" />
+      <created>1761855841805</created>
+      <option name="number" value="00157" />
+      <option name="presentableId" value="LOCAL-00157" />
+      <option name="project" value="LOCAL" />
+      <updated>1761855841805</updated>
+    </task>
+    <task id="LOCAL-00158" summary="Add new photos">
+      <option name="closed" value="true" />
+      <created>1761856717229</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1761856717229</updated>
+    </task>
+    <task id="LOCAL-00159" summary="Upgrade photos">
+      <option name="closed" value="true" />
+      <created>1761857086198</created>
+      <option name="number" value="00159" />
+      <option name="presentableId" value="LOCAL-00159" />
+      <option name="project" value="LOCAL" />
+      <updated>1761857086198</updated>
+    </task>
+    <task id="LOCAL-00160" summary="375">
+      <option name="closed" value="true" />
+      <created>1761859337688</created>
+      <option name="number" value="00160" />
+      <option name="presentableId" value="LOCAL-00160" />
+      <option name="project" value="LOCAL" />
+      <updated>1761859337688</updated>
+    </task>
+    <task id="LOCAL-00161" summary="83573">
+      <option name="closed" value="true" />
+      <created>1761859458703</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
+      <option name="project" value="LOCAL" />
+      <updated>1761859458703</updated>
+    </task>
+    <task id="LOCAL-00162" summary="fix: Final attempt with pure relative paths">
+      <option name="closed" value="true" />
+      <created>1761859801167</created>
+      <option name="number" value="00162" />
+      <option name="presentableId" value="LOCAL-00162" />
+      <option name="project" value="LOCAL" />
+      <updated>1761859801167</updated>
+    </task>
+    <task id="LOCAL-00163" summary="35647">
+      <option name="closed" value="true" />
+      <created>1761860054472</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
+      <option name="project" value="LOCAL" />
+      <updated>1761860054472</updated>
+    </task>
+    <task id="LOCAL-00164" summary="236">
+      <option name="closed" value="true" />
+      <created>1761860129489</created>
+      <option name="number" value="00164" />
+      <option name="presentableId" value="LOCAL-00164" />
+      <option name="project" value="LOCAL" />
+      <updated>1761860129489</updated>
+    </task>
+    <task id="LOCAL-00165" summary="58327">
+      <option name="closed" value="true" />
+      <created>1761860208354</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
+      <option name="project" value="LOCAL" />
+      <updated>1761860208354</updated>
+    </task>
+    <task id="LOCAL-00166" summary="418">
+      <option name="closed" value="true" />
+      <created>1761860518776</created>
+      <option name="number" value="00166" />
+      <option name="presentableId" value="LOCAL-00166" />
+      <option name="project" value="LOCAL" />
+      <updated>1761860518776</updated>
+    </task>
+    <task id="LOCAL-00167" summary="5343">
+      <option name="closed" value="true" />
+      <created>1761908745054</created>
+      <option name="number" value="00167" />
+      <option name="presentableId" value="LOCAL-00167" />
+      <option name="project" value="LOCAL" />
+      <updated>1761908745054</updated>
+    </task>
+    <task id="LOCAL-00168" summary="Add new style css">
+      <option name="closed" value="true" />
+      <created>1761910770794</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
+      <option name="project" value="LOCAL" />
+      <updated>1761910770794</updated>
+    </task>
+    <task id="LOCAL-00169" summary="Upgrade html and add new columns">
+      <option name="closed" value="true" />
+      <created>1761939785357</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
+      <option name="project" value="LOCAL" />
+      <updated>1761939785358</updated>
+    </task>
+    <task id="LOCAL-00170" summary="Do padding and margin between cards">
+      <option name="closed" value="true" />
+      <created>1761940609907</created>
+      <option name="number" value="00170" />
+      <option name="presentableId" value="LOCAL-00170" />
+      <option name="project" value="LOCAL" />
+      <updated>1761940609907</updated>
+    </task>
+    <task id="LOCAL-00171" summary="Do padding and margin between cards">
+      <option name="closed" value="true" />
+      <created>1761940727791</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
+      <option name="project" value="LOCAL" />
+      <updated>1761940727791</updated>
+    </task>
+    <task id="LOCAL-00172" summary="Add padding and margin between cards">
+      <option name="closed" value="true" />
+      <created>1761940973192</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
+      <option name="project" value="LOCAL" />
+      <updated>1761940973192</updated>
+    </task>
+    <task id="LOCAL-00173" summary="Add padding and margin for cards in project">
+      <option name="closed" value="true" />
+      <created>1761941275131</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
+      <option name="project" value="LOCAL" />
+      <updated>1761941275131</updated>
+    </task>
+    <task id="LOCAL-00174" summary="Add new photos for cards">
+      <option name="closed" value="true" />
+      <created>1761941853808</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
+      <option name="project" value="LOCAL" />
+      <updated>1761941853808</updated>
+    </task>
+    <task id="LOCAL-00175" summary="Add photos">
+      <option name="closed" value="true" />
+      <created>1761942006235</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
+      <option name="project" value="LOCAL" />
+      <updated>1761942006236</updated>
+    </task>
+    <task id="LOCAL-00176" summary="Add photos for cards">
+      <option name="closed" value="true" />
+      <created>1761942321516</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1761942321516</updated>
+    </task>
+    <task id="LOCAL-00177" summary="Update photos and do commit">
+      <option name="closed" value="true" />
+      <created>1761942610419</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1761942610419</updated>
+    </task>
+    <task id="LOCAL-00178" summary="Fix all errors">
+      <option name="closed" value="true" />
+      <created>1761943749260</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1761943749260</updated>
+    </task>
+    <task id="LOCAL-00179" summary="Update our js code and btn">
+      <option name="closed" value="true" />
+      <created>1761992710575</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
+      <option name="project" value="LOCAL" />
+      <updated>1761992710575</updated>
+    </task>
+    <option name="localTasksCounter" value="180" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Debug text lower" />
+    <MESSAGE value="Upgrade our frontend part" />
+    <MESSAGE value="Del btn and add new padding" />
+    <MESSAGE value="Add new js and css files and do push" />
+    <MESSAGE value="Add new photos" />
+    <MESSAGE value="Upgrade photos" />
+    <MESSAGE value="375" />
+    <MESSAGE value="83573" />
+    <MESSAGE value="fix: Final attempt with pure relative paths" />
+    <MESSAGE value="35647" />
+    <MESSAGE value="236" />
+    <MESSAGE value="58327" />
+    <MESSAGE value="418" />
+    <MESSAGE value="5343" />
+    <MESSAGE value="Add new style css" />
+    <MESSAGE value="Upgrade html and add new columns" />
+    <MESSAGE value="Do padding and margin between cards" />
+    <MESSAGE value="Add padding and margin between cards" />
+    <MESSAGE value="Add padding and margin for cards in project" />
+    <MESSAGE value="Add new photos for cards" />
+    <MESSAGE value="Add photos" />
+    <MESSAGE value="Add photos for cards" />
+    <MESSAGE value="Update photos and do commit" />
+    <MESSAGE value="Fix all errors" />
+    <MESSAGE value="Update our js code and btn" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update our js code and btn" />
+  </component>
+</project>
