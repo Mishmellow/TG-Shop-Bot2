@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="fix: Final fix, sending order data as JSON string">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Fix mainbutton">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00133" summary="Add new btn and adding new web-app info into a kbw">
-      <option name="closed" value="true" />
-      <created>1761652060004</created>
-      <option name="number" value="00133" />
-      <option name="presentableId" value="LOCAL-00133" />
-      <option name="project" value="LOCAL" />
-      <updated>1761652060004</updated>
     </task>
     <task id="LOCAL-00134" summary="Delete docs">
       <option name="closed" value="true" />
@@ -479,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761996163755</updated>
     </task>
-    <option name="localTasksCounter" value="182" />
+    <task id="LOCAL-00182" summary="Fix mainbutton">
+      <option name="closed" value="true" />
+      <created>1761996351470</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
+      <option name="project" value="LOCAL" />
+      <updated>1761996351470</updated>
+    </task>
+    <option name="localTasksCounter" value="183" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -494,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Del btn and add new padding" />
     <MESSAGE value="Add new js and css files and do push" />
     <MESSAGE value="Add new photos" />
     <MESSAGE value="Upgrade photos" />
@@ -519,6 +519,7 @@
     <MESSAGE value="Update our js code and btn" />
     <MESSAGE value="Update html and fix 404error" />
     <MESSAGE value="fix: Final fix, sending order data as JSON string" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Final fix, sending order data as JSON string" />
+    <MESSAGE value="Fix mainbutton" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix mainbutton" />
   </component>
 </project>

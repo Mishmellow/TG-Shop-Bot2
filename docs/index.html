@@ -252,20 +252,20 @@
             tg.MainButton.onClick(() => {
                 if (cart.length === 0) return;
 
+                let totalSum = 0;
                 let orderText = "🎉 НОВЫЙ ЗАКАЗ!\n\n";
-                let totalSum = 0;   
 
                 cart.forEach(item => {
                     const itemTotal = item.price * item.quantity;
                     orderText += `${item.name} x ${item.quantity} шт. = ${itemTotal.toFixed(0)} грн\n`;
-                    totalSum += itemTotal;
+                    totalSum += itemTotal; 
                 });
 
                 orderText += `\nИТОГО: ${totalSum.toFixed(0)} грн.`;
-                
                 const dataToSend = {
-                    message: orderText,
-                    total: totalSum.toFixed(0)
+                    items: cart,
+                    total_sum: totalSum.toFixed(0),
+                    order_message: orderText
                 };
 
                 tg.sendData(JSON.stringify(dataToSend));
