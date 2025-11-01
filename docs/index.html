@@ -253,7 +253,7 @@
                 if (cart.length === 0) return;
 
                 let orderText = "🎉 НОВЫЙ ЗАКАЗ!\n\n";
-                let totalSum = 0;
+                let totalSum = 0;   
 
                 cart.forEach(item => {
                     const itemTotal = item.price * item.quantity;
@@ -262,7 +262,13 @@
                 });
 
                 orderText += `\nИТОГО: ${totalSum.toFixed(0)} грн.`;
-                tg.sendData(orderText);
+                
+                const dataToSend = {
+                    message: orderText,
+                    total: totalSum.toFixed(0)
+                };
+
+                tg.sendData(JSON.stringify(dataToSend));
             });
         }
 

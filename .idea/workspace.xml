@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update our js code and btn">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update html and fix 404error">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
     </list>
@@ -87,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00131" summary="delete web app again">
-      <option name="closed" value="true" />
-      <created>1761509078434</created>
-      <option name="number" value="00131" />
-      <option name="presentableId" value="LOCAL-00131" />
-      <option name="project" value="LOCAL" />
-      <updated>1761509078434</updated>
     </task>
     <task id="LOCAL-00132" summary="Add new btn 'profile'">
       <option name="closed" value="true" />
@@ -480,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761992710575</updated>
     </task>
-    <option name="localTasksCounter" value="180" />
+    <task id="LOCAL-00180" summary="Update html and fix 404error">
+      <option name="closed" value="true" />
+      <created>1761994905838</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
+      <option name="project" value="LOCAL" />
+      <updated>1761994905838</updated>
+    </task>
+    <option name="localTasksCounter" value="181" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Debug text lower" />
     <MESSAGE value="Upgrade our frontend part" />
     <MESSAGE value="Del btn and add new padding" />
     <MESSAGE value="Add new js and css files and do push" />
@@ -520,6 +519,7 @@
     <MESSAGE value="Update photos and do commit" />
     <MESSAGE value="Fix all errors" />
     <MESSAGE value="Update our js code and btn" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update our js code and btn" />
+    <MESSAGE value="Update html and fix 404error" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update html and fix 404error" />
   </component>
 </project>
