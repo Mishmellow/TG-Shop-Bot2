@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="fix: db: final structure fix in init_db (comma and INSERT OR IGNORE)">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Delete ','">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shop_bot.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00139" summary="Again delete ','">
-      <option name="closed" value="true" />
-      <created>1761684153803</created>
-      <option name="number" value="00139" />
-      <option name="presentableId" value="LOCAL-00139" />
-      <option name="project" value="LOCAL" />
-      <updated>1761684153803</updated>
     </task>
     <task id="LOCAL-00140" summary="Add card and grid">
       <option name="closed" value="true" />
@@ -479,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761998449685</updated>
     </task>
-    <option name="localTasksCounter" value="188" />
+    <task id="LOCAL-00188" summary="Delete ','">
+      <option name="closed" value="true" />
+      <created>1761998660231</created>
+      <option name="number" value="00188" />
+      <option name="presentableId" value="LOCAL-00188" />
+      <option name="project" value="LOCAL" />
+      <updated>1761998660231</updated>
+    </task>
+    <option name="localTasksCounter" value="189" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -494,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="83573" />
     <MESSAGE value="fix: Final attempt with pure relative paths" />
     <MESSAGE value="35647" />
     <MESSAGE value="236" />
@@ -519,6 +519,7 @@
     <MESSAGE value="Fix line 102" />
     <MESSAGE value="fix: added missing 'price' column to 'orders' table creation" />
     <MESSAGE value="fix: db: final structure fix in init_db (comma and INSERT OR IGNORE)" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: db: final structure fix in init_db (comma and INSERT OR IGNORE)" />
+    <MESSAGE value="Delete ','" />
+    <option name="LAST_COMMIT_MESSAGE" value="Delete ','" />
   </component>
 </project>
