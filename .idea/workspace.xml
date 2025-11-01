@@ -5,29 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update our js code and btn">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/order.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/profile.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/registration.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/start.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/handlers.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/keyboards.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_base.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/photos/burger.webp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/photos/cofee.webp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/photos/pizza.webp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/style.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/webhook.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
