@@ -12,8 +12,11 @@ from Handlers.order import router as order_router
 from Handlers.profile import router as profile_router
 from Handlers.admin import router as admin_router
 
-from data_base import init_db
+from db_manager import DBManager
 from webhook import setup_webhook
+
+
+db_manager = DBManager(db_path='your_bot_shop.db')
 
 session = AiohttpSession(timeout=40)
 
@@ -21,9 +24,9 @@ bot = Bot(token=TOKEN, session=session)
 
 dp = Dispatcher()
 
+
 @dp.errors()
 async def global_error_handler(event: ErrorEvent):
-
     logging.error(
         f'⚠️ Глобальная ошибка: {type(event.exception).__name__}: {event.exception}',
         exc_info=True
@@ -36,9 +39,9 @@ async def global_error_handler(event: ErrorEvent):
         except Exception:
             pass
 
-async def main():
 
-    init_db()
+async def main():
+    dp.workflow_data['db'] = db_manager
 
     dp.include_router(start_router)
     dp.include_router(registration_router)
@@ -70,6 +73,10 @@ async def main():
 
         print(f"🌐 Веб-сервер запущен на порту 8020")
         await asyncio.Future()
+    else:
+        print('Бот запущен в режиме Polling')
+        await dp.start_polling(bot)
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)

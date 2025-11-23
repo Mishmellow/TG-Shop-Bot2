@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update index.html and do new architecture">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Add new db and update db_manager">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/db_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00145" summary="Add process_address and new confirm order">
-      <option name="closed" value="true" />
-      <created>1761752985645</created>
-      <option name="number" value="00145" />
-      <option name="presentableId" value="LOCAL-00145" />
-      <option name="project" value="LOCAL" />
-      <updated>1761752985645</updated>
     </task>
     <task id="LOCAL-00146" summary="Debugs data.get and quantity">
       <option name="closed" value="true" />
@@ -480,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763928096746</updated>
     </task>
-    <option name="localTasksCounter" value="194" />
+    <task id="LOCAL-00194" summary="Add new db and update db_manager">
+      <option name="closed" value="true" />
+      <created>1763928785686</created>
+      <option name="number" value="00194" />
+      <option name="presentableId" value="LOCAL-00194" />
+      <option name="project" value="LOCAL" />
+      <updated>1763928785686</updated>
+    </task>
+    <option name="localTasksCounter" value="195" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="5343" />
     <MESSAGE value="Add new style css" />
     <MESSAGE value="Upgrade html and add new columns" />
     <MESSAGE value="Do padding and margin between cards" />
@@ -520,6 +519,7 @@
     <MESSAGE value="Fix 102 line" />
     <MESSAGE value="Update our confirm_order handler" />
     <MESSAGE value="Update index.html and do new architecture" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update index.html and do new architecture" />
+    <MESSAGE value="Add new db and update db_manager" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add new db and update db_manager" />
   </component>
 </project>
