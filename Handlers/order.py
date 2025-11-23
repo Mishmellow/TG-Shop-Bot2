@@ -12,7 +12,7 @@ from data_base import add_order, get_user_orders, load_cart_from_db
 from data_base import get_product_price
 from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
-from app.keyboards import get_web_app_keyboard,  inline_confirm_order
+from app.keyboards import get_web_app_keyboard, inline_confirm_order
 
 ADMIN_ID = 1499143658
 

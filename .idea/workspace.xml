@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Fix 102 line">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update our confirm_order handler">
+      <change afterPath="$PROJECT_DIR$/db_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Handlers/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/order.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/start.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,14 +91,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00143" summary="3321">
-      <option name="closed" value="true" />
-      <created>1761688168845</created>
-      <option name="number" value="00143" />
-      <option name="presentableId" value="LOCAL-00143" />
-      <option name="project" value="LOCAL" />
-      <updated>1761688168845</updated>
     </task>
     <task id="LOCAL-00144" summary="Global update code">
       <option name="closed" value="true" />
@@ -480,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1761999410547</updated>
     </task>
-    <option name="localTasksCounter" value="192" />
+    <task id="LOCAL-00192" summary="Update our confirm_order handler">
+      <option name="closed" value="true" />
+      <created>1762025941179</created>
+      <option name="number" value="00192" />
+      <option name="presentableId" value="LOCAL-00192" />
+      <option name="project" value="LOCAL" />
+      <updated>1762025941180</updated>
+    </task>
+    <option name="localTasksCounter" value="193" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +499,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="58327" />
     <MESSAGE value="418" />
     <MESSAGE value="5343" />
     <MESSAGE value="Add new style css" />
@@ -520,6 +523,7 @@
     <MESSAGE value="Delete bd" />
     <MESSAGE value="Update 110 line" />
     <MESSAGE value="Fix 102 line" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix 102 line" />
+    <MESSAGE value="Update our confirm_order handler" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update our confirm_order handler" />
   </component>
 </project>
