@@ -3,20 +3,19 @@ from aiogram import F, Router, Bot
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
-from app.keyboards import inline_cart_keyboard, inline_continue_shopping
-from data_base import clear_cart_from_db
-import logging
-import json
-
-from data_base import add_order, get_user_orders, load_cart_from_db
-from data_base import get_product_price
 from aiogram.exceptions import TelegramBadRequest, TelegramForbiddenError
 
-from app.keyboards import get_web_app_keyboard, inline_confirm_order
+from db_manager import DBManager
+
+from app.keyboards import inline_cart_keyboard, inline_continue_shopping, get_web_app_keyboard, inline_confirm_order
+
+import logging
+import json
 
 ADMIN_ID = 1499143658
 
 router = Router()
+
 
 class Order(StatesGroup):
     choosing_product = State()
@@ -48,8 +47,7 @@ async def handle_web_app_order(message: Message, state: FSMContext):
         await state.set_state(Order.providing_address)
 
         await message.answer(
-            "📍 Отлично!"
-            "Мы получили ваш заказ из WebApp. "
+            "📍 Отлично! Мы получили ваш заказ из WebApp. "
             "Теперь, пожалуйста, введите адрес доставки:",
             reply_markup=ReplyKeyboardRemove()
         )
@@ -67,7 +65,7 @@ async def process_address(message: Message, state: FSMContext):
 
     await state.set_state(Order.adding_comment)
     await message.answer(
-        "📝 **Почти готово!"
+        "📝 **Почти готово!**\n"
         "Введите, пожалуйста, любой комментарий к заказу (например, "
         "домофон, код подъезда, этаж) или нажмите Пропустить.",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
@@ -75,16 +73,20 @@ async def process_address(message: Message, state: FSMContext):
         ])
     )
 
+
 @router.callback_query(F.data == 'confirm_order')
-async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
+async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot, db: DBManager):
     user_id = callback.from_user.id
     data = await state.get_data()
     total_amount = 0
     total_quantity = 0
     order_items_list = []
 
+    await callback.answer('Обработка заказа...', cache_time=1)
+
     if 'items' not in data or not data['items']:
-        await callback.answer("❌ Корзина пуста. Пожалуйста, соберите заказ заново", show_alert=True)
+        await callback.message.edit_text("❌ Корзина пуста. Пожалуйста, соберите заказ заново",
+                                         reply_markup=get_web_app_keyboard())
         await state.clear()
         return
 
@@ -101,7 +103,8 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
 
         order_text_to_save = "\n".join(order_items_list)
 
-        add_order(
+        # Асинхронный вызов DBManager
+        await db.add_order(
             user_id=user_id,
             product=order_text_to_save,
             quantity=total_quantity,
@@ -110,7 +113,8 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
             price=total_amount
         )
 
-        clear_cart_from_db(user_id)
+        # Асинхронный вызов DBManager
+        await db.clear_cart(user_id)
         await state.update_data(items=[])
 
         order_info = "🛒 *НОВЫЙ ЗАКАЗ!*\n\n"
@@ -123,7 +127,7 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
         order_info += f'\n📊 Итого: {len(data["items"])} позиций, {total_quantity} шт.'
 
         await bot.send_message(
-            chat_id=1499143658,
+            chat_id=ADMIN_ID,
             text=order_info,
             parse_mode='Markdown'
         )
@@ -134,20 +138,21 @@ async def confirm_order(callback: CallbackQuery, state: FSMContext, bot: Bot):
         await state.clear()
 
     except (TelegramBadRequest, TelegramForbiddenError) as api_error:
-        logging.error(f"❌ Ошибка Telegram API: {api_error}", exc_info=True)
+        logging.error(f"❌ Ошибка Telegram API при отправке админу: {api_error}", exc_info=True)
         await callback.answer("⚠️ Не удалось отправить сообщение. Обратитесь к администратору.", show_alert=True)
     except Exception as e:
         logging.error(f"❌ Непредвиденная ошибка в confirm_order: {e}", exc_info=True)
-        await callback.answer("⚠️ Произошла ошибка. Пожалуйста, попробуйте позже.", show_alert=True)
+        await callback.message.edit_text("⚠️ Произошла ошибка. Пожалуйста, попробуйте позже.")
 
-    finally:
-        await callback.answer()
 
 @router.message(Order.adding_comment)
 async def process_comment(message: Message, state: FSMContext):
-    comment = message.text if message.text.lower() not in ['Нет', 'not', 'без коментария'] else ''
+    comment = message.text if message.text and message.text.lower() not in ['нет', 'not', 'без коментария',
+                                                                            'пропустить'] else 'Нет комментария'
+
     await state.update_data(comment=comment)
     await state.set_state(Order.confirm_order)
+
     await show_order_summary(message, state)
 
 
@@ -160,9 +165,11 @@ async def cancel_order(callback: CallbackQuery, state: FSMContext):
         reply_markup=get_web_app_keyboard()
     )
 
+
 @router.message(Command('my_orders'))
-async def show_my_orders(message: Message):
-    orders = get_user_orders(message.from_user.id)
+async def show_my_orders(message: Message, db: DBManager):
+    # Асинхронный вызов DBManager
+    orders = await db.get_user_orders(message.from_user.id)
 
     if not orders:
         await message.answer('📭 У вас ещё нет заказов')
@@ -170,36 +177,38 @@ async def show_my_orders(message: Message):
 
     orders_by_group = {}
     for order in orders:
-        key = f"{order['address']}_{order['created_at'][:16]}"
+        key = f"{order.get('address', 'Не указан')}_{order.get('created_at', '')[:16]}"
         if key not in orders_by_group:
             orders_by_group[key] = []
         orders_by_group[key].append(order)
 
     text = '📦 Ваши заказы:\n\n'
     for group_key, order_list in orders_by_group.items():
-        text += f"📍 Адрес: {order_list[0]['address']}\n"
-        text += f"📅 {order_list[0]['created_at'][:16]}\n"
+        text += f"📍 Адрес: {order_list[0].get('address', 'Не указан')}\n"
+        text += f"📅 {order_list[0].get('created_at', '')[:16]}\n"
+
         for order in order_list:
-            text += f"   • {order['product']} x{order['quantity']}\n"
+            text += f"{order.get('product', 'Товар не указан')}\n"
         text += "\n"
 
     await message.answer(text)
 
+
 @router.message(Command('cancel'))
 @router.message(F.text.casefold() == 'Отмена')
-async def cansel(message: Message, state: FSMContext):
+async def cancel(message: Message, state: FSMContext):
     await state.clear()
     await message.answer('Заказ отменен!', reply_markup=get_web_app_keyboard())
 
+
 @router.message(Command('stats'))
-async def show_stats(message: Message):
-    if message.from_user.id != 1499143658:
+async def show_stats(message: Message, db: DBManager):
+    if message.from_user.id != ADMIN_ID:
         return
 
-    from data_base import get_users_count, get_all_orders
-
-    users_count = get_users_count()
-    orders = get_all_orders()
+    # Асинхронные вызовы DBManager
+    users_count = await db.get_users_count()
+    orders = await db.get_all_orders()
     total_orders = len(orders)
 
     stats_text = (
@@ -210,15 +219,16 @@ async def show_stats(message: Message):
 
     await message.answer(stats_text, parse_mode='Markdown')
 
+
 @router.callback_query(F.data == 'clear_cart')
-async def cleat_cart(callback: CallbackQuery, state: FSMContext):
+async def clear_cart(callback: CallbackQuery, state: FSMContext, db: DBManager):
     user_id = callback.from_user.id
 
     await state.update_data(items=[])
-    clear_cart_from_db(user_id)
-
+    # Асинхронный вызов DBManager
+    await db.clear_cart(user_id)
     await callback.answer('🗑️ Корзина очищена!')
-    await callback.message.edit.text(
+    await callback.message.edit_text(
         '🛒 Ваша корзина пуста',
         reply_markup=inline_confirm_order()
     )
@@ -226,15 +236,17 @@ async def cleat_cart(callback: CallbackQuery, state: FSMContext):
 
 @router.message(Command('cart'))
 @router.callback_query(F.data == 'view_cart')
-async def view_cart(update: Message | CallbackQuery, state: FSMContext):
-    user_id = update.from_user.id if isinstance(update, CallbackQuery) else update.from_user.id
+async def view_cart(update: Message | CallbackQuery, state: FSMContext, db: DBManager):
+    user_id = update.from_user.id
+
+    is_callback = isinstance(update, CallbackQuery)
 
     data = await state.get_data()
     items_from_state = data.get('items', [])
 
-
     if not items_from_state:
-        items_from_db = load_cart_from_db(user_id)
+        # Асинхронный вызов DBManager
+        items_from_db = await db.load_cart_from_db(user_id)
         if items_from_db:
             await state.update_data(items=items_from_db)
             items = items_from_db
@@ -252,21 +264,33 @@ async def view_cart(update: Message | CallbackQuery, state: FSMContext):
         total_quantity = 0
 
         for item in items:
-            price = get_product_price(item['product'])
-            item_total = price * item['quantity']
-            text += f'• {item["product"]} x{item["quantity"]} - {item_total}₴\n'
+            price = item.get('price')
+            if price is None:
+                # Асинхронный вызов DBManager
+                price = await db.get_product_price(item['product'])
+
+            item['price'] = price
+
+            quantity = item.get('quantity', 0)
+            item_total = price * quantity
+
+            text += f'• {item["product"]} x{quantity} - {item_total}₴\n'
             total_amount += item_total
             total_quantity += item['quantity']
+
+        await state.update_data(items=items)
 
         text += f'\n💰 Общая сумма: {total_amount}₴'
         text += f'\n📊 Товаров: {total_quantity} шт.'
 
         keyboard = inline_cart_keyboard()
 
-    if isinstance(update, Message):
-        await update.answer(text, reply_markup=keyboard)
-    else:
+    if is_callback:
         await update.message.edit_text(text, reply_markup=keyboard)
+        await update.answer()
+    else:
+        await update.answer(text, reply_markup=keyboard)
+
 
 @router.message(F.text == '📞 Контакты')
 async def handler_contact(message: Message):
@@ -281,6 +305,7 @@ async def handler_contact(message: Message):
         parse_mode='Markdown'
     )
 
+
 @router.message(F.text == 'ℹ️ О нас')
 async def handler_about(message: Message):
     about_text = (
@@ -294,8 +319,11 @@ async def handler_about(message: Message):
         parse_mode='Markdown'
     )
 
-async def show_order_summary(message: Message, state: FSMContext):
+
+async def show_order_summary(update: Message | CallbackQuery, state: FSMContext):
     data = await state.get_data()
+
+    message = update.message if isinstance(update, CallbackQuery) else update
 
     if 'items' not in data or not data['items']:
         await message.answer("❌ Корзина пуста. Пожалуйста, начните сначала.")
@@ -323,10 +351,16 @@ async def show_order_summary(message: Message, state: FSMContext):
         parse_mode='Markdown'
     )
 
+
 @router.callback_query(F.data == 'skip_comment', Order.adding_comment)
 async def skip_comment(callback: CallbackQuery, state: FSMContext):
     await state.update_data(comment="Нет комментария")
 
-    await callback.message.delete()
+    try:
+        await callback.message.delete()
+    except TelegramBadRequest:
+        pass
+
     await show_order_summary(callback.message, state)
+
     await callback.answer()
