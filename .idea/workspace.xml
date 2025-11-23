@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update run">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update and fix order">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/order.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Handlers/profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/profile.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00147" summary="Fix code errors">
-      <option name="closed" value="true" />
-      <created>1761755056037</created>
-      <option name="number" value="00147" />
-      <option name="presentableId" value="LOCAL-00147" />
-      <option name="project" value="LOCAL" />
-      <updated>1761755056037</updated>
     </task>
     <task id="LOCAL-00148" summary="Delete reply_markup for verification">
       <option name="closed" value="true" />
@@ -481,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763929202445</updated>
     </task>
-    <option name="localTasksCounter" value="196" />
+    <task id="LOCAL-00196" summary="Update and fix order">
+      <option name="closed" value="true" />
+      <created>1763930197306</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
+      <option name="project" value="LOCAL" />
+      <updated>1763930197306</updated>
+    </task>
+    <option name="localTasksCounter" value="197" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Upgrade html and add new columns" />
     <MESSAGE value="Do padding and margin between cards" />
     <MESSAGE value="Add padding and margin between cards" />
     <MESSAGE value="Add padding and margin for cards in project" />
@@ -521,6 +520,7 @@
     <MESSAGE value="Update index.html and do new architecture" />
     <MESSAGE value="Add new db and update db_manager" />
     <MESSAGE value="Update run" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update run" />
+    <MESSAGE value="Update and fix order" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update and fix order" />
   </component>
 </project>

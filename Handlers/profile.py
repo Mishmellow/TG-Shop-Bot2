@@ -2,9 +2,11 @@ from aiogram import Router
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message
 from aiogram.filters import Command
-from data_base import get_user_orders
+
+from db_manager import DBManager
 
 router = Router()
+
 
 class Order(StatesGroup):
     choosing_product = State()
@@ -12,10 +14,13 @@ class Order(StatesGroup):
     providing_address = State()
     confirm_order = State()
 
+
 @router.message(Command('profile'))
-async def profile_order(message: Message):
+async def profile_order(message: Message, db: DBManager):
     user_id = message.from_user.id
-    orders = get_user_orders(user_id)
+
+    orders = await db.get_user_orders(user_id)
+
     orders_count = len(orders)
 
     await message.answer(
