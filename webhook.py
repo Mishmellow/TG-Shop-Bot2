@@ -11,12 +11,12 @@ async def setup_webhook(bot: Bot, dp: Dispatcher):
         return False
 
     webhook_path = f"/webhook/{WEBHOOK_SECRET}"
-    webhook_url = f"{WEBHOOK_URL}{webhook_path}"
+    ful_webhook_url = f"{WEBHOOK_URL}{webhook_path}"
 
     await bot.set_webhook(
-        url=webhook_url,
+        url=ful_webhook_url,
         secret_token=WEBHOOK_SECRET,
         drop_pending_updates=True
     )
-    print(f"✅ Webhook установлен: {webhook_url}")
+    print(f"✅ Webhook установлен: {ful_webhook_url}")
     return True
