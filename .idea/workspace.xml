@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Global update and fix">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update config, add logging and fix bot token">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,14 +86,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00149" summary="11021">
-      <option name="closed" value="true" />
-      <created>1761756401391</created>
-      <option name="number" value="00149" />
-      <option name="presentableId" value="LOCAL-00149" />
-      <option name="project" value="LOCAL" />
-      <updated>1761756401391</updated>
     </task>
     <task id="LOCAL-00150" summary="828424">
       <option name="closed" value="true" />
@@ -480,7 +471,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763931225193</updated>
     </task>
-    <option name="localTasksCounter" value="198" />
+    <task id="LOCAL-00198" summary="Update config, add logging and fix bot token">
+      <option name="closed" value="true" />
+      <created>1764010001450</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
+      <option name="project" value="LOCAL" />
+      <updated>1764010001450</updated>
+    </task>
+    <option name="localTasksCounter" value="199" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +494,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add padding and margin between cards" />
     <MESSAGE value="Add padding and margin for cards in project" />
     <MESSAGE value="Add new photos for cards" />
     <MESSAGE value="Add photos" />
@@ -520,6 +518,7 @@
     <MESSAGE value="Update run" />
     <MESSAGE value="Update and fix order" />
     <MESSAGE value="Global update and fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Global update and fix" />
+    <MESSAGE value="Update config, add logging and fix bot token" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update config, add logging and fix bot token" />
   </component>
 </project>
