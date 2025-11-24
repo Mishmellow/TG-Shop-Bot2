@@ -2,6 +2,7 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 from db_manager import DBManager
+import asyncio
 
 from app.keyboards import get_web_app_keyboard
 
@@ -10,6 +11,7 @@ DB = DBManager('my_database.db')
 router = Router()
 
 print("🎯 start.py загружен!")
+
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
@@ -21,14 +23,15 @@ async def cmd_start(message: Message):
         except ValueError:
             pass
 
-    DB.add_user(
+    await asyncio.to_thread(
+        DB.add_user,
         user_id=message.from_user.id,
         username=message.from_user.username,
         first_name=message.from_user.first_name,
         referrer_id=referrer_id
     )
 
-    cart_items = DB.load_cart_from_db(message.from_user.id)
+    cart_items = await asyncio.to_thread(DB.load_cart_from_db, message.from_user.id)
 
     if cart_items:
         welcome_text = f'🛒 Добро пожаловать! В вашей корзине {len(cart_items)} товаров.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
@@ -40,9 +43,11 @@ async def cmd_start(message: Message):
         reply_markup=get_web_app_keyboard()
     )
 
+
 @router.message(Command('help'))
 async def get_help(message: Message):
     await message.answer('Это команда /help')
+
 
 @router.callback_query(F.data == 'about_us')
 async def show_about(callback: CallbackQuery):
@@ -52,6 +57,7 @@ async def show_about(callback: CallbackQuery):
         "Быстро, качественно, с гарантией.",
         reply_markup=get_web_app_keyboard()
     )
+
 
 @router.callback_query(F.data == 'contacts')
 async def contacts(callback: CallbackQuery):
@@ -63,15 +69,18 @@ async def contacts(callback: CallbackQuery):
         reply_markup=get_web_app_keyboard()
     )
 
+
 @router.message(Command('ref'))
 async def ref_user(message: Message):
-    ref_count = DB.user_conn_ref(message.from_user.id)
+    ref_count = await asyncio.to_thread(DB.user_conn_ref, message.from_user.id)
+
     ref_link = f"https://t.me/твой_бот?start=ref_{message.from_user.id}"
     await message.answer(
         f"🎁 Реферальная система\n"
         f"Приглашено друзей: {ref_count}\n"
         f"Твоя ссылка: {ref_link}"
     )
+
 
 @router.message(Command("test"))
 async def test_command(message: Message):
