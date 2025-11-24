@@ -19,9 +19,16 @@ from Handlers.admin import router as admin_router
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
-PORT = int(os.environ.get("PORT", 8080))
+
+env_port = os.environ.get("PORT")
+if not env_port:
+    logger.warning(
+        "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8000) для локального режима.")
+    PORT = 8000
+else:
+    PORT = int(env_port)
+
 WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "my_super_secret_token_123")
 WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
@@ -89,7 +96,7 @@ async def main():
         logger.info(f"--- ПРОВЕРКА ПЕРЕМЕННЫХ ---")
         logger.info(f"WEBHOOK_URL (прочитан): {WEBHOOK_URL}")
         logger.info(f"WEBHOOK_PATH (ожидаемый): {WEBHOOK_PATH}")
-        logger.info(f"Порт (ожидаемый): {PORT}")
+        logger.info(f"Порт (используемый): {PORT}")
         logger.info(f"---------------------------")
 
         await on_startup(bot)
