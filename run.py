@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
-PORT = int(os.environ.get("PORT", 8020))
+PORT = int(os.environ.get("PORT", 8080))
 WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "my_super_secret_token_123")
 WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
