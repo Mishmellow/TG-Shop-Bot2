@@ -50,19 +50,22 @@ async def global_error_handler(event: ErrorEvent):
 async def on_startup(bot: Bot):
     if WEBHOOK_URL:
         full_webhook_url = f"{WEBHOOK_URL}{WEBHOOK_PATH}"
-        logging.info(f"✅ Установка Webhook: {full_webhook_url}")
+
+        print(f"✅ Установка Webhook: {full_webhook_url}")
 
         await bot.delete_webhook(drop_pending_updates=True)
         await bot.set_webhook(
             url=full_webhook_url,
             secret_token=WEBHOOK_SECRET
         )
-        logging.info("🟢 Webhook успешно установлен.")
+        print("🟢 Webhook успешно установлен.")
+    else:
+        print("⚠️ Переменная WEBHOOK_URL не задана. Запуск в режиме Polling.")
 
 
 async def on_shutdown(bot: Bot):
     if WEBHOOK_URL:
-        logging.info("❌ Удаление Webhook...")
+        print("❌ Удаление Webhook...")
         await bot.delete_webhook()
 
 
