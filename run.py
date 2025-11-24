@@ -1,9 +1,12 @@
 import asyncio
 import logging
+import os
+from aiohttp import web
 
 from aiogram import Bot, Dispatcher
 from aiogram.types import ErrorEvent
 from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 
 from config import TOKEN
 from Handlers.start import router as start_router
@@ -13,15 +16,19 @@ from Handlers.profile import router as profile_router
 from Handlers.admin import router as admin_router
 
 from db_manager import DBManager
-from webhook import setup_webhook
 
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
+
+PORT = int(os.environ.get("PORT", 8020))
+
+WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "my_super_secret_token_123")
+WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
 db_manager = DBManager(db_path='your_bot_shop.db')
 
 session = AiohttpSession(timeout=40)
 
 bot = Bot(token=TOKEN, session=session)
-
 dp = Dispatcher()
 
 
@@ -40,6 +47,25 @@ async def global_error_handler(event: ErrorEvent):
             pass
 
 
+async def on_startup(bot: Bot):
+    if WEBHOOK_URL:
+        full_webhook_url = f"{WEBHOOK_URL}{WEBHOOK_PATH}"
+        logging.info(f"✅ Установка Webhook: {full_webhook_url}")
+
+        await bot.delete_webhook(drop_pending_updates=True)
+        await bot.set_webhook(
+            url=full_webhook_url,
+            secret_token=WEBHOOK_SECRET
+        )
+        logging.info("🟢 Webhook успешно установлен.")
+
+
+async def on_shutdown(bot: Bot):
+    if WEBHOOK_URL:
+        logging.info("❌ Удаление Webhook...")
+        await bot.delete_webhook()
+
+
 async def main():
     dp.workflow_data['db'] = db_manager
 
@@ -49,35 +75,40 @@ async def main():
     dp.include_router(profile_router)
     dp.include_router(admin_router)
 
-    use_webhook = await setup_webhook(bot, dp)
+    dp.startup.register(on_startup)
+    dp.shutdown.register(on_shutdown)
 
-    if use_webhook:
-        print('Бот запущен в режиме Webhook')
+    if WEBHOOK_URL:
+        print(f'🚀 Бот запущен в режиме Webhook на порту {PORT} (для Railway или ngrok)')
 
-        from aiogram.webhook.aiohttp_server import SimpleRequestHandler
-        from aiohttp import web
-        import os
         app = web.Application()
 
-        WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
-        webhook_path = f"/webhook/{WEBHOOK_SECRET}"
+        handler = SimpleRequestHandler(
+            dispatcher=dp,
+            bot=bot,
+            secret_token=WEBHOOK_SECRET
+        )
 
-        handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
-        handler.register(app, path=webhook_path)
+        handler.register(app, path=WEBHOOK_PATH)
 
         runner = web.AppRunner(app)
         await runner.setup()
 
-        site = web.TCPSite(runner, "0.0.0.0", 8020)
+        site = web.TCPSite(runner, "0.0.0.0", PORT)
         await site.start()
 
-        print(f"🌐 Веб-сервер запущен на порту 8020")
+        print(f"🌐 Веб-сервер AIOHTTP запущен на 0.0.0.0:{PORT}")
+
         await asyncio.Future()
     else:
-        print('Бот запущен в режиме Polling')
+        print(f'🤖 Бот запущен в режиме Polling (локальный запуск)')
+        await on_startup(bot)
         await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.info("Бот остановлен вручную.")
