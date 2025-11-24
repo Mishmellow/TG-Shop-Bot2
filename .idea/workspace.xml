@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Again update run">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update run and fix it AGAIN">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
@@ -87,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00154" summary="Debug text lower">
-      <option name="closed" value="true" />
-      <created>1761772868970</created>
-      <option name="number" value="00154" />
-      <option name="presentableId" value="LOCAL-00154" />
-      <option name="project" value="LOCAL" />
-      <updated>1761772868970</updated>
     </task>
     <task id="LOCAL-00155" summary="Upgrade our frontend part">
       <option name="closed" value="true" />
@@ -480,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764012557953</updated>
     </task>
-    <option name="localTasksCounter" value="203" />
+    <task id="LOCAL-00203" summary="Update run and fix it AGAIN">
+      <option name="closed" value="true" />
+      <created>1764012688032</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
+      <option name="project" value="LOCAL" />
+      <updated>1764012688032</updated>
+    </task>
+    <option name="localTasksCounter" value="204" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update photos and do commit" />
     <MESSAGE value="Fix all errors" />
     <MESSAGE value="Update our js code and btn" />
     <MESSAGE value="Update html and fix 404error" />
@@ -520,6 +519,7 @@
     <MESSAGE value="Update config" />
     <MESSAGE value="Update and fix run" />
     <MESSAGE value="Again update run" />
-    <option name="LAST_COMMIT_MESSAGE" value="Again update run" />
+    <MESSAGE value="Update run and fix it AGAIN" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update run and fix it AGAIN" />
   </component>
 </project>

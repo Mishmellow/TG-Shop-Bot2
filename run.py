@@ -4,6 +4,7 @@ import os
 from aiohttp import web
 
 from aiogram import Bot, Dispatcher
+from aiogram.types import ErrorEvent
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler
 
@@ -27,12 +28,26 @@ bot = Bot(token=TOKEN, session=session)
 dp = Dispatcher()
 
 
+@dp.errors()
+async def global_error_handler(event: ErrorEvent):
+    logging.error(
+        f'⚠️ Глобальная ошибка: {type(event.exception).__name__}: {event.exception}',
+        exc_info=True
+    )
+    if event.update.message:
+        try:
+            await event.update.message.answer(
+                'Произошла непредвиденная ошибка. Попробуйте позже.'
+            )
+        except Exception:
+            pass
+
+
 async def on_startup(bot: Bot):
     if WEBHOOK_URL:
         full_webhook_url = f"{WEBHOOK_URL}{WEBHOOK_PATH}"
 
         print("--- ВХОД В on_startup ДЛЯ УСТАНОВКИ WEBHOOK ---")
-
         print(f"✅ Установка Webhook: {full_webhook_url}")
 
         await bot.delete_webhook(drop_pending_updates=True)
@@ -60,7 +75,6 @@ async def main():
     dp.include_router(profile_router)
     dp.include_router(admin_router)
 
-    dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
 
     if WEBHOOK_URL:
@@ -70,6 +84,8 @@ async def main():
         print(f"WEBHOOK_PATH (ожидаемый): {WEBHOOK_PATH}")
         print(f"Порт (ожидаемый): {PORT}")
         print(f"---------------------------")
+
+        await on_startup(bot)
 
         print(f'🚀 Бот запущен в режиме Webhook на порту {PORT} (для Railway или ngrok)')
 
@@ -94,7 +110,6 @@ async def main():
         await asyncio.Future()
     else:
         print(f'🤖 Бот запущен в режиме Polling (локальный запуск)')
-        await on_startup(bot)
         await dp.start_polling(bot)
 
 
