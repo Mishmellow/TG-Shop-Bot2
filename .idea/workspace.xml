@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="rename run">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Rename run">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" afterPath="$PROJECT_DIR$/Procfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00163" summary="35647">
-      <option name="closed" value="true" />
-      <created>1761860054472</created>
-      <option name="number" value="00163" />
-      <option name="presentableId" value="LOCAL-00163" />
-      <option name="project" value="LOCAL" />
-      <updated>1761860054472</updated>
     </task>
     <task id="LOCAL-00164" summary="236">
       <option name="closed" value="true" />
@@ -479,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764015805780</updated>
     </task>
-    <option name="localTasksCounter" value="212" />
+    <task id="LOCAL-00212" summary="Rename run">
+      <option name="closed" value="true" />
+      <created>1764100804490</created>
+      <option name="number" value="00212" />
+      <option name="presentableId" value="LOCAL-00212" />
+      <option name="project" value="LOCAL" />
+      <updated>1764100804491</updated>
+    </task>
+    <option name="localTasksCounter" value="213" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -494,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix: db: final structure fix in init_db (comma and INSERT OR IGNORE)" />
     <MESSAGE value="Delete ','" />
     <MESSAGE value="Delete bd" />
     <MESSAGE value="Update 110 line" />
@@ -519,6 +519,7 @@
     <MESSAGE value="Global update into run" />
     <MESSAGE value="123" />
     <MESSAGE value="Fix run" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix run" />
+    <MESSAGE value="Rename run" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rename run" />
   </component>
 </project>
