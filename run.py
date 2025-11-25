@@ -24,8 +24,8 @@ WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
 env_port = os.environ.get("PORT")
 if not env_port:
     logger.warning(
-        "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (9000) для Railway.")
-    PORT = 9000
+        "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8080) для Railway.")
+    PORT = 8080
 else:
     PORT = int(env_port)
 
