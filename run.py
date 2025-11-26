@@ -134,3 +134,5 @@ if __name__ == '__main__':
         asyncio.run(main())
     except KeyboardInterrupt:
         logger.info("Бот остановлен вручную.")
+    except Exception as e:
+        logger.critical(f"❌ КРИТИЧЕСКИЙ СБОЙ В ЗАПУСКЕ: {type(e).__name__} - {e}", exc_info=True)
