@@ -1,5 +1,5 @@
-import json
 import requests
+import json
 import os
 
 TOKEN = "7979006531:AAE6KatiHFo_fc5ItEVMzrzclETbI6rtHik"
@@ -10,9 +10,8 @@ API_URL = f"https://api.telegram.org/bot{TOKEN}/getWebhookInfo"
 def check_webhook_status():
     print("--- Проверка статуса Webhook через Telegram API ---")
 
-    if TOKEN == "7979006531:AAE6KatiHFo_fc5ItEVMzrzclETbI6rtHik" or not TOKEN:
-        print(
-            "🛑 Ошибка: Пожалуйста, замените '7979006531:AAE6KatiHFo_fc5ItEVMzrzclETbI6rtHik' на ваш фактический токен бота в файле check_webhook.py.")
+    if not TOKEN:
+        print("🛑 Ошибка: Пожалуйста, вставьте ваш актуальный токен бота в переменную TOKEN.")
         return
 
     try:
