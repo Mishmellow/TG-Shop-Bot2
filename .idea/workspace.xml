@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="fix commit -m">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update and fix run">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
@@ -87,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00173" summary="Add padding and margin for cards in project">
-      <option name="closed" value="true" />
-      <created>1761941275131</created>
-      <option name="number" value="00173" />
-      <option name="presentableId" value="LOCAL-00173" />
-      <option name="project" value="LOCAL" />
-      <updated>1761941275131</updated>
     </task>
     <task id="LOCAL-00174" summary="Add new photos for cards">
       <option name="closed" value="true" />
@@ -480,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764187175274</updated>
     </task>
-    <option name="localTasksCounter" value="222" />
+    <task id="LOCAL-00222" summary="Update and fix run">
+      <option name="closed" value="true" />
+      <created>1764187413365</created>
+      <option name="number" value="00222" />
+      <option name="presentableId" value="LOCAL-00222" />
+      <option name="project" value="LOCAL" />
+      <updated>1764187413365</updated>
+    </task>
+    <option name="localTasksCounter" value="223" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -499,7 +499,6 @@
     <MESSAGE value="Update config, add logging and fix bot token" />
     <MESSAGE value="Fix .env" />
     <MESSAGE value="Update config" />
-    <MESSAGE value="Update and fix run" />
     <MESSAGE value="Again update run" />
     <MESSAGE value="Update run and fix it AGAIN" />
     <MESSAGE value="run" />
@@ -520,6 +519,7 @@
     <MESSAGE value="fix" />
     <MESSAGE value="add new file" />
     <MESSAGE value="fix commit -m" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix commit -m" />
+    <MESSAGE value="Update and fix run" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update and fix run" />
   </component>
 </project>

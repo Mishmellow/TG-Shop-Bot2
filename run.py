@@ -31,7 +31,8 @@ try:
     else:
         PORT = int(env_port)
 
-    WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "dev_secret_123")
+    WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "final_secret_456")
+
     WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
     db_manager = DBManager(db_path='your_bot_shop.db')
@@ -76,7 +77,7 @@ async def on_startup(bot: Bot):
         )
         logger.info("🟢 Webhook успешно установлен.")
     else:
-        logger.warning("⚠️ Переменная WEBHOOK_URL не задана. on_startup пропущен.")
+        logger.warning("⚠️ Переменная WEBHOOK_URL не задана. on_startup пропущена.")
 
 
 async def on_shutdown(bot: Bot):
