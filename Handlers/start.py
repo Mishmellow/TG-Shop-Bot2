@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 print("🎯 start.py загружен!")
 
 
-@router.message(CommandStart(), F.extract(data='db'))
+@router.message(CommandStart(), F.extract('db'))
 async def cmd_start(message: Message, db):
     DB = db
 
@@ -60,7 +60,8 @@ async def cmd_start(message: Message, db):
             logger.error(f"❌ Не удалось отправить ответ пользователю после ошибки.")
 
 
-@router.message(Command('help'), F.extract(data='db'))
+# ИСПРАВЛЕНО
+@router.message(Command('help'), F.extract('db'))
 async def get_help(message: Message, db):
     await message.answer('Это команда /help')
 
@@ -86,7 +87,7 @@ async def contacts(callback: CallbackQuery):
     )
 
 
-@router.message(Command('ref'), F.extract(data='db'))
+@router.message(Command('ref'), F.extract('db'))
 async def ref_user(message: Message, db):
     DB = db
     try:
