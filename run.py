@@ -31,7 +31,7 @@ try:
     else:
         PORT = int(env_port)
 
-    WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "my_super_secret_token_123")
+    WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "dev_secret_123")
     WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
     db_manager = DBManager(db_path='your_bot_shop.db')
@@ -66,6 +66,9 @@ async def on_startup(bot: Bot):
         logger.info("--- ВХОД В on_startup ДЛЯ УСТАНОВКИ WEBHOOK ---")
         logger.info(f"✅ Установка Webhook: {full_webhook_url}")
 
+        logger.info("🔥 Удаление старого вебхука и ожидающих обновлений...")
+        await bot.delete_webhook(drop_pending_updates=True)
+        logger.info("🟢 Старый вебхук удален. Установка нового...")
 
         await bot.set_webhook(
             url=full_webhook_url,
