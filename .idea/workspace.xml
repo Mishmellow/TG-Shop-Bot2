@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update start and run, commit -m">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="commit -m">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/start.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,14 +87,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00169" summary="Upgrade html and add new columns">
-      <option name="closed" value="true" />
-      <created>1761939785357</created>
-      <option name="number" value="00169" />
-      <option name="presentableId" value="LOCAL-00169" />
-      <option name="project" value="LOCAL" />
-      <updated>1761939785358</updated>
     </task>
     <task id="LOCAL-00170" summary="Do padding and margin between cards">
       <option name="closed" value="true" />
@@ -480,7 +472,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764185539118</updated>
     </task>
-    <option name="localTasksCounter" value="218" />
+    <task id="LOCAL-00218" summary="commit -m">
+      <option name="closed" value="true" />
+      <created>1764185672593</created>
+      <option name="number" value="00218" />
+      <option name="presentableId" value="LOCAL-00218" />
+      <option name="project" value="LOCAL" />
+      <updated>1764185672593</updated>
+    </task>
+    <option name="localTasksCounter" value="219" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -495,7 +495,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update index.html and do new architecture" />
     <MESSAGE value="Add new db and update db_manager" />
     <MESSAGE value="Update run" />
     <MESSAGE value="Update and fix order" />
@@ -520,6 +519,7 @@
     <MESSAGE value="Update domain" />
     <MESSAGE value="Push -m" />
     <MESSAGE value="Update start and run, commit -m" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update start and run, commit -m" />
+    <MESSAGE value="commit -m" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit -m" />
   </component>
 </project>

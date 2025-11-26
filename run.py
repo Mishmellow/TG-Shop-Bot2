@@ -66,7 +66,7 @@ async def on_startup(bot: Bot):
         logger.info("--- ВХОД В on_startup ДЛЯ УСТАНОВКИ WEBHOOK ---")
         logger.info(f"✅ Установка Webhook: {full_webhook_url}")
 
-        await bot.delete_webhook(drop_pending_updates=True)
+
         await bot.set_webhook(
             url=full_webhook_url,
             secret_token=WEBHOOK_SECRET
@@ -119,7 +119,11 @@ async def main():
             secret_token=WEBHOOK_SECRET
         )
 
-        handler.register(app, path=WEBHOOK_PATH)
+        async def raw_webhook_interceptor(request):
+            logger.info("🚨🚨 RAW WEBHOOK HIT RECEIVED")
+            return await handler.get_response(request)
+
+        app.router.add_post(WEBHOOK_PATH, raw_webhook_interceptor)
 
         runner = web.AppRunner(app)
         await runner.setup()
