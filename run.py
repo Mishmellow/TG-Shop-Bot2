@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import sys
 from aiohttp import web
 from db_manager import DBManager
 
@@ -19,23 +20,28 @@ from Handlers.admin import router as admin_router
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
+try:
+    WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
 
-env_port = os.environ.get("PORT")
-if not env_port:
-    logger.warning(
-        "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8080) для Railway.")
-    PORT = 8080
-else:
-    PORT = int(env_port)
+    env_port = os.environ.get("PORT")
+    if not env_port:
+        logger.warning(
+            "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8080) для Railway.")
+        PORT = 8080
+    else:
+        PORT = int(env_port)
 
-WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "my_super_secret_token_123")
-WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
+    WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "my_super_secret_token_123")
+    WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
-db_manager = DBManager(db_path='your_bot_shop.db')
-session = AiohttpSession(timeout=40)
-bot = Bot(token=TOKEN, session=session)
-dp = Dispatcher()
+    db_manager = DBManager(db_path='your_bot_shop.db')
+    session = AiohttpSession(timeout=40)
+    bot = Bot(token=TOKEN, session=session)
+    dp = Dispatcher()
+
+except Exception as e:
+    logger.critical(f"❌ КРИТИЧЕСКИЙ СБОЙ В ГЛОБАЛЬНОЙ ИНИЦИАЛИЗАЦИИ: {type(e).__name__} - {e}", exc_info=True)
+    sys.exit(1)
 
 
 @dp.errors()
@@ -135,4 +141,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         logger.info("Бот остановлен вручную.")
     except Exception as e:
-        logger.critical(f"❌ КРИТИЧЕСКИЙ СБОЙ В ЗАПУСКЕ: {type(e).__name__} - {e}", exc_info=True)
+        logger.critical(f"❌ КРИТИЧЕСКИЙ СБОЙ В ЦИКЛЕ MAIN: {type(e).__name__} - {e}", exc_info=True)

@@ -1,51 +1,67 @@
 from aiogram import Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
-from db_manager import DBManager
 import asyncio
+import logging
 
 from app.keyboards import get_web_app_keyboard
 
-DB = DBManager('my_database.db')
 
 router = Router()
+logger = logging.getLogger(__name__)
 
 print("🎯 start.py загружен!")
 
 
-@router.message(CommandStart())
-async def cmd_start(message: Message):
-    args = message.text.split()
-    referrer_id = None
-    if len(args) > 1 and args[1].startswith('ref_'):
+@router.message(CommandStart(), F.extract(data='db'))
+async def cmd_start(message: Message, db):
+    DB = db
+
+    try:
+        args = message.text.split()
+        referrer_id = None
+        if len(args) > 1 and args[1].startswith('ref_'):
+            try:
+                referrer_id = int(args[1].replace('ref_', ''))
+            except ValueError:
+                pass
+
+        logger.info(f"➡️ Обработка /start для пользователя {message.from_user.id}. Реферер: {referrer_id}")
+
+        await asyncio.to_thread(
+            DB.add_user,
+            user_id=message.from_user.id,
+            username=message.from_user.username,
+            first_name=message.from_user.first_name,
+            referrer_id=referrer_id
+        )
+        logger.info(f"✅ Пользователь {message.from_user.id} успешно добавлен/обновлен.")
+
+        cart_items = await asyncio.to_thread(DB.load_cart_from_db, message.from_user.id)
+        logger.info(f"✅ Корзина для {message.from_user.id} загружена. Товаров: {len(cart_items) if cart_items else 0}.")
+
+        if cart_items:
+            welcome_text = f'🛒 Добро пожаловать! В вашей корзине {len(cart_items)} товаров.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
+        else:
+            welcome_text = f'Добро пожаловать!\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
+
+        await message.reply(
+            welcome_text,
+            reply_markup=get_web_app_keyboard()
+        )
+        logger.info(f"✅ Ответ пользователю {message.from_user.id} отправлен.")
+
+    except Exception as e:
+        logger.error(f"❌ КРИТИЧЕСКАЯ ОШИБКА в cmd_start для {message.from_user.id}: {type(e).__name__} - {e}",
+                     exc_info=True)
         try:
-            referrer_id = int(args[1].replace('ref_', ''))
-        except ValueError:
-            pass
-
-    await asyncio.to_thread(
-        DB.add_user,
-        user_id=message.from_user.id,
-        username=message.from_user.username,
-        first_name=message.from_user.first_name,
-        referrer_id=referrer_id
-    )
-
-    cart_items = await asyncio.to_thread(DB.load_cart_from_db, message.from_user.id)
-
-    if cart_items:
-        welcome_text = f'🛒 Добро пожаловать! В вашей корзине {len(cart_items)} товаров.\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
-    else:
-        welcome_text = f'Добро пожаловать!\nТвой ID: {message.from_user.id}\nИмя: {message.from_user.first_name}\nВыберите действие:'
-
-    await message.reply(
-        welcome_text,
-        reply_markup=get_web_app_keyboard()
-    )
+            await message.answer(f"❌ Внутренняя ошибка ({type(e).__name__}). Проверьте логи.")
+        except Exception:
+            logger.error(f"❌ Не удалось отправить ответ пользователю после ошибки.")
 
 
-@router.message(Command('help'))
-async def get_help(message: Message):
+@router.message(Command('help'), F.extract(data='db'))
+async def get_help(message: Message, db):
     await message.answer('Это команда /help')
 
 
@@ -70,16 +86,20 @@ async def contacts(callback: CallbackQuery):
     )
 
 
-@router.message(Command('ref'))
-async def ref_user(message: Message):
-    ref_count = await asyncio.to_thread(DB.user_conn_ref, message.from_user.id)
+@router.message(Command('ref'), F.extract(data='db'))
+async def ref_user(message: Message, db):
+    DB = db
+    try:
+        ref_count = await asyncio.to_thread(DB.user_conn_ref, message.from_user.id)
 
-    ref_link = f"https://t.me/твой_бот?start=ref_{message.from_user.id}"
-    await message.answer(
-        f"🎁 Реферальная система\n"
-        f"Приглашено друзей: {ref_count}\n"
-        f"Твоя ссылка: {ref_link}"
-    )
+        ref_link = f"https://t.me/твой_бот?start=ref_{message.from_user.id}"
+        await message.answer(
+            f"🎁 Реферальная система\n"
+            f"Приглашено друзей: {ref_count}\n"
+            f"Твоя ссылка: {ref_link}"
+        )
+    except Exception as e:
+        logger.error(f"❌ КРИТИЧЕСКАЯ ОШИБКА в cmd_ref: {type(e).__name__} - {e}", exc_info=True)
 
 
 @router.message(Command("test"))
