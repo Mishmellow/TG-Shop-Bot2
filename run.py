@@ -107,7 +107,7 @@ async def main():
 
         webhook_requests_handler.register(app, path=WEBHOOK_PATH)
 
-        app.router.add_get('/', WebAppHandler())
+        app.router.add_get('/', WebAppHandler)
 
         setup_application(app, dp, bot=bot)
 
