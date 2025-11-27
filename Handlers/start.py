@@ -3,9 +3,14 @@ from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 import asyncio
 import logging
+import json
 
-from app.keyboards import get_web_app_keyboard
-
+try:
+    from app.keyboards import get_web_app_keyboard
+except ImportError:
+    def get_web_app_keyboard():
+        return None
+    print("⚠️ ВНИМАНИЕ: Не удалось импортировать get_web_app_keyboard. Проверьте путь.")
 
 router = Router()
 logger = logging.getLogger(__name__)
@@ -53,14 +58,99 @@ async def cmd_start(message: Message, db):
         logger.error(f"❌ КРИТИЧЕСКАЯ ОШИБКА в cmd_start для {message.from_user.id}: {type(e).__name__} - {e}",
                      exc_info=True)
         try:
+            import sys, traceback
+            print(f"❌❌ КРИТИЧЕСКАЯ ОШИБКА В cmd_start: {type(e).__name__} - {e}", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
             await message.answer(f"❌ Внутренняя ошибка ({type(e).__name__}). Проверьте логи.")
         except Exception:
             logger.error(f"❌ Не удалось отправить ответ пользователю после ошибки.")
 
 
 @router.message(Command('help'))
-async def get_help(message: Message, db):
-    await message.answer('Это команда /help')
+async def get_help(message: Message):
+    await message.answer(
+        '📖 Помощь по боту:\n\n'
+        '/start - Главное меню\n'
+        '/help - Эта справка\n'
+        '/ref - Реферальная система\n'
+        '/test - Проверка работы бота\n\n'
+        'Используйте кнопку "Магазин" для выбора товаров.'
+    )
+
+
+@router.message(Command('ref'))
+async def ref_user(message: Message, db):
+    try:
+        ref_count = await asyncio.to_thread(db.user_conn_ref, message.from_user.id)
+
+        ref_link = f"https://t.me/PractAPI_Bot?start=ref_{message.from_user.id}"
+        await message.answer(
+            f"🎁 Реферальная система\n"
+            f"Приглашено друзей: {ref_count}\n"
+            f"Твоя ссылка: {ref_link}"
+        )
+    except Exception as e:
+        logger.error(f"❌ КРИТИЧЕСКАЯ ОШИБКА в cmd_ref: {type(e).__name__} - {e}", exc_info=True)
+        await message.answer("❌ Ошибка при загрузке реферальной информации.")
+
+
+@router.message(Command("test"))
+async def test_command(message: Message):
+    logger.info(f"✅ Тестовая команда получена от {message.from_user.id}")
+    await message.answer("✅ Бот работает! WebApp данные должны приходить сейчас.")
+
+
+@router.message(F.web_app_data)
+async def handle_webapp_data(message: Message, db):
+    try:
+        data = json.loads(message.web_app_data.data)
+
+        logger.info(f"📦 Получены данные WebApp от {message.from_user.id}: {data}")
+
+        items = data.get('items', [])
+        total_sum = data.get('total_sum', 0)
+        order_message = data.get('order_message', '')
+
+        if not items:
+            await message.answer("❌ Корзина пуста!")
+            return
+
+        order_text = f"✅ Заказ оформлен!\n\n{order_message}\n\n"
+        order_text += f"💳 К оплате: {total_sum} грн\n\n"
+        order_text += "Ожидайте подтверждения от оператора."
+
+        await message.answer(order_text)
+
+        try:
+            await asyncio.to_thread(db.save_order, message.from_user.id, items, total_sum)
+            logger.info(f"✅ Заказ сохранен в БД")
+        except Exception as db_error:
+            logger.error(f"❌ Ошибка сохранения в БД: {db_error}")
+
+        ADMIN_ID = 1499143658
+        try:
+            await message.bot.send_message(
+                chat_id=ADMIN_ID,
+                text=(
+                    f"🆕 НОВЫЙ ЗАКАЗ!\n\n"
+                    f"👤 От: {message.from_user.full_name} (@{message.from_user.username or 'без username'})\n"
+                    f"🆔 ID: {message.from_user.id}\n\n"
+                    f"{order_message}"
+                )
+            )
+            logger.info(f"✅ Уведомление отправлено администратору")
+        except Exception as admin_error:
+            logger.error(f"❌ Ошибка отправки админу: {admin_error}")
+            # Не показываем ошибку пользователю
+
+        logger.info(f"✅ Заказ от {message.from_user.id} успешно обработан")
+
+    except json.JSONDecodeError as e:
+        logger.error(f"❌ Ошибка парсинга JSON от WebApp: {e}")
+        await message.answer("❌ Ошибка обработки данных. Попробуйте снова.")
+    except Exception as e:
+        logger.error(f"❌ Ошибка обработки WebApp данных: {type(e).__name__} - {e}", exc_info=True)
+        await message.answer("❌ Произошла ошибка при оформлении заказа.")
 
 
 @router.callback_query(F.data == 'about_us')
@@ -71,6 +161,7 @@ async def show_about(callback: CallbackQuery):
         "Быстро, качественно, с гарантией.",
         reply_markup=get_web_app_keyboard()
     )
+    await callback.answer()
 
 
 @router.callback_query(F.data == 'contacts')
@@ -82,24 +173,4 @@ async def contacts(callback: CallbackQuery):
         "⏰ График работы: Пн-Пт 9:00-18:00",
         reply_markup=get_web_app_keyboard()
     )
-
-
-@router.message(Command('ref'))
-async def ref_user(message: Message, db):
-    try:
-        ref_count = await asyncio.to_thread(db.user_conn_ref, message.from_user.id)
-
-        ref_link = f"https://t.me/твой_бот?start=ref_{message.from_user.id}"
-        await message.answer(
-            f"🎁 Реферальная система\n"
-            f"Приглашено друзей: {ref_count}\n"
-            f"Твоя ссылка: {ref_link}"
-        )
-    except Exception as e:
-        logger.error(f"❌ КРИТИЧЕСКАЯ ОШИБКА в cmd_ref: {type(e).__name__} - {e}", exc_info=True)
-
-
-@router.message(Command("test"))
-async def test_command(message: Message):
-    print(f"✅ Тестовая команда получена от {message.from_user.id}")
-    await message.answer("✅ Бот работает! WebApp данные должны приходить сейчас.")
+    await callback.answer()

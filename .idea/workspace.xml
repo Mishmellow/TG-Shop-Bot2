@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="123">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update 5 files, commit -m">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Handlers/start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/start.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/check_webhook.py" beforeDir="false" afterPath="$PROJECT_DIR$/check_webhook.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00175" summary="Add photos">
-      <option name="closed" value="true" />
-      <created>1761942006235</created>
-      <option name="number" value="00175" />
-      <option name="presentableId" value="LOCAL-00175" />
-      <option name="project" value="LOCAL" />
-      <updated>1761942006236</updated>
     </task>
     <task id="LOCAL-00176" summary="Add photos for cards">
       <option name="closed" value="true" />
@@ -484,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764187929270</updated>
     </task>
-    <option name="localTasksCounter" value="224" />
+    <task id="LOCAL-00224" summary="Update 5 files, commit -m">
+      <option name="closed" value="true" />
+      <created>1764270137012</created>
+      <option name="number" value="00224" />
+      <option name="presentableId" value="LOCAL-00224" />
+      <option name="project" value="LOCAL" />
+      <updated>1764270137012</updated>
+    </task>
+    <option name="localTasksCounter" value="225" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -499,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Global update and fix" />
     <MESSAGE value="Update config, add logging and fix bot token" />
     <MESSAGE value="Fix .env" />
     <MESSAGE value="Update config" />
@@ -524,6 +520,7 @@
     <MESSAGE value="fix commit -m" />
     <MESSAGE value="Update and fix run" />
     <MESSAGE value="123" />
-    <option name="LAST_COMMIT_MESSAGE" value="123" />
+    <MESSAGE value="Update 5 files, commit -m" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update 5 files, commit -m" />
   </component>
 </project>
