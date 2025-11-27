@@ -1,26 +1,27 @@
-from aiogram.types import InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder, WebAppInfo
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 WebA_APP_URL = 'https://mishmellow.github.io/TG-Shop-Bot2/'
 
-web_app_info = WebAppInfo(url=WebA_APP_URL)
 
-def get_web_app_keyboard():
-    webapp_info = WebAppInfo(url=WebA_APP_URL)
+def get_web_app_keyboard() -> InlineKeyboardMarkup:
 
-    web_app_button = KeyboardButton(text='🛍️ Сделать Заказ', web_app=webapp_info)
-    contacts_button = KeyboardButton(text='📞 Контакты')
-    about_button = KeyboardButton(text='ℹ️ О нас')
-
-    keyboard = ReplyKeyboardMarkup(
-        keyboard=[
-            [web_app_button],
-            [contacts_button, about_button]
-        ],
-        resize_keyboard=True,
-        is_persistent=True
+    # 1. Кнопка WebApp
+    web_app_button = InlineKeyboardButton(
+        text="🛍️ Сделать Заказ",
+        web_app=WebAppInfo(url=WebA_APP_URL)  # Используем WebAppInfo
     )
+
+    contacts_button = InlineKeyboardButton(text='📞 Контакты', callback_data='contacts')
+    about_button = InlineKeyboardButton(text='ℹ️ О нас', callback_data='about_us')
+
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [web_app_button],
+        [contacts_button, about_button]
+    ])
     return keyboard
+
+
 
 def inline_continue_order():
     keyboard = InlineKeyboardBuilder()
@@ -29,6 +30,7 @@ def inline_continue_order():
         InlineKeyboardButton(text='🚀 Завершить заказ', callback_data='finish_order')
     )
     return keyboard.adjust(1).as_markup()
+
 
 def inline_categories():
     keyboard = InlineKeyboardBuilder()
@@ -83,31 +85,34 @@ def inline_products(category):
 
     return keyboard.adjust(1).as_markup()
 
+
 def inline_cart_keyboard():
     keyboard = InlineKeyboardBuilder()
 
     keyboard.add(InlineKeyboardButton(
-        text = '🛒 Продолжить покупки',
+        text='🛒 Продолжить покупки',
         callback_data='back_to_categories'
     ))
     keyboard.add(InlineKeyboardButton(
-        text = '✅ Оформить зака',
+        text='✅ Оформить зака',
         callback_data='finish_order'
     ))
     keyboard.add(InlineKeyboardButton(
-        text = '🗑️ Очистить корзину',
+        text='🗑️ Очистить корзину',
         callback_data='clear_cart'
     ))
 
     return keyboard.adjust(1).as_markup()
 
+
 def inline_continue_shopping():
     keyboard = InlineKeyboardBuilder()
     keyboard.add(InlineKeyboardButton(
-        text = '🛒 Начать покупки',
+        text='🛒 Начать покупки',
         callback_data='place_order'
     ))
     return keyboard.as_markup()
+
 
 def inline_confirm_order():
     keyboard = InlineKeyboardBuilder()
@@ -116,6 +121,7 @@ def inline_confirm_order():
         InlineKeyboardButton(text='❌ Отменить', callback_data='cancel_order')
     )
     return keyboard.adjust(2).as_markup()
+
 
 def admin_order_actions(order_id):
     keyboard = InlineKeyboardBuilder()

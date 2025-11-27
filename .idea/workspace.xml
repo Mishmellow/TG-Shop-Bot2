@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update 5 files, commit -m">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Update start">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Handlers/start.py" beforeDir="false" afterPath="$PROJECT_DIR$/Handlers/start.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/keyboards.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/keyboards.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00176" summary="Add photos for cards">
-      <option name="closed" value="true" />
-      <created>1761942321516</created>
-      <option name="number" value="00176" />
-      <option name="presentableId" value="LOCAL-00176" />
-      <option name="project" value="LOCAL" />
-      <updated>1761942321516</updated>
     </task>
     <task id="LOCAL-00177" summary="Update photos and do commit">
       <option name="closed" value="true" />
@@ -481,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764270137012</updated>
     </task>
-    <option name="localTasksCounter" value="225" />
+    <task id="LOCAL-00225" summary="Update start">
+      <option name="closed" value="true" />
+      <created>1764270908697</created>
+      <option name="number" value="00225" />
+      <option name="presentableId" value="LOCAL-00225" />
+      <option name="project" value="LOCAL" />
+      <updated>1764270908697</updated>
+    </task>
+    <option name="localTasksCounter" value="226" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update config, add logging and fix bot token" />
     <MESSAGE value="Fix .env" />
     <MESSAGE value="Update config" />
     <MESSAGE value="Again update run" />
@@ -521,6 +520,7 @@
     <MESSAGE value="Update and fix run" />
     <MESSAGE value="123" />
     <MESSAGE value="Update 5 files, commit -m" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update 5 files, commit -m" />
+    <MESSAGE value="Update start" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update start" />
   </component>
 </project>
