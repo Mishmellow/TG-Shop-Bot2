@@ -93,6 +93,7 @@ async def on_startup(bot: Bot):
 
 
 async def main():
+    await on_startup(bot)
 
     if FULL_WEBHOOK_URL:
         logger.info(f"🤖 Бот запущен в режиме Webhook на порту {PORT}")
@@ -106,17 +107,20 @@ async def main():
         )
 
         webhook_requests_handler.register(app, path=WEBHOOK_PATH)
-
         app.router.add_get('/', WebAppHandler)
-
         setup_application(app, dp, bot=bot)
 
-        await on_startup(bot)
-        web.run_app(app, host='0.0.0.0', port=PORT)
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, host='0.0.0.0', port=PORT)
+        await site.start()
+
+        logger.info("⚡ Ожидание входящих Webhook запросов...")
+        await asyncio.Event().wait()
+
 
     else:
         logger.info(f'🤖 Бот запущен в режиме Polling (локальный запуск)')
-        await on_startup(bot)
         await dp.start_polling(bot)
 
 
