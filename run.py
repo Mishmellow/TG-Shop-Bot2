@@ -10,11 +10,13 @@ from aiogram.types import ErrorEvent, TelegramObject
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.methods import set_webhook
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+from aiohttp import web
 
 from typing import Callable, Dict, Any, Awaitable
 
 from config import TOKEN
 from Handlers.start import router as start_router
+from web_app_handler import WebAppHandler
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -40,7 +42,9 @@ try:
 
     env_port = os.environ.get("PORT")
     if not env_port:
-        PORT = 9000
+        logger.warning(
+            "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8080) для локального Webhook или Polling.")
+        PORT = 8080
     else:
         PORT = int(env_port)
 
@@ -89,12 +93,10 @@ async def on_startup(bot: Bot):
 
 
 async def main():
-    await asyncio.to_thread(db_manager.initialize_db)
 
     if FULL_WEBHOOK_URL:
         logger.info(f"🤖 Бот запущен в режиме Webhook на порту {PORT}")
 
-        from aiohttp import web
         app = web.Application()
 
         webhook_requests_handler = SimpleRequestHandler(
@@ -105,7 +107,6 @@ async def main():
 
         webhook_requests_handler.register(app, path=WEBHOOK_PATH)
 
-        from web_app_handler import WebAppHandler
         app.router.add_get('/', WebAppHandler())
 
         setup_application(app, dp, bot=bot)

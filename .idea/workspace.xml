@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Add new file">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Delete logging">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
@@ -88,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00180" summary="Update html and fix 404error">
-      <option name="closed" value="true" />
-      <created>1761994905838</created>
-      <option name="number" value="00180" />
-      <option name="presentableId" value="LOCAL-00180" />
-      <option name="project" value="LOCAL" />
-      <updated>1761994905838</updated>
     </task>
     <task id="LOCAL-00181" summary="fix: Final fix, sending order data as JSON string">
       <option name="closed" value="true" />
@@ -481,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764273088067</updated>
     </task>
-    <option name="localTasksCounter" value="229" />
+    <task id="LOCAL-00229" summary="Delete logging">
+      <option name="closed" value="true" />
+      <created>1764273626840</created>
+      <option name="number" value="00229" />
+      <option name="presentableId" value="LOCAL-00229" />
+      <option name="project" value="LOCAL" />
+      <updated>1764273626840</updated>
+    </task>
+    <option name="localTasksCounter" value="230" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update run and fix it AGAIN" />
     <MESSAGE value="run" />
     <MESSAGE value="update webhook.py" />
     <MESSAGE value="must work" />
@@ -521,6 +520,7 @@
     <MESSAGE value="Add new keyboard" />
     <MESSAGE value="Add new html" />
     <MESSAGE value="Add new file" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add new file" />
+    <MESSAGE value="Delete logging" />
+    <option name="LAST_COMMIT_MESSAGE" value="Delete logging" />
   </component>
 </project>
