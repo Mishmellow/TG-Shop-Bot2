@@ -40,9 +40,7 @@ try:
 
     env_port = os.environ.get("PORT")
     if not env_port:
-        logger.warning(
-            "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8080) для локального Webhook или Polling.")
-        PORT = 8080
+        PORT = 9000
     else:
         PORT = int(env_port)
 

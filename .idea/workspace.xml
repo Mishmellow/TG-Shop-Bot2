@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Add new html">
-      <change afterPath="$PROJECT_DIR$/web_app_handler.py" afterDir="false" />
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Add new file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
@@ -89,14 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00179" summary="Update our js code and btn">
-      <option name="closed" value="true" />
-      <created>1761992710575</created>
-      <option name="number" value="00179" />
-      <option name="presentableId" value="LOCAL-00179" />
-      <option name="project" value="LOCAL" />
-      <updated>1761992710575</updated>
     </task>
     <task id="LOCAL-00180" summary="Update html and fix 404error">
       <option name="closed" value="true" />
@@ -482,7 +473,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764272306183</updated>
     </task>
-    <option name="localTasksCounter" value="228" />
+    <task id="LOCAL-00228" summary="Add new file">
+      <option name="closed" value="true" />
+      <created>1764273088066</created>
+      <option name="number" value="00228" />
+      <option name="presentableId" value="LOCAL-00228" />
+      <option name="project" value="LOCAL" />
+      <updated>1764273088067</updated>
+    </task>
+    <option name="localTasksCounter" value="229" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -497,7 +496,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Again update run" />
     <MESSAGE value="Update run and fix it AGAIN" />
     <MESSAGE value="run" />
     <MESSAGE value="update webhook.py" />
@@ -522,6 +520,7 @@
     <MESSAGE value="Update start" />
     <MESSAGE value="Add new keyboard" />
     <MESSAGE value="Add new html" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add new html" />
+    <MESSAGE value="Add new file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add new file" />
   </component>
 </project>
