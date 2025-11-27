@@ -1,18 +1,21 @@
 import requests
 import json
 import os
+from dotenv import load_dotenv
 
-TOKEN = "7979006531:AAE6KatiHFo_fc5ItEVMzrzclETbI6rtHik"
+load_dotenv()
+TOKEN = os.environ.get("BOT_TOKEN")
+
+if not TOKEN:
+    print("🛑 Ошибка: Токен не найден в .env файле.")
+    print("Добавьте в .env: BOT_TOKEN=ваш_токен")
+    exit(1)
 
 API_URL = f"https://api.telegram.org/bot{TOKEN}/getWebhookInfo"
 
 
 def check_webhook_status():
     print("--- Проверка статуса Webhook через Telegram API ---")
-
-    if not TOKEN:
-        print("🛑 Ошибка: Пожалуйста, вставьте ваш актуальный токен бота в переменную TOKEN.")
-        return
 
     try:
         response = requests.get(API_URL)
@@ -25,32 +28,59 @@ def check_webhook_status():
             print("\n✅ Успешный ответ от Telegram:")
             print(json.dumps(info, indent=4, ensure_ascii=False))
 
-            current_railway_url = "https://worker-production-8177.up.railway.app/webhook/dev_secret_123"
+            webhook_url = info.get('url', '')
+            pending = info.get('pending_update_count', 0)
 
-            print(f"\nТекущий URL вебхука (в Telegram): {info.get('url', 'НЕ УСТАНОВЛЕН')}")
-            print(f"Ожидаемый URL (на Railway): {current_railway_url}")
-            print(f"Количество необработанных обновлений: {info.get('pending_update_count', 0)}")
+            print(f"\nТекущий URL вебхука: {webhook_url if webhook_url else '❌ НЕ УСТАНОВЛЕН (Polling режим)'}")
+            print(f"Количество необработанных обновлений: {pending}")
 
-            if info.get('url') and info['url'] != current_railway_url:
-                print("\n🚨 ВНИМАНИЕ: URL, установленный в Telegram, НЕ СОВПАДАЕТ с вашим Railway URL. Это проблема.")
+            if webhook_url:
+                print("\n⚠️ Webhook активен! Для Polling режима нужно его удалить:")
+                print(f"curl \"https://api.telegram.org/bot{TOKEN}/deleteWebhook?drop_pending_updates=true\"")
+            else:
+                print("\n✅ Webhook отключен. Можно использовать Polling режим.")
 
-            if info.get('pending_update_count', 0) > 0:
-                print(
-                    f"🚨 ВНИМАНИЕ: Есть {info['pending_update_count']} необработанных обновлений, которые блокируют новые.")
-                print(
-                    "Решение: В run.py раскомментируйте 'await bot.delete_webhook(drop_pending_updates=True)' в on_startup, чтобы удалить их при следующем запуске.")
+            if pending > 0:
+                print(f"\n⚠️ ВНИМАНИЕ: Есть {pending} необработанных обновлений.")
+                print("Они будут обработаны при следующем запуске бота.")
 
             if info.get('last_error_message'):
-                print(f"❌ ПОСЛЕДНЯЯ ОШИБКА TELEGRAM: {info['last_error_message']}")
+                print(f"\n❌ ПОСЛЕДНЯЯ ОШИБКА: {info['last_error_message']}")
+                print(f"Время ошибки: {info.get('last_error_date', 'Неизвестно')}")
 
         else:
             print(f"\n❌ Ошибка API Telegram: {data.get('description', 'Нет описания')}")
 
     except requests.exceptions.RequestException as e:
-        print(f"\n❌ Ошибка при выполнении HTTP-запроса: {e}")
+        print(f"\n❌ Ошибка HTTP запроса: {e}")
     except Exception as e:
         print(f"\n❌ Непредвиденная ошибка: {e}")
 
 
+def delete_webhook():
+    print("\n--- Удаление Webhook ---")
+    delete_url = f"https://api.telegram.org/bot{TOKEN}/deleteWebhook?drop_pending_updates=true"
+
+    try:
+        response = requests.get(delete_url)
+        data = response.json()
+
+        if data['ok']:
+            print("✅ Webhook успешно удалён!")
+        else:
+            print(f"❌ Ошибка: {data.get('description', 'Неизвестно')}")
+    except Exception as e:
+        print(f"❌ Ошибка: {e}")
+
+
 if __name__ == "__main__":
-    check_webhook_status()
+    print("1. Проверить статус webhook")
+    print("2. Удалить webhook")
+    choice = input("\nВыберите действие (1 или 2): ").strip()
+
+    if choice == "1":
+        check_webhook_status()
+    elif choice == "2":
+        delete_webhook()
+    else:
+        print("❌ Неверный выбор")

@@ -13,10 +13,8 @@ logger = logging.getLogger(__name__)
 print("🎯 start.py загружен!")
 
 
-@router.message(CommandStart(), F.extract('db'))
+@router.message(CommandStart())
 async def cmd_start(message: Message, db):
-    DB = db
-
     try:
         args = message.text.split()
         referrer_id = None
@@ -29,7 +27,7 @@ async def cmd_start(message: Message, db):
         logger.info(f"➡️ Обработка /start для пользователя {message.from_user.id}. Реферер: {referrer_id}")
 
         await asyncio.to_thread(
-            DB.add_user,
+            db.add_user,
             user_id=message.from_user.id,
             username=message.from_user.username,
             first_name=message.from_user.first_name,
@@ -37,7 +35,7 @@ async def cmd_start(message: Message, db):
         )
         logger.info(f"✅ Пользователь {message.from_user.id} успешно добавлен/обновлен.")
 
-        cart_items = await asyncio.to_thread(DB.load_cart_from_db, message.from_user.id)
+        cart_items = await asyncio.to_thread(db.load_cart_from_db, message.from_user.id)
         logger.info(f"✅ Корзина для {message.from_user.id} загружена. Товаров: {len(cart_items) if cart_items else 0}.")
 
         if cart_items:
@@ -60,8 +58,7 @@ async def cmd_start(message: Message, db):
             logger.error(f"❌ Не удалось отправить ответ пользователю после ошибки.")
 
 
-# ИСПРАВЛЕНО
-@router.message(Command('help'), F.extract('db'))
+@router.message(Command('help'))
 async def get_help(message: Message, db):
     await message.answer('Это команда /help')
 
@@ -87,11 +84,10 @@ async def contacts(callback: CallbackQuery):
     )
 
 
-@router.message(Command('ref'), F.extract('db'))
+@router.message(Command('ref'))
 async def ref_user(message: Message, db):
-    DB = db
     try:
-        ref_count = await asyncio.to_thread(DB.user_conn_ref, message.from_user.id)
+        ref_count = await asyncio.to_thread(db.user_conn_ref, message.from_user.id)
 
         ref_link = f"https://t.me/твой_бот?start=ref_{message.from_user.id}"
         await message.answer(

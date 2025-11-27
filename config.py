@@ -1,15 +1,15 @@
 import os
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-TOKEN = os.getenv('BOT_TOKEN')
+TOKEN = os.environ.get("BOT_TOKEN")
+
 if not TOKEN:
-    logging.critical('❌ Критическая ошибка: Переменная BOT_TOKEN не найдена. Проверьте Environment Variables в Railway!')
-    raise ValueError('Bot token is missing!')
-
-DB_PATH = os.getenv('DB_PATH', 'bot.db')
-WEBHOOK_SECRET = os.getenv('WEBHOOK_SECRET', 'default_secret')
-WEBHOOK_URL = os.getenv('WEBHOOK_URL')
-
-logging.info('✅ Конфигурация успешно загружена.')
+    logger.critical("❌ Критическая ошибка: Токен бота не найден в переменных окружения.")
+    logger.critical("Убедитесь что в .env файле есть строка: BOT_TOKEN=ваш_токен")
+    raise ValueError('Bot token is missing! Add BOT_TOKEN to .env file')

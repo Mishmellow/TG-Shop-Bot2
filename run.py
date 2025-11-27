@@ -2,23 +2,35 @@ import asyncio
 import logging
 import os
 import sys
-from aiohttp import web
 from db_manager import DBManager
+from aiogram.exceptions import TelegramAPIError
 
-from aiogram import Bot, Dispatcher
-from aiogram.types import ErrorEvent
+from aiogram import Bot, Dispatcher, BaseMiddleware
+from aiogram.types import ErrorEvent, TelegramObject
 from aiogram.client.session.aiohttp import AiohttpSession
-from aiogram.webhook.aiohttp_server import SimpleRequestHandler
+from typing import Callable, Dict, Any, Awaitable
 
 from config import TOKEN
 from Handlers.start import router as start_router
-from Handlers.registration import router as registration_router
-from Handlers.order import router as order_router
-from Handlers.profile import router as profile_router
-from Handlers.admin import router as admin_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+class DBMiddleware(BaseMiddleware):
+    def __init__(self, db_manager):
+        self.db = db_manager
+        super().__init__()
+
+    async def __call__(
+            self,
+            handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+            event: TelegramObject,
+            data: Dict[str, Any]
+    ) -> Any:
+        data['db'] = self.db
+        return await handler(event, data)
+
 
 try:
     WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
@@ -32,7 +44,6 @@ try:
         PORT = int(env_port)
 
     WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "final_secret_456")
-
     WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
     db_manager = DBManager(db_path='your_bot_shop.db')
@@ -56,91 +67,27 @@ async def global_error_handler(event: ErrorEvent):
             await event.update.message.answer(
                 'Произошла непредвиденная ошибка. Попробуйте позже.'
             )
-        except Exception:
+        except TelegramAPIError:
             pass
 
 
 async def on_startup(bot: Bot):
-    if WEBHOOK_URL:
-        full_webhook_url = f"{WEBHOOK_URL}{WEBHOOK_PATH}"
-
-        logger.info("--- ВХОД В on_startup ДЛЯ УСТАНОВКИ WEBHOOK ---")
-        logger.info(f"✅ Установка Webhook: {full_webhook_url}")
-
-        logger.info("🔥 Удаление старого вебхука и ожидающих обновлений...")
-        await bot.delete_webhook(drop_pending_updates=True)
-        logger.info("🟢 Старый вебхук удален. Установка нового...")
-
-        await bot.set_webhook(
-            url=full_webhook_url,
-            secret_token=WEBHOOK_SECRET
-        )
-        logger.info("🟢 Webhook успешно установлен.")
-    else:
-        logger.warning("⚠️ Переменная WEBHOOK_URL не задана. on_startup пропущена.")
-
-
-async def on_shutdown(bot: Bot):
-    if WEBHOOK_URL:
-        logger.info("❌ Удаление Webhook...")
-        await bot.delete_webhook()
-
-
-async def health_check(request):
-    logger.info("✅ Health Check (/) Received. Server is accessible.")
-    return web.Response(text="OK - Server is healthy.")
+    logger.info("🔥 Очистка старого Webhook для запуска Polling...")
+    await bot.delete_webhook(drop_pending_updates=True)
+    logger.info("🟢 Webhook очищен.")
 
 
 async def main():
-    dp.workflow_data['db'] = db_manager
+    dp.message.middleware(DBMiddleware(db_manager))
+    dp.callback_query.middleware(DBMiddleware(db_manager))
 
     dp.include_router(start_router)
-    dp.include_router(registration_router)
-    dp.include_router(order_router)
-    dp.include_router(profile_router)
-    dp.include_router(admin_router)
 
-    dp.shutdown.register(on_shutdown)
+    logger.info(f'🤖 Бот запущен в режиме Polling (локальный запуск)')
 
-    if WEBHOOK_URL:
-        logger.info(f"--- ПРОВЕРКА ПЕРЕМЕННЫХ ---")
-        logger.info(f"WEBHOOK_URL (прочитан): {WEBHOOK_URL}")
-        logger.info(f"WEBHOOK_PATH (ожидаемый): {WEBHOOK_PATH}")
-        logger.info(f"Порт (используемый): {PORT}")
-        logger.info(f"---------------------------")
+    await on_startup(bot)
 
-        await on_startup(bot)
-
-        logger.info(f'🚀 Бот запущен в режиме Webhook на порту {PORT} (для Railway или ngrok)')
-
-        app = web.Application()
-
-        app.router.add_get("/", health_check)
-
-        handler = SimpleRequestHandler(
-            dispatcher=dp,
-            bot=bot,
-            secret_token=WEBHOOK_SECRET
-        )
-
-        async def raw_webhook_interceptor(request):
-            logger.info("🚨🚨 RAW WEBHOOK HIT RECEIVED")
-            return await handler.get_response(request)
-
-        app.router.add_post(WEBHOOK_PATH, raw_webhook_interceptor)
-
-        runner = web.AppRunner(app)
-        await runner.setup()
-
-        site = web.TCPSite(runner, "0.0.0.0", PORT)
-        await site.start()
-
-        logger.info(f"🌐 Веб-сервер AIOHTTP запущен на 0.0.0.0:{PORT}")
-
-        await asyncio.Future()
-    else:
-        logger.info(f'🤖 Бот запущен в режиме Polling (локальный запуск)')
-        await dp.start_polling(bot)
+    await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
