@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Add new keyboard">
+    <list default="true" id="0acf8b4a-1e17-4b6d-9096-7ac3da420fe0" name="Changes" comment="Add new html">
+      <change afterPath="$PROJECT_DIR$/web_app_handler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,14 +89,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1760110481360</updated>
-    </task>
-    <task id="LOCAL-00178" summary="Fix all errors">
-      <option name="closed" value="true" />
-      <created>1761943749260</created>
-      <option name="number" value="00178" />
-      <option name="presentableId" value="LOCAL-00178" />
-      <option name="project" value="LOCAL" />
-      <updated>1761943749260</updated>
     </task>
     <task id="LOCAL-00179" summary="Update our js code and btn">
       <option name="closed" value="true" />
@@ -481,7 +474,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764271492357</updated>
     </task>
-    <option name="localTasksCounter" value="227" />
+    <task id="LOCAL-00227" summary="Add new html">
+      <option name="closed" value="true" />
+      <created>1764272306183</created>
+      <option name="number" value="00227" />
+      <option name="presentableId" value="LOCAL-00227" />
+      <option name="project" value="LOCAL" />
+      <updated>1764272306183</updated>
+    </task>
+    <option name="localTasksCounter" value="228" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -496,7 +497,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update config" />
     <MESSAGE value="Again update run" />
     <MESSAGE value="Update run and fix it AGAIN" />
     <MESSAGE value="run" />
@@ -521,6 +521,7 @@
     <MESSAGE value="Update 5 files, commit -m" />
     <MESSAGE value="Update start" />
     <MESSAGE value="Add new keyboard" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add new keyboard" />
+    <MESSAGE value="Add new html" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add new html" />
   </component>
 </project>

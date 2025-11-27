@@ -8,6 +8,9 @@ from aiogram.exceptions import TelegramAPIError
 from aiogram import Bot, Dispatcher, BaseMiddleware
 from aiogram.types import ErrorEvent, TelegramObject
 from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.methods import set_webhook
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+
 from typing import Callable, Dict, Any, Awaitable
 
 from config import TOKEN
@@ -38,7 +41,7 @@ try:
     env_port = os.environ.get("PORT")
     if not env_port:
         logger.warning(
-            "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8080) для Railway.")
+            "⚠️ Переменная окружения PORT не установлена. Используется порт по умолчанию (8080) для локального Webhook или Polling.")
         PORT = 8080
     else:
         PORT = int(env_port)
@@ -46,10 +49,15 @@ try:
     WEBHOOK_SECRET = os.environ.get("WEBHOOK_SECRET", "final_secret_456")
     WEBHOOK_PATH = f"/webhook/{WEBHOOK_SECRET}"
 
+    FULL_WEBHOOK_URL = f"{WEBHOOK_URL}{WEBHOOK_PATH}" if WEBHOOK_URL else None
+
     db_manager = DBManager(db_path='your_bot_shop.db')
     session = AiohttpSession(timeout=40)
     bot = Bot(token=TOKEN, session=session)
     dp = Dispatcher()
+    dp.message.middleware(DBMiddleware(db_manager))
+    dp.callback_query.middleware(DBMiddleware(db_manager))
+    dp.include_router(start_router)
 
 except Exception as e:
     logger.critical(f"❌ КРИТИЧЕСКИЙ СБОЙ В ГЛОБАЛЬНОЙ ИНИЦИАЛИЗАЦИИ: {type(e).__name__} - {e}", exc_info=True)
@@ -72,22 +80,45 @@ async def global_error_handler(event: ErrorEvent):
 
 
 async def on_startup(bot: Bot):
-    logger.info("🔥 Очистка старого Webhook для запуска Polling...")
-    await bot.delete_webhook(drop_pending_updates=True)
-    logger.info("🟢 Webhook очищен.")
+    if FULL_WEBHOOK_URL:
+        logger.info(f"Setting Webhook to: {FULL_WEBHOOK_URL}")
+        await bot(set_webhook.SetWebhook(url=FULL_WEBHOOK_URL, secret_token=WEBHOOK_SECRET))
+        logger.info("🟢 Webhook успешно установлен.")
+    else:
+        logger.info("🔥 Очистка старого Webhook для запуска Polling...")
+        await bot.delete_webhook(drop_pending_updates=True)
+        logger.info("🟢 Webhook очищен.")
 
 
 async def main():
-    dp.message.middleware(DBMiddleware(db_manager))
-    dp.callback_query.middleware(DBMiddleware(db_manager))
+    await asyncio.to_thread(db_manager.initialize_db)
 
-    dp.include_router(start_router)
+    if FULL_WEBHOOK_URL:
+        logger.info(f"🤖 Бот запущен в режиме Webhook на порту {PORT}")
 
-    logger.info(f'🤖 Бот запущен в режиме Polling (локальный запуск)')
+        from aiohttp import web
+        app = web.Application()
 
-    await on_startup(bot)
+        webhook_requests_handler = SimpleRequestHandler(
+            dispatcher=dp,
+            bot=bot,
+            secret_token=WEBHOOK_SECRET
+        )
 
-    await dp.start_polling(bot)
+        webhook_requests_handler.register(app, path=WEBHOOK_PATH)
+
+        from web_app_handler import WebAppHandler
+        app.router.add_get('/', WebAppHandler())
+
+        setup_application(app, dp, bot=bot)
+
+        await on_startup(bot)
+        web.run_app(app, host='0.0.0.0', port=PORT)
+
+    else:
+        logger.info(f'🤖 Бот запущен в режиме Polling (локальный запуск)')
+        await on_startup(bot)
+        await dp.start_polling(bot)
 
 
 if __name__ == '__main__':
