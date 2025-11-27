@@ -6,13 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram WebApp Shop</title>
 
-    <!-- Подключаем Telegram Web App JS API -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <meta name="theme-color" content="var(--tg-theme-bg-color, #ffffff)">
 
     <style>
-        /* Использование Telegram Theme Variables */
         :root {
             --tg-bg: var(--tg-theme-bg-color, #ffffff);
             --tg-text: var(--tg-theme-text-color, #000000);
@@ -28,7 +26,7 @@
             color: var(--tg-text);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 20px;
-            padding-bottom: 90px; /* Учитываем высоту Главной Кнопки ТГ */
+            padding-bottom: 90px; 
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -48,14 +46,14 @@
         }
 
         .product-col {
-            width: calc(50% - 7.5px); /* Две колонки на мобильных */
+            width: calc(50% - 7.5px); 
             flex-grow: 1;
             box-sizing: border-box;
         }
 
         @media (min-width: 600px) {
              .product-col {
-                width: calc(33.333% - 10px); /* 3 колонки на широких экранах */
+                width: calc(33.333% - 10px); 
              }
         }
 
@@ -118,7 +116,6 @@
             filter: brightness(0.9);
         }
 
-        /* Стиль для сообщения о загрузке/ошибке */
         .status-message {
             text-align: center;
             padding: 50px 0;
@@ -137,7 +134,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно для сообщений (вместо alert/confirm) -->
     <div id="modal-message" class="modal-overlay hidden" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 1000; display: none; align-items: center; justify-content: center;">
         <div class="modal-content" style="background: var(--tg-secondary-bg); color: var(--tg-text); padding: 20px; border-radius: 10px; max-width: 300px; text-align: center;">
             <h3 id="modal-title" style="font-size: 1.2rem; font-weight: 600; margin-bottom: 10px;"></h3>
@@ -150,43 +146,32 @@
     </div>
 
     <script type="module">
-        // --- Firebase Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, getDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // setLogLevel('debug'); // Раскомментируй для отладки отладки
 
-        // --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ FIREBASE (Обязательно) ---
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         let db, auth, userId = null;
         let cartDocRef = null;
-        let currentCart = {}; // Текущее состояние корзины из Firestore
+        let currentCart = {}; 
 
-        // --- Telegram WebApp Instance ---
         const tg = window.Telegram ? window.Telegram.WebApp : null;
 
-        // --- ДАННЫЕ МЕНЮ (Теперь с публичными ссылками-заглушками вместо локальных путей) ---
         const PRODUCTS = [
             { category: "Кава", emoji: "🛍️", items: [
-                // Использовалось: ./photos/cofee.webp
                 { id: "latte", name: "Латте", price: 70, description: "Свежесваренный кофе с молоком и пухкой пенкой.", img: "https://placehold.co/400x120/F0D9C1/4F3A2E?text=LATTE" },
-                // Использовалось: ./photos/latte.webp
                 { id: "double_latte", name: "Двойной Латте", price: 95, description: "Крепкий двойной эспрессо.", img: "https://placehold.co/400x120/D9C8B5/4F3A2E?text=DOUBLE+LATTE" },
             ]},
             { category: "Піцца", emoji: "🍕", items: [
-                // Использовалось: ./photos/pizza.webp
                 { id: "pepperoni_pizza", name: "Пицца Пепперони", price: 220, description: "Острая пепперони с томатным соусом.", img: "https://placehold.co/400x120/E86850/FFFFFF?text=PEPPERONI" },
-                // Использовалось: ./photos/havaipizza.webp
                 { id: "hawaiian_pizza", name: "Пицца Гавайская", price: 250, description: "Курица, свежие ананасы, сыр.", img: "https://placehold.co/400x120/81C784/FFFFFF?text=HAWAIIAN" },
             ]},
             { category: "Бургери", emoji: "🍔", items: [
-                // Использовалось: ./photos/burger.webp
                 { id: "big_burger", name: "Большой Бургер", price: 150, description: "Мясной бургер с двойным сыром и беконом.", img: "https://placehold.co/400x120/C19A6B/FFFFFF?text=BURGER" },
-                // Использовалось: ./photos/MChiken.webp
                 { id: "chicken_burger", name: "Чикен Бургер", price: 120, description: "Куриное филе с соусом майонез.", img: "https://placehold.co/400x120/FFD580/FFFFFF?text=CHICKEN" },
             ]},
         ];
@@ -199,11 +184,10 @@
         }
 
         function getCartDocRef(uid) {
-            // Частные данные: /artifacts/{appId}/users/{userId}/cart/user_cart
             return doc(db, 'artifacts', appId, 'users', uid, 'cart', 'user_cart');
         }
 
-        // --- РЕНДЕРИНГ МЕНЮ ---
+
         function renderMenu() {
             const container = document.getElementById('app-container');
             container.innerHTML = '';
@@ -235,7 +219,7 @@
                 container.appendChild(section);
             });
 
-            // Добавляем слушатели событий после рендеринга
+
             document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.currentTarget.dataset.id;
@@ -246,7 +230,6 @@
             });
         }
 
-        // --- ЛОГИКА КОРЗИНЫ FIREBASE ---
         async function addToCart(productId, name, price) {
             if (!userId || !cartDocRef) {
                 showModal("Помилка", "Система не ініціалізована.");
@@ -254,20 +237,16 @@
             }
 
             try {
-                // Копируем текущее состояние корзины
                 const newCartItems = { ...currentCart };
 
-                // Обновляем количество товара
                 newCartItems[productId] = {
                     name: name,
                     price: price,
                     quantity: (newCartItems[productId]?.quantity || 0) + 1
                 };
 
-                // Сохраняем обратно в Firestore
                 await setDoc(cartDocRef, { items: newCartItems }, { merge: false });
 
-                // Визуальный фидбек
                 if (tg) tg.HapticFeedback.notificationOccurred('success');
                 showModal("Додано!", `"${name}" додано до кошика.`);
 
@@ -278,7 +257,7 @@
             }
         }
 
-        // --- ОБНОВЛЕНИЕ UI (Firestore Listener) ---
+
         function updateCartUI(cartItems) {
             let totalSum = 0;
             let totalQuantity = 0;
@@ -290,7 +269,6 @@
             });
 
 
-            // Обновление Главной Кнопки Telegram
             if (tg) {
                 if (totalQuantity > 0) {
                     tg.MainButton.setText(`Оформить заказ (${totalSum.toFixed(0)} грн)`).show();
@@ -298,11 +276,10 @@
                 } else {
                     tg.MainButton.hide();
                 }
-                // Проверяем, нужно ли расширить высоту WebApp
                 tg.ready();
             }
 
-            currentCart = cartItems; // Обновляем локальное состояние корзины
+            currentCart = cartItems;
             console.log('--- КОРЗИНА ОБНОВЛЕНА И СОХРАНЕНА (Firestore) ---');
             console.log('Общая сумма заказа:', totalSum.toFixed(0), 'грн');
         }
@@ -310,10 +287,8 @@
         function subscribeToCartUpdates() {
             onSnapshot(cartDocRef, (docSnapshot) => {
                 if (docSnapshot.exists() && docSnapshot.data().items) {
-                    // Используем данные из Firestore для обновления UI
                     updateCartUI(docSnapshot.data().items);
                 } else {
-                    // Корзина пуста или документ не существует
                     updateCartUI({});
                 }
             }, (error) => {
@@ -322,7 +297,6 @@
             });
         }
 
-        // --- ОБРАБОТКА НАЖАТИЯ ГЛАВНОЙ КНОПКИ ТГ ---
         if (tg) {
             tg.ready();
             tg.MainButton.onClick(() => {
@@ -343,37 +317,35 @@
                     items: itemsArray,
                     total_sum: totalSum.toFixed(0),
                     order_message: orderText,
-                    user_id: userId // Добавляем userId для идентификации в боте
+                    user_id: userId 
                 };
 
-                // Отправляем данные обратно в Telegram Bot
                 tg.sendData(JSON.stringify(dataToSend));
             });
         }
 
 
-        // --- ИНИЦИАЛИЗАЦИЯ FIREBASE и АВТОРИЗАЦИЯ ---
         async function initializeAppAndAuth() {
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
 
-                // Анонимный вход или вход по токену
+
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
                     await signInAnonymously(auth);
                 }
 
-                // После аутентификации
+
                 onAuthStateChanged(auth, (user) => {
                     const loadingMessage = document.getElementById('loading-message');
                     if (user) {
                         userId = user.uid;
                         cartDocRef = getCartDocRef(userId);
                         renderMenu();
-                        subscribeToCartUpdates(); // Начинаем слушать изменения корзины
+                        subscribeToCartUpdates(); 
                     } else {
                         loadingMessage.textContent = "Помилка авторизації.";
                     }
